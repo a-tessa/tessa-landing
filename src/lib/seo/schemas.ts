@@ -1,8 +1,8 @@
 export const SITE = {
   name: "Tessa",
   domain: "https://SEU-DOMINIO.com",
-  tagline: "Tijolos para sua obra",
-  description: "Tijolos com qualidade, entrega e suporte para sua construção.",
+  tagline: "Estruturas metálicas e perfis sob medida",
+  description: "Aço galvanizado. Engenharia aplicada. Produção industrial. Entrega para o seu projeto sair do papel com previsibilidade.",
   phone: "+55 11 99999-9999",
   email: "contato@SEU-DOMINIO.com",
   address: {
@@ -14,6 +14,15 @@ export const SITE = {
   },
   socials: [
     // "https://www.instagram.com/suaempresa",
+  ],
+  keywords: [
+    "Estrutra metálica para telhado",
+    "Carport",
+    "Estruturas de aviário",
+    "Aço galvanizado",
+    "Engenharia aplicada",
+    "Produção industrial",
+    "Entrega para o seu projeto sair do papel com previsibilidade.",
   ],
 };
 

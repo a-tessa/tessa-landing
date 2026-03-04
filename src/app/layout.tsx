@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Inter, Barlow } from "next/font/google";
 import "./globals.css";
+import { SITE } from "@/lib/seo/schemas";
+import { cn } from "@/lib/utils";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,14 +16,19 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const barlow = Barlow({
+  variable: "--font-barlow",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.tessa.com.br"),
   title: {
-    template: "%s | Tessa",
-    default: "Tessa - Estruturas metálicas e perfis sob medida",
+    template: `%s | ${SITE.name}`,
+    default: `${SITE.name} — ${SITE.tagline}`,
   },
-  description:
-    "Aço galvanizado. Engenharia aplicada. Produção industrial. Entrega para o seu projeto sair do papel com previsibilidade.",
+  description: SITE.description,
   alternates: {
     canonical: "/",
     languages: {
@@ -32,9 +41,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pt-BR",
     url: "https://www.tessa.com.br",
-    title: "Tessa - Estruturas metálicas e perfis sob medida",
-    description:
-      "Aço galvanizado. Engenharia aplicada. Produção industrial. Entrega para o seu projeto sair do papel com previsibilidade.",
+    title: `${SITE.name} — ${SITE.tagline}`,
+    description: SITE.description,
     images: [
       {
         url: "/og-image.png",
@@ -42,17 +50,9 @@ export const metadata: Metadata = {
         height: 630,
       },
     ],
-    siteName: "Tessa",
+    siteName: SITE.name,
   },
-  keywords: [
-    "Estrutra metálica para telhado",
-    "Carport",
-    "Estruturas de aviário",
-    "Aço galvanizado",
-    "Engenharia aplicada",
-    "Produção industrial",
-    "Entrega para o seu projeto sair do papel com previsibilidade.",
-  ],
+  keywords: SITE.keywords,
 };
 
 export default function RootLayout({
@@ -61,9 +61,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={cn(
+          geistSans.variable,
+          geistMono.variable,
+          inter.variable,
+          barlow.variable,
+          barlow.className,
+          "antialiased",
+        )}
       >
         {children}
       </body>

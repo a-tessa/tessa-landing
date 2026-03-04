@@ -20,7 +20,7 @@ export default function Icon() {
           fontSize: 18,
           fontWeight: 800,
           borderRadius: 6,
-          fontFamily: "Inter, system-ui, sans-serif",
+          fontFamily: "Barlow, system-ui, sans-serif",
         }}
       >
         {SITE.name.slice(0, 1).toUpperCase()}
