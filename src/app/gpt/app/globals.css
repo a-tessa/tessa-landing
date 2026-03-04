@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+/* Tailwind v4 (CSS-first). If your project is still on Tailwind v3,
+   replace with @tailwind base/components/utilities. */
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  color: hsl(var(--foreground));
+  background: hsl(var(--background));
+}
