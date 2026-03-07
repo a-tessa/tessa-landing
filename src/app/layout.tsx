@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Inter, Barlow } from "next/font/google";
 import "./globals.css";
 import { SITE } from "@/lib/seo/schemas";
 import { cn } from "@/lib/utils";
+import { Navbar } from "@/components/marketing/Navbar";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -72,6 +73,7 @@ export default function RootLayout({
           "antialiased",
         )}
       >
+        <Navbar />
         {children}
       </body>
     </html>

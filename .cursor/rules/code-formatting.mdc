@@ -1,0 +1,18 @@
+---
+alwaysApply: false
+---
+Use this when prompted to run formatting.
+
+## Biome Rules
+- **Code Formatting**: Use Biome for code formatting and linting.
+- **Pre-commit Hook**: Configure Biome as a pre-commit hook.
+- **Recommended Rules**: Follow Biome's recommended rules.
+- **Configuration**: Customize Biome configuration in `biome.json` as needed.
+- **Consistent Style**: Ensure consistent code style across the project.
+- **Pre-commit Checks**: Run Biome checks before committing changes.
+- **Address Warnings/Errors**: Address all Biome warnings and errors promptly.
+- **Organize Imports**: Use Biome's organize imports feature to maintain clean import statements.
+- **Advanced Linting**: Leverage Biome's advanced linting capabilities for TypeScript.
+- **CI/CD Integration**: Integrate Biome into the CI/CD pipeline for automated checks.
+- **Updates**: Keep Biome updated to the latest stable version.
+- **Ignore Patterns**: Use Biome's ignore patterns to exclude specific files or directories when necessary.
