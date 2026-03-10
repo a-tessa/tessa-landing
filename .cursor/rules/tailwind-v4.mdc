@@ -1,12 +1,8 @@
 ---
 description: Apply Tailwind CSS v4 guidance when editing UI components, styles, or Tailwind/PostCSS configuration (Shadcn/Radix-friendly).
 globs:
-  - "app/**/*.{ts,tsx,js,jsx,mdx}"
-  - "src/**/*.{ts,tsx,js,jsx,mdx}"
-  - "components/**/*.{ts,tsx,js,jsx}"
-  - "**/*.{css,pcss,scss,sass}"
+  - "src/**/*.{ts,tsx,mdx}"
   - "**/tailwind.config.{js,cjs,mjs,ts}"
-  - "**/postcss.config.{js,cjs,mjs,ts}"
 alwaysApply: false
 ---
 # Tailwind CSS
