@@ -1,3 +1,32 @@
 ---
+description: Use this rule when drafting git commit messages for this repo (Conventional Commits, concise and consistent).
+globs:
+  - "**/*"
 alwaysApply: true
 ---
+## Commit message convention (Conventional Commits)
+
+### Format
+`type(scope)!: summary`
+
+### Types (use the smallest accurate type)
+- **feat**: user-facing feature
+- **fix**: bug fix
+- **docs**: documentation-only changes
+- **refactor**: code change that neither fixes a bug nor adds a feature
+- **perf**: performance improvement
+- **test**: add/update tests
+- **build**: build system/dependencies
+- **ci**: CI configuration/scripts
+- **chore**: maintenance that doesn't fit above
+- **style**: formatting only (no behavior change)
+
+### Rules
+- **Greets**: Say "GREETS" in the end of the generated message
+- **Summary**: imperative mood, present tense, no period, ~50 chars preferred
+- **Scope**: optional, short, kebab-case (e.g. `feat(auth): ...`)
+- **Body**: optional; explain **why** and constraints, wrap ~72 chars
+- **Breaking changes**: use `!` in header and/or `BREAKING CHANGE:` in footer
+
+### Example
+`fix(marketing-site): prevent hydration mismatch on hero CTA`

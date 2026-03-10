@@ -4,11 +4,11 @@ globs:
   - "src/**/*.{tsx}"
 alwaysApply: false
 ---
-# Tailwind CSS (Next.js Guide)
+# Tailwind CSS
 
-# Tailwind CSS & Next.js Development Guide
+## Tailwind CSS Development Guide
 
-## Prompt Generation Rules
+### Prompt Generation Rules
 - **DaisyUI Component Suggestions**: Include specific DaisyUI component suggestions where applicable.
 - **Tailwind CSS Classes**: Specify desired Tailwind CSS classes for styling.
 - **TypeScript Types/Interfaces**: Mention any required TypeScript types or interfaces.
@@ -24,7 +24,7 @@ alwaysApply: false
 - **Testing**: Include instructions for testing the component.
 - **Documentation**: Suggest documentation requirements for the component.
 
-## General Component Creation Guidelines
+### General Component Creation Guidelines
 - **Reusability and Modularity**: Prioritize reusability and modularity.
 - **Naming Conventions**: Ensure consistent naming conventions.
 - **React Best Practices**: Follow React best practices and patterns.
@@ -33,7 +33,7 @@ alwaysApply: false
 - **SEO Optimization**: Optimize for SEO when applicable.
 - **Browser/Device Compatibility**: Ensure compatibility with different browsers and devices.
 
-## General Rules
+### General Rules
 - **Strict TypeScript**: Enable strict TypeScript (`strict: true` in `tsconfig.json`).
 - **Avoid 'any'**: Prefer 'unknown' with runtime checks.
 - **Explicit Typing**: Explicitly type function inputs and outputs.
@@ -43,7 +43,7 @@ alwaysApply: false
 - **Biome for Formatting**: Use Biome for code formatting and linting.
 - **Pre-commit Hook**: Configure Biome as a pre-commit hook.
 
-## Next.js Rules
+### Next.js Rules
 - **Dynamic Routes**: Use dynamic routes with bracket notation (`[id].tsx`).
 - **Route Parameters**: Validate and sanitize route parameters.
 - **Flat Routes**: Prefer flat, descriptive routes.
@@ -52,15 +52,7 @@ alwaysApply: false
 - **Image Optimization**: Use `next/image` for optimized images.
 - **Image Attributes**: Configure image layout, priority, sizes, and `srcSet` attributes.
 
-## TypeScript Rules
-- **Strict Mode**: Enable all strict mode options in `tsconfig.json`.
-- **Explicit Typing**: Explicitly type all variables, parameters, and return values.
-- **Utility Types**: Use utility types, mapped types, and conditional types.
-- **Interface vs Type**: Prefer 'interface' for extendable object shapes, 'type' for unions, intersections, and primitive compositions.
-- **JSDoc Documentation**: Document complex types with JSDoc.
-- **Discriminated Unions**: Avoid ambiguous union types, use discriminated unions when necessary.
-
-## TailwindCSS and DaisyUI Rules
+### TailwindCSS and DaisyUI Rules
 - **Utility Classes**: Use TailwindCSS utility classes for styling.
 - **Custom CSS**: Avoid custom CSS unless absolutely necessary.
 - **Class Order**: Maintain consistent order of utility classes.
@@ -68,8 +60,3 @@ alwaysApply: false
 - **DaisyUI Components**: Leverage DaisyUI components for rapid development.
 - **Customization**: Customize DaisyUI components only when necessary.
 - **Design Tokens**: Define and use design tokens in `tailwind.config.js`.
-
-## Development Process
-- **Meaningful Tests**: Prioritize meaningful tests over high coverage numbers.
-- **Last message**: In the final of the phrase, put 'COOL COMMIT' in the end.
-- **Conventional Commits**: Use Conventional Commits practices for commit messages (`feat:`, `fix:`, `docs:`, `chore:`) in the start of the message.
