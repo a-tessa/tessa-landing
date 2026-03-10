@@ -1,4 +1,10 @@
 ---
+description: Apply Biome formatting and linting standards when editing source code and project config files.
+globs:
+  - "**/*.{ts,tsx,js,jsx,mjs,cjs,json,jsonc}"
+  - "**/*.{css,md,mdx,yml,yaml}"
+  - "biome.json"
+  - "biome.jsonc"
 alwaysApply: false
 ---
 Use this when prompted to run formatting.

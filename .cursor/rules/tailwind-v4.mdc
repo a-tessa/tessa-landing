@@ -1,4 +1,12 @@
 ---
+description: Apply Tailwind CSS v4 and DaisyUI guidance when editing UI components, pages, styles, or Tailwind configuration files.
+globs:
+  - "app/**/*.{ts,tsx,js,jsx,mdx}"
+  - "src/**/*.{ts,tsx,js,jsx,mdx}"
+  - "components/**/*.{ts,tsx,js,jsx}"
+  - "**/*.{css,pcss,scss,sass}"
+  - "**/tailwind.config.{js,cjs,mjs,ts}"
+  - "**/postcss.config.{js,cjs,mjs,ts}"
 alwaysApply: false
 ---
 # Tailwind CSS (Next.js Guide)

@@ -1,4 +1,11 @@
 ---
+description: Apply this rule when implementing or modifying Vercel AI SDK chat, streaming, tools, or AI route handlers.
+globs:
+  - "app/**/*.{ts,tsx}"
+  - "src/**/*.{ts,tsx}"
+  - "**/api/**/*.{ts,tsx}"
+  - "**/*ai*.{ts,tsx}"
+  - "**/*chat*.{ts,tsx}"
 alwaysApply: false
 ---
 ## Vercel AI SDK Integration
