@@ -22,7 +22,6 @@ alwaysApply: true
 - **style**: formatting only (no behavior change)
 
 ### Rules
-- **Greets**: Say "GREETS" in the end of the generated message
 - **Summary**: imperative mood, present tense, no period, ~50 chars preferred
 - **Scope**: optional, short, kebab-case (e.g. `feat(auth): ...`)
 - **Body**: optional; explain **why** and constraints, wrap ~72 chars

@@ -1,4 +1,5 @@
 ---
+description: Apply when building or modifying this Next.js 16 (App Router) + React 19 + TypeScript app, especially for UI/components, routing, data fetching, and Tailwind v4/Shadcn/Radix usage.
 globs:
   - "src/**/*.{ts,tsx}"
 alwaysApply: true
@@ -59,6 +60,12 @@ Before responding to any request, follow these steps:
 - Avoid enums; use const maps instead
 - Implement proper type safety and inference
 - Use `satisfies` operator for type validation
+- **Strict Mode**: Enable all strict mode options in `tsconfig.json`.
+- **Explicit Typing**: Explicitly type all variables, parameters, and return values.
+- **Utility Types**: Use utility types, mapped types, and conditional types.
+- **Interface vs Type**: Prefer 'interface' for extendable object shapes, 'type' for unions, intersections, and primitive compositions.
+- **JSDoc Documentation**: Document complex types with JSDoc.
+- **Discriminated Unions**: Avoid ambiguous union types, use discriminated unions when necessary.
 
 ## React 19 and Next.js 16 Best Practices
 
@@ -67,8 +74,6 @@ Before responding to any request, follow these steps:
 - **Flat Routes**: Prefer flat, descriptive routes.
 - **Data Fetching**: Use `getServerSideProps` for dynamic data, `getStaticProps`/`getStaticPaths` for static.
 - **ISR**: Implement Incremental Static Regeneration (ISR) where appropriate.
-- **Image Optimization**: Use `next/image` for optimized images.
-- **Image Attributes**: Configure image layout, priority, sizes, and `srcSet` attributes.
 
 ### Component Architecture
 
@@ -79,14 +84,13 @@ Before responding to any request, follow these steps:
 - Optimize for performance and Web Vitals
 
 ## General Component Creation Guidelines
-
-- Reusability and Modularity: Prioritize reusability and modularity.
-- Naming Conventions: Ensure consistent naming conventions.
-- React Best Practices: Follow React best practices and patterns.
-- Prop Validation: Implement proper prop validation.
-- Internationalization: Consider internationalization requirements.
-- SEO Optimization: Optimize for SEO when applicable.
-- Browser/Device Compatibility: Ensure compatibility with different browsers and devices.
+- **Reusability and Modularity**: Prioritize reusability and modularity.
+- **Naming Conventions**: Ensure consistent naming conventions.
+- **React Best Practices**: Follow React best practices and patterns.
+- **Prop Validation**: Implement proper prop validation.
+- **Internationalization**: Consider internationalization requirements.
+- **SEO Optimization**: Optimize for SEO when applicable.
+- **Browser/Device Compatibility**: Ensure compatibility with different browsers and devices.
 
 ### State Management
 
@@ -131,7 +135,7 @@ export async function GET(request: Request) {
 
 ### Styling
 
-- Use Tailwind CSS with a mobile-first approach
+- Use Tailwind CSS with a mobile-first approach, refer to `.cursor/rules/tailwind-v4.mdc` to know the rules of estilization
 - Implement Shadcn UI and Radix UI components
 - Follow consistent spacing and layout patterns
 - Ensure responsive design across breakpoints

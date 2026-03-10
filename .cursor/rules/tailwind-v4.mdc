@@ -1,7 +1,12 @@
 ---
-description: Apply Tailwind CSS v4 and DaisyUI guidance when editing UI components, pages, styles, or Tailwind configuration files.
+description: Apply Tailwind CSS v4 guidance when editing UI components, styles, or Tailwind/PostCSS configuration (Shadcn/Radix-friendly).
 globs:
-  - "src/**/*.{tsx}"
+  - "app/**/*.{ts,tsx,js,jsx,mdx}"
+  - "src/**/*.{ts,tsx,js,jsx,mdx}"
+  - "components/**/*.{ts,tsx,js,jsx}"
+  - "**/*.{css,pcss,scss,sass}"
+  - "**/tailwind.config.{js,cjs,mjs,ts}"
+  - "**/postcss.config.{js,cjs,mjs,ts}"
 alwaysApply: false
 ---
 # Tailwind CSS
@@ -9,7 +14,7 @@ alwaysApply: false
 ## Tailwind CSS Development Guide
 
 ### Prompt Generation Rules
-- **DaisyUI Component Suggestions**: Include specific DaisyUI component suggestions where applicable.
+- **ShadCN Component Suggestions**: Include specific ShadCN component suggestions where applicable.
 - **Tailwind CSS Classes**: Specify desired Tailwind CSS classes for styling.
 - **TypeScript Types/Interfaces**: Mention any required TypeScript types or interfaces.
 - **Responsive Design**: Include instructions for responsive design.
@@ -19,44 +24,20 @@ alwaysApply: false
 - **Icons/Assets**: Mention any required icons or assets.
 - **Error Handling/Loading States**: Suggest error handling and loading states.
 - **Animations/Transitions**: Include instructions for animations or transitions if needed.
-- **API Integrations/Data Fetching**: Specify any required API integrations or data fetching.
 - **Performance Optimization**: Mention performance optimization techniques if applicable.
-- **Testing**: Include instructions for testing the component.
 - **Documentation**: Suggest documentation requirements for the component.
 
-### General Component Creation Guidelines
-- **Reusability and Modularity**: Prioritize reusability and modularity.
-- **Naming Conventions**: Ensure consistent naming conventions.
-- **React Best Practices**: Follow React best practices and patterns.
-- **Prop Validation**: Implement proper prop validation.
-- **Internationalization**: Consider internationalization requirements.
-- **SEO Optimization**: Optimize for SEO when applicable.
-- **Browser/Device Compatibility**: Ensure compatibility with different browsers and devices.
-
 ### General Rules
-- **Strict TypeScript**: Enable strict TypeScript (`strict: true` in `tsconfig.json`).
-- **Avoid 'any'**: Prefer 'unknown' with runtime checks.
-- **Explicit Typing**: Explicitly type function inputs and outputs.
-- **Advanced TypeScript Features**: Use advanced TypeScript features (type guards, mapped types, conditional types).
-- **Project Structure**: Organize project structure: components, pages, hooks, utils, styles, contracts, services.
-- **Separation of Concerns**: Separate concerns: presentational components, business logic, side effects.
-- **Biome for Formatting**: Use Biome for code formatting and linting.
-- **Pre-commit Hook**: Configure Biome as a pre-commit hook.
 
-### Next.js Rules
-- **Dynamic Routes**: Use dynamic routes with bracket notation (`[id].tsx`).
-- **Route Parameters**: Validate and sanitize route parameters.
-- **Flat Routes**: Prefer flat, descriptive routes.
-- **Data Fetching**: Use `getServerSideProps` for dynamic data, `getStaticProps`/`getStaticPaths` for static.
-- **ISR**: Implement Incremental Static Regeneration (ISR) where appropriate.
+### Image Optimization Rules
 - **Image Optimization**: Use `next/image` for optimized images.
 - **Image Attributes**: Configure image layout, priority, sizes, and `srcSet` attributes.
 
-### TailwindCSS and DaisyUI Rules
+### TailwindCSS Rules
 - **Utility Classes**: Use TailwindCSS utility classes for styling.
 - **Custom CSS**: Avoid custom CSS unless absolutely necessary.
 - **Class Order**: Maintain consistent order of utility classes.
 - **Responsive Variants**: Use Tailwind's responsive variants for adaptive designs.
-- **DaisyUI Components**: Leverage DaisyUI components for rapid development.
-- **Customization**: Customize DaisyUI components only when necessary.
+- **ShadCN Components**: Leverage ShadCN components for rapid development.
+- **Customization**: Customize SHadCN components only when necessary using components from Shadcn Studio.
 - **Design Tokens**: Define and use design tokens in `tailwind.config.js`.
