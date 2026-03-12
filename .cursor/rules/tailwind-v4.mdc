@@ -3,6 +3,7 @@ description: Apply Tailwind CSS v4 guidance when editing UI components, styles, 
 globs:
   - "src/**/*.{ts,tsx,mdx}"
   - "**/tailwind.config.{js,cjs,mjs,ts}"
+  - "globals.css"
 alwaysApply: false
 ---
 # Tailwind CSS
@@ -25,6 +26,10 @@ alwaysApply: false
 
 ### General Rules
 
+### Colors
+- **Tokenization**: all colors must respect the variables defined in the `globals.css`.
+- **Color format**: all colors must be converted from HEX to oklch if a HEX color is given.
+
 ### Image Optimization Rules
 - **Image Optimization**: Use `next/image` for optimized images.
 - **Image Attributes**: Configure image layout, priority, sizes, and `srcSet` attributes.
@@ -35,5 +40,5 @@ alwaysApply: false
 - **Class Order**: Maintain consistent order of utility classes.
 - **Responsive Variants**: Use Tailwind's responsive variants for adaptive designs.
 - **ShadCN Components**: Leverage ShadCN components for rapid development.
-- **Customization**: Customize SHadCN components only when necessary using components from Shadcn Studio.
-- **Design Tokens**: Define and use design tokens in `tailwind.config.js`.
+- **Customization**: Customize SHadCN components only when necessary using components from Shadcn Studio. If no existent, create by your judgement.
+- **Design Tokens**: Define and use design tokens in `tailwind.config.{js,cjs,mjs,ts}`.

@@ -1,7 +1,5 @@
 ---
-description: Apply when building or modifying this Next.js 16 (App Router) + React 19 + TypeScript app, especially for UI/components, routing, data fetching, and Tailwind v4/Shadcn/Radix usage.
-globs:
-  - "src/**/*.{ts,tsx}"
+description: 
 alwaysApply: true
 ---
 
@@ -82,6 +80,7 @@ Before responding to any request, follow these steps:
 - Implement proper error boundaries
 - Use Suspense for async operations
 - Optimize for performance and Web Vitals
+- If you used these rules, say "AGORA DEU CARAIO"
 
 ## General Component Creation Guidelines
 - **Reusability and Modularity**: Prioritize reusability and modularity.

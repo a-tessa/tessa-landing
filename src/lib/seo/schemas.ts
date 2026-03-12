@@ -1,22 +1,26 @@
 export const SITE = {
-  name: "Tessa",
+  name: "Tessa Tecnologia e Desenvolvimento LTDA",
+  shortName: "Tessa",
   domain: "https://SEU-DOMINIO.com",
   tagline: "Estruturas metálicas e perfis sob medida",
-  description: "Aço galvanizado. Engenharia aplicada. Produção industrial. Entrega para o seu projeto sair do papel com previsibilidade.",
-  phone: "+55 11 99999-9999",
+  description:
+    "Aço galvanizado. Engenharia aplicada. Produção industrial. Entrega para o seu projeto sair do papel com previsibilidade.",
+  phones: ["+55 17 3267-1210", "+55 17 3267-1453"],
   email: "contato@SEU-DOMINIO.com",
   address: {
-    streetAddress: "Rua Exemplo, 123",
-    addressLocality: "Osasco",
+    streetAddress: "Rodovia Assis Chateaubriand SP 425 KM175,9",
+    addressLocality: "Guapiaçu",
     addressRegion: "SP",
-    postalCode: "00000-000",
+    postalCode: "15110-000",
     addressCountry: "BR",
   },
-  socials: [
-    // "https://www.instagram.com/suaempresa",
-  ],
+  socials: {
+    linkedin: "https://www.linkedin.com/company/tessa",
+    youtube: "https://www.youtube.com/@tessa",
+    instagram: "https://www.instagram.com/tessa",
+  },
   keywords: [
-    "Estrutra metálica para telhado",
+    "Estrutura metálica para telhado",
     "Carport",
     "Estruturas de aviário",
     "Aço galvanizado",
@@ -34,8 +38,12 @@ export function organizationJsonLd() {
     url: SITE.domain,
     description: SITE.description,
     email: SITE.email,
-    telephone: SITE.phone,
-    sameAs: SITE.socials,
+    telephone: SITE.phones[0],
+    address: {
+      "@type": "PostalAddress",
+      ...SITE.address,
+    },
+    sameAs: Object.values(SITE.socials),
   };
 }
 

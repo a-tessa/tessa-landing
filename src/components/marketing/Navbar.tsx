@@ -5,13 +5,13 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Container } from "./Container";
-import { cn } from "@/lib/utils";
+import { cn, homeSpacing } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
 
 const SCROLL_THRESHOLD = 150;
 
 const navLinks = [
-  { href: "/home", label: "A TESSA" },
+  { href: "/", label: "A TESSA" },
   { href: "/servicos", label: "SERVIÇOS" },
   { href: "/representantes", label: "REPRESENTANTES" },
   { href: "/blog", label: "BLOG" },
@@ -69,7 +69,7 @@ export function Navbar() {
             priority
           />
         </Link>
-        <span className="hidden h-4 w-px bg-transparent sm:block" />
+        <span className="hidden h-4 w-px shrink-0 bg-white/40 sm:block" aria-hidden />
         <span className="hidden text-xs font-medium uppercase tracking-wide text-white/60 sm:block">
           DESDE 2001
         </span>
@@ -112,15 +112,16 @@ export function Navbar() {
   );
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50">
+    <header className="fixed left-0 right-0 top-6 z-50 px-6">
       <div
-        className="flex justify-center px-4 pt-3 transition-all duration-500 sm:px-6 lg:px-8"
+        className="flex justify-center pt-3 transition-all duration-500"
         style={{ paddingTop: `${12 * (1 - scrollProgress)}px` }}
       >
         <nav
           className={cn(
-            "flex w-full items-center justify-between transition-all duration-500 rounded-lg px-8 h-14",
+            "flex w-full items-center text-base font-medium justify-between transition-all duration-500 rounded-lg h-18",
             expanded ? "border-white/10 w-screen" : "border-transparent w-6xl",
+            expanded ? "px-16!" : "",
           )}
           style={{
             backgroundColor: expanded
@@ -135,10 +136,7 @@ export function Navbar() {
       </div>
 
       {!expanded && (
-        <div
-          className="mx-auto transition-all duration-500"
-          style={{ maxWidth: "72rem", padding: "0 1.5rem" }}
-        >
+        <div className={cn("mx-auto transition-all duration-500", homeSpacing, expanded ? "px-16!" : "")}>
           <div className="mt-0 h-px bg-white/15" />
         </div>
       )}
@@ -153,7 +151,8 @@ export function Navbar() {
         >
           <Container className="flex flex-col gap-1 py-4">
             {navLinks.map(({ href, label }) => {
-              const isActive = pathname === href || pathname.startsWith(href + "/");
+              const isActive =
+                pathname === href || pathname.startsWith(href + "/");
               return (
                 <Link
                   key={href}

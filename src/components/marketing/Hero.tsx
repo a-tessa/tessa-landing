@@ -1,45 +1,56 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, domAnimation, LazyMotion, m } from "motion/react";
-import { Container } from "./Container";
-import { cn } from "@/lib/utils";
 import { ArrowRight, ChevronLeft } from "lucide-react";
+import { Container } from "./Container";
+import { cn, homeSpacing } from "@/lib/utils";
 
 interface Slide {
-  title: string;
-  subtitle: string;
+  heading: string;
   cardLabel: string;
+  description: string;
+  bgImage: string;
+  bgAlt: string;
 }
 
-const slides: Slide[] = [
+const SLIDES: Slide[] = [
   {
-    title: "ESTRUTURAS METÁLICAS\nE PERFIS SOB MEDIDA.",
-    subtitle:
-      "AÇO GALVANIZADO. ENGENHARIA APLICADA. PRODUÇÃO INDUSTRIAL.\nENTREGA PARA O SEU PROJETO SAIR DO PAPEL COM PREVISIBILIDADE.",
+    heading: "Estruturas metálicas\ne perfis sob medida.",
     cardLabel: "ESTRUTURAS\nMETÁLICAS\nE PERFIS SOB MEDIDA",
+    description:
+      "Aço galvanizado. Engenharia aplicada. Produção industrial.\nEntrega para o seu projeto sair do papel com previsibilidade.",
+    bgImage: "/hero-estruturas.webp",
+    bgAlt:
+      "Vista aérea da fábrica Tessa com estruturas metálicas e galpões industriais",
   },
   {
-    title: "ENERGIA LIMPA\nQUE REDUZ SEUS CUSTOS.",
-    subtitle:
-      "SOLUÇÕES EM ENERGIA SOLAR PARA SUA EMPRESA.\nREDUÇÃO DE CUSTOS COM ENERGIA DE FORMA SUSTENTÁVEL.",
+    heading: "Energia limpa\nque reduz seus custos.",
     cardLabel: "ENERGIA LIMPA\nQUE REDUZ\nSEUS CUSTOS",
+    description:
+      "Soluções em energia solar para empresas e indústrias.\nEconomia recorrente e operação mais sustentável.",
+    bgImage: "/hero-energia.webp",
+    bgAlt: "Painéis solares instalados pela Tessa em planta industrial",
   },
 ];
 
-const AUTOPLAY_MS = 6000;
-
-const heroBg = [
-  "linear-gradient(135deg, #2c3e50 0%, #3d566e 50%, #4a6072 100%)",
-  "linear-gradient(135deg, #1a3a5c 0%, #2d5a7b 50%, #3a6b8c 100%)",
-];
+const PARTNER_NAMES = [
+  "Outros Montes",
+  "ZS",
+  "Sunshine",
+  "Classic",
+  "Showtime",
+  "Brandit",
+  "Vintage",
+] as const;
 
 function ScrollIndicator() {
   return (
-    <div className="flex h-9 w-[22px] items-start justify-center rounded-full border-2 border-white/40 pt-1.5">
+    <div className="flex h-9 w-[22px] items-start justify-center rounded-full border border-white/35 pt-1.5">
       <m.div
-        className="h-1.5 w-1.5 rounded-full bg-white/70"
+        className="h-1.5 w-1.5 rounded-full bg-white/80"
         animate={{ y: [0, 10, 0] }}
         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
       />
@@ -47,28 +58,38 @@ function ScrollIndicator() {
   );
 }
 
-function LogoMarquee() {
-  const logos = ["OutrosMitos", "Classic"];
-  const oneSet = Array.from({ length: 8 }, () => logos).flat();
-  const doubled = [...oneSet, ...oneSet];
+function LogoStrip() {
+  const marqueeItems = [...PARTNER_NAMES, ...PARTNER_NAMES].map(
+    (partner, index) => ({
+      key: `${partner}-${Math.floor(index / PARTNER_NAMES.length)}`,
+      label: partner,
+    }),
+  );
 
   return (
-    <div className="overflow-hidden">
-      <m.div
-        className="flex items-center gap-20"
-        animate={{ x: ["0%", "-50%"] }}
-        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-        style={{ width: "max-content" }}
-      >
-        {doubled.map((name, i) => (
-          <span
-            key={i}
-            className="whitespace-nowrap text-lg font-bold uppercase tracking-[0.12em] text-zinc-300 sm:text-xl"
-          >
-            {name}
-          </span>
+    <div>
+      <ul className="sr-only">
+        {PARTNER_NAMES.map((partner) => (
+          <li key={partner}>{partner}</li>
         ))}
-      </m.div>
+      </ul>
+
+      <div aria-hidden="true" className="overflow-hidden">
+        <m.div
+          className="flex w-max items-center gap-12 sm:gap-16"
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{ duration: 26, repeat: Infinity, ease: "linear" }}
+        >
+          {marqueeItems.map((item) => (
+            <span
+              key={item.key}
+              className="whitespace-nowrap text-sm font-semibold uppercase tracking-[0.24em] text-muted-foreground/70 sm:text-base"
+            >
+              {item.label}
+            </span>
+          ))}
+        </m.div>
+      </div>
     </div>
   );
 }
@@ -77,147 +98,186 @@ export function Hero() {
   const [current, setCurrent] = useState(0);
 
   const next = useCallback(() => {
-    setCurrent((prev) => (prev + 1) % slides.length);
+    setCurrent((prev) => (prev + 1) % SLIDES.length);
   }, []);
 
   const prev = useCallback(() => {
-    setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
+    setCurrent((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
   }, []);
 
-  useEffect(() => {
-    const timer = setInterval(next, AUTOPLAY_MS);
-    return () => clearInterval(timer);
-  }, [next]);
-
-  const slide = slides[current];
+  const activeSlide = SLIDES[current];
 
   return (
     <LazyMotion features={domAnimation}>
-      <section className="relative flex min-h-screen flex-col">
-        {/* Background carousel */}
-        <div className="absolute inset-0 overflow-hidden">
-          <AnimatePresence initial={false}>
-            <m.div
-              key={current}
-              className="absolute inset-0"
-              initial={{ opacity: 0, scale: 1.06 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 1.2, ease: "easeOut" }}
-              style={{ background: heroBg[current] }}
-            />
-          </AnimatePresence>
-          <div className="pointer-events-none absolute inset-0 bg-linear-to-r from-black/60 via-black/25 to-transparent" />
-          <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-black/20" />
-        </div>
+      <section
+        aria-labelledby="hero-title"
+        className="relative overflow-hidden pb-8 pt-24 sm:pb-10 sm:pt-6 w-full px-4 sm:px-6 lg:px-6"
+      >
+        <Container className="relative px-0!">
+          <div className="relative overflow-hidden rounded-3xl bg-primary shadow-2xl shadow-primary/20">
+            {SLIDES.map((slide, index) => (
+              <m.div
+                key={slide.bgImage}
+                className="absolute inset-0"
+                initial={false}
+                animate={{ opacity: index === current ? 1 : 0 }}
+                transition={{ duration: 0.7 }}
+                aria-hidden={index !== current}
+              >
+                <Image
+                  src={slide.bgImage}
+                  alt={slide.bgAlt}
+                  fill
+                  priority={index === 0}
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 97vw"
+                />
+              </m.div>
+            ))}
 
-        {/* Hero content */}
-        <div className="relative z-10 flex flex-1 items-center pt-20 pb-12">
-          <Container>
-            <div className="flex w-full items-center justify-between gap-8">
-              {/* Left: text + CTAs */}
-              <div className="max-w-2xl">
-                <AnimatePresence mode="wait">
-                  <m.div
-                    key={current}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.6 }}
-                  >
-                    <h1 className="whitespace-pre-line text-3xl font-bold leading-[1.1] text-white sm:text-4xl md:text-5xl lg:text-[3.25rem]">
-                      {slide.title}
+            <div className="absolute inset-0 z-1 bg-linear-to-r from-black/65 via-black/35 to-black/10" />
+            <div className="absolute inset-0 z-1 bg-linear-to-t from-black/60 via-transparent to-transparent" />
+
+            <div className="relative z-10 flex h-[calc(100vh-5rem)] sm:h-screen flex-col">
+              <div className={cn("flex flex-1 sm:items-end pt-10 sm:pt-24", homeSpacing)}>
+                <div className="w-full gap-10 flex flex-col lg:flex-row justify-between">
+                  <div className="pb-16 lg:pb-20 my-auto">
+                    <h1
+                      id="hero-title"
+                      className="max-w-2xl text-4xl font-bold uppercase text-white sm:text-5xl lg:text-6xl"
+                    >
+                      <AnimatePresence mode="wait" initial={false}>
+                        <m.span
+                          key={activeSlide.heading}
+                          className="block whitespace-pre-line"
+                          initial={{ opacity: 0, y: 16 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          transition={{ duration: 0.35 }}
+                        >
+                          {activeSlide.heading}
+                        </m.span>
+                      </AnimatePresence>
                     </h1>
-                    <p className="mt-5 whitespace-pre-line text-[0.65rem] font-medium uppercase leading-relaxed tracking-[0.15em] text-white/60 sm:text-xs">
-                      {slide.subtitle}
-                    </p>
-                  </m.div>
-                </AnimatePresence>
 
-                <div className="mt-8 flex flex-wrap items-center gap-3 sm:gap-4">
-                  <Link
-                    href="#contato"
-                    className="rounded-md border border-white/25 bg-white/5 px-5 py-2.5 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/15 sm:px-6 sm:py-3"
-                  >
-                    Solicitar orçamento
-                  </Link>
-                  <Link
-                    href="#servicos"
-                    className="group inline-flex items-center gap-2 rounded-md border border-[#FF6F00] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#FF6F00]/20 sm:px-6 sm:py-3"
-                  >
-                    Conhecer soluções
-                    <ArrowRight
-                      size={16}
-                      className="transition-transform group-hover:translate-x-0.5"
-                    />
-                  </Link>
+                    <AnimatePresence mode="wait" initial={false}>
+                      <m.p
+                        key={activeSlide.description}
+                        className="mt-5 max-w-xl whitespace-pre-line text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/70 sm:text-xs"
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.35, delay: 0.05 }}
+                      >
+                        {activeSlide.description}
+                      </m.p>
+                    </AnimatePresence>
+
+                    <div className="mt-8 flex flex-wrap items-center gap-3">
+                      <Link
+                        href="/contato"
+                        className="rounded-md border border-white/20 bg-white/8 px-5 py-3 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/14 sm:px-6"
+                      >
+                        Solicitar orçamento
+                      </Link>
+                      <Link
+                        href="/servicos"
+                        className="group inline-flex items-center gap-2 rounded-md bg-chart-5 px-5 py-3 text-sm font-medium text-white transition-transform hover:-translate-y-0.5 sm:px-6"
+                      >
+                        Conhecer soluções
+                        <ArrowRight
+                          size={16}
+                          className="transition-transform group-hover:translate-x-0.5"
+                        />
+                      </Link>
+                    </div>
+                  </div>
+
+                  <div className="hidden items-end justify-end pb-16 lg:flex lg:pb-20">
+                    <div className="flex w-full max-w-76 flex-col gap-4">
+                      {SLIDES.map((slide, index) => (
+                        <button
+                          key={slide.cardLabel}
+                          type="button"
+                          onClick={() => setCurrent(index)}
+                          aria-pressed={index === current}
+                          className={cn(
+                            "min-h-64 w-76 rounded-3xl border p-6 text-left transition-all duration-300 flex flex-col justify-end",
+                            index === current
+                              ? "border-chart-5/60 bg-primary text-white shadow-xl shadow-chart-5/20"
+                              : "border-white/20 bg-transparent text-white backdrop-blur-md hover:bg-white/12",
+                          )}
+                        >
+                          <p className="whitespace-pre-line text-2xl font-semibold uppercase">
+                            {slide.cardLabel}
+                          </p>
+                        </button>
+                      ))}
+
+                      <div className="flex items-center justify-end gap-3">
+                        <div className="h-1 flex-1 rounded-full bg-chart-5/70" />
+                        <button
+                          type="button"
+                          onClick={next}
+                          className="flex h-11 w-11 items-center justify-center rounded-full bg-chart-5 text-white transition-transform hover:scale-105"
+                          aria-label="Mostrar a próxima solução"
+                        >
+                          <ArrowRight size={18} />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* Right: desktop-only slide cards */}
-              <div className="hidden flex-col items-end gap-3 lg:flex">
-                {slides.map((s, i) => (
+              <div className="flex items-center justify-between px-5 pb-4 sm:px-8 lg:px-14">
+                <div className="flex items-center gap-3 text-white/70">
+                  <ScrollIndicator />
+                </div>
+
+                <div className="flex items-center gap-3 lg:hidden">
                   <button
-                    key={i}
-                    onClick={() => setCurrent(i)}
-                    className={cn(
-                      "w-52 cursor-pointer rounded-xl p-5 text-left transition-all duration-500",
-                      i === current
-                        ? "bg-[#FF6F00] text-white shadow-lg shadow-orange-500/25"
-                        : "bg-white/90 text-zinc-700 hover:bg-white",
-                    )}
+                    type="button"
+                    onClick={prev}
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/16"
+                    aria-label="Mostrar a solução anterior"
                   >
-                    <p className="whitespace-pre-line text-xs font-bold uppercase leading-snug tracking-wide">
-                      {s.cardLabel}
-                    </p>
+                    <ChevronLeft size={18} />
                   </button>
-                ))}
-                <button
-                  onClick={next}
-                  className="mt-1 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-[#FF6F00] text-white shadow-lg shadow-orange-500/25 transition-transform hover:scale-110"
-                  aria-label="Próximo slide"
-                >
-                  <ArrowRight size={18} />
-                </button>
+                  <button
+                    type="button"
+                    onClick={next}
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-chart-5 text-white transition-colors hover:brightness-110"
+                    aria-label="Mostrar a próxima solução"
+                  >
+                    <ArrowRight size={18} />
+                  </button>
+                </div>
+              </div>
+
+              <div className="pb-14 text-center">
+                <p className="text-xs font-bold uppercase tracking-[0.22em] text-white sm:text-sm">
+                  Empresas que confiam
+                </p>
               </div>
             </div>
-          </Container>
-        </div>
 
-        {/* Left arrow */}
-        <button
-          onClick={prev}
-          className="absolute left-4 top-[42%] z-20 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20 sm:left-6"
-          aria-label="Slide anterior"
-        >
-          <ChevronLeft size={20} />
-        </button>
-
-        {/* Right arrow (mobile only — desktop uses the card-area button) */}
-        <button
-          onClick={next}
-          className="absolute right-4 top-[42%] z-20 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[#FF6F00] text-white transition-colors hover:bg-[#E65100] sm:right-6 lg:hidden"
-          aria-label="Próximo slide"
-        >
-          <ArrowRight size={18} />
-        </button>
-
-        {/* Scroll indicator */}
-        <div className="relative z-10 flex justify-center pb-6">
-          <ScrollIndicator />
-        </div>
-
-        {/* Companies section */}
-        <div className="relative z-10">
-          <div className="rounded-t-[2rem] bg-white px-4 pb-6 pt-8 sm:rounded-t-[2.5rem] sm:pb-8 sm:pt-10">
-            <p className="mb-4 text-center text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-zinc-400 sm:mb-6 sm:text-xs">
-              Empresas que confiam
-            </p>
-            <Container>
-              <LogoMarquee />
-            </Container>
+            <button
+              type="button"
+              onClick={prev}
+              className="absolute left-5 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/16 lg:flex"
+              aria-label="Mostrar a solução anterior"
+            >
+              <ChevronLeft size={20} />
+            </button>
           </div>
-        </div>
+
+          <div className={cn("relative z-10 -mt-8", homeSpacing)}>
+            <div className="rounded-full bg-card px-6 py-6 shadow-2xl shadow-primary/10 lg:px-10 sm:py-10">
+              <LogoStrip />
+            </div>
+          </div>
+        </Container>
       </section>
     </LazyMotion>
   );
