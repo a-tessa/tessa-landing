@@ -12,7 +12,7 @@ export function Scenarios() {
       className="w-full"
     >
       <Container className="px-0! pb-0!">
-        <div className={`${homeSpacing}`}>
+        <div className={`${homeSpacing} lg:px-96`}>
           <h2
             id="scenarios-title"
             className="text-3xl font-bold uppercase leading-tight text-foreground sm:text-4xl"
