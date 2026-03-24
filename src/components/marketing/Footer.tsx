@@ -141,7 +141,7 @@ export function Footer() {
 							aria-hidden
 						>
 							<div
-								className="absolute inset-0 bg-[url('/city-bg.png')] bg-right bg-no-repeat opacity-25 bg-cover"
+								className="absolute inset-0 bg-[url('/city-bg.webp')] bg-right bg-no-repeat opacity-25 bg-cover"
 								// style={{ backgroundSize: "min(100%, 420px) auto" }}
 							/>
 						</div>
