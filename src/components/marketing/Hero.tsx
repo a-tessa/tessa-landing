@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, domAnimation, LazyMotion, m } from "motion/react";
-import { ArrowRight, ChevronLeft } from "lucide-react";
+import { ArrowRight, ChevronDown, ChevronLeft } from "lucide-react";
 import { Container } from "./Container";
 import { cn, homeSpacing } from "@/lib/utils";
 
@@ -48,12 +48,31 @@ const PARTNER_NAMES = [
 
 function ScrollIndicator() {
   return (
-    <div className="flex h-9 w-[22px] items-start justify-center rounded-full border border-white/35 pt-1.5">
-      <m.div
-        className="h-1.5 w-1.5 rounded-full bg-white/80"
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-      />
+    <div className="flex flex-col items-center gap-1">
+      <div className="flex h-9 w-[22px] items-start justify-center rounded-full border border-white/35 pt-1.5">
+        <m.div
+          className="h-1.5 w-1.5 rounded-full bg-white/80"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        />
+      </div>
+
+      <div className="flex flex-col items-center -space-y-2.5">
+        {[0, 1, 2].map((i) => (
+          <m.div
+            key={i}
+            animate={{ opacity: [0.15, 0.8, 0.15], y: [0, 3, 0] }}
+            transition={{
+              duration: 1.6,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 0.2,
+            }}
+          >
+            <ChevronDown className="size-3.5 text-white" strokeWidth={2.5} />
+          </m.div>
+        ))}
+      </div>
     </div>
   );
 }
