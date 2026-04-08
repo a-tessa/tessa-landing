@@ -19,7 +19,7 @@
   --primary: oklch(0.7076 0.19745 46.4558);
   --primary-foreground: oklch(0.216 0.006 56.043);
   --secondary: oklch(0.7526 0.1195 185.3);
-  --secondary-foreground: oklch(0.216 0.006 56.043);
+  --secondary-foreground: oklch(1 0 0);
   --muted: oklch(0.97 0.001 106.424);
   --muted-foreground: oklch(0.553 0.013 58.071);
   --accent: oklch(0.97 0.001 106.424);
@@ -138,5 +138,8 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+  }
+  main {
+    @apply overflow-x-hidden;
   }
 }
