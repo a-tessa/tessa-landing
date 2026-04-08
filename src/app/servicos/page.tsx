@@ -4,8 +4,7 @@ import { Heading } from "@/components/marketing/Heading";
 import { Testimonials } from "@/components/marketing/Testimonials";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { organizationJsonLd, SITE, websiteJsonLd } from "@/lib/seo/schemas";
-import { Container } from "@/components/marketing/Container";
-import { freeSectionShellSpacing, homeSpacing, insideCardSpacing, sectionCardShellSpacing } from "@/lib/utils";
+import { freeSectionShellSpacing, homeSpacing } from "@/lib/utils";
 import AppleCardsCarousel from "@/components/apple-cards-carousel";
 import Link from "next/link";
 
