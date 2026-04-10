@@ -7,7 +7,7 @@ import {
   IconArrowNarrowRight,
 } from "@tabler/icons-react";
 import { motion } from "motion/react";
-import { cn } from "@/lib/utils";
+import { cn, insideCardSpacing } from "@/lib/utils";
 
 interface BentoImage {
   src: string;
@@ -57,10 +57,10 @@ export function BentoCarousel({ slides, className }: BentoCarouselProps) {
       <div
         ref={scrollRef}
         onScroll={checkScrollability}
-        className="flex w-full items-stretch overflow-x-scroll overscroll-x-auto scroll-smooth rounded-3xl bg-primary [scrollbar-width:none] h-250 bg-[url('/operations-section-bg.webp')] bg-cover bg-center bg-no-repeat pl-76 py-12"
+        className={cn("flex w-full items-stretch overflow-x-scroll overscroll-x-auto scroll-smooth rounded-3xl bg-primary [scrollbar-width:none] h-250 bg-[url('/operations-section-bg.webp')] bg-cover bg-center bg-no-repeat py-12", insideCardSpacing)}
       >
         {/* Title card — first item in the carousel */}
-        <div className="relative flex shrink-0 flex-col justify-center px-8 pb-12 pt-10 lg:w-[300px] lg:px-10 lg:pb-14">
+        <div className="relative flex shrink-0 flex-col justify-center pb-12 pt-10 lg:w-[300px] lg:pb-14">
           <div className="relative z-10">
             <h3 className="font-barlow text-3xl font-bold uppercase leading-tight text-white lg:text-4xl">
               Nossas

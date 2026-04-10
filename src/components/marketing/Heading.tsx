@@ -2,21 +2,25 @@ import { insideCardSpacing } from "@/lib/utils";
 import { NavbarPage } from "./NavbarPage";
 
 interface HeadingProps {
-    title: string;
-    description: string;
+  title: string;
+  description: string;
 }
 
 const css = /* css */ `
 @keyframes marketing-heading-shell {
-  from { min-height: 28rem; border-radius: 1.5rem; background-color: rgb(0 0 0 / 0.3); }
-  to   { min-height: 10rem;  border-radius: 0.75rem; background-color: rgb(0 0 0 / 0.5); }
+  from { min-height: 21rem; background-color: rgb(0 0 0 / 0.3); }
+  to   { min-height: 10rem; background-color: rgb(0 0 0 / 0.5); }
+}
+@keyframes marketing-heading-shell-sm {
+  from { min-height: 6rem; background-color: rgb(0 0 0 / 0.3); }
+  to   { min-height: 6rem; background-color: rgb(0 0 0 / 0.5); }
 }
 @keyframes marketing-heading-title-sm {
   from { font-size: 1.875rem; line-height: 1; opacity: 1; max-height: 5rem; }
-  to   { font-size: 1.25rem;  line-height: 1.1; opacity: 0; max-height: 0; }
+  to   { font-size: 1.25rem;  line-height: 1.1; opacity: 1; max-height: 3rem; }
 }
 @keyframes marketing-heading-title-lg {
-  from { font-size: 4.5rem;  line-height: 1; opacity: 1; max-height: 6rem; }
+  from { font-size: inherit;  line-height: 1; opacity: 1; }
   to   { font-size: 1.875rem; line-height: 1.1; opacity: 1; max-height: 6rem; }
 }
 @keyframes marketing-heading-desc {
@@ -36,11 +40,14 @@ const css = /* css */ `
     animation-range: 0 28vh;
   }
   @media (min-width: 640px) {
+    .marketing-heading-shell {
+      animation-name: marketing-heading-shell-sm;
+    }
     .marketing-heading-scroll h1 {
       animation-name: marketing-heading-title-lg;
     }
   }
-  .marketing-heading-scroll p {
+  .marketing-heading-scroll h2 {
     animation: marketing-heading-desc linear forwards;
     animation-timeline: scroll(root block);
     animation-range: 0 28vh;
@@ -50,7 +57,7 @@ const css = /* css */ `
 @media (prefers-reduced-motion: reduce) {
   .marketing-heading-scroll,
   .marketing-heading-scroll h1,
-  .marketing-heading-scroll p {
+  .marketing-heading-scroll h2 {
     animation-name: none;
     animation-duration: 0s;
   }
@@ -58,26 +65,28 @@ const css = /* css */ `
 `;
 
 export function Heading({ title, description }: HeadingProps) {
-    return (
-        <>
-            <style href="marketing-heading" precedence="component">
-                {css}
-            </style>
-            <div className="relative h-110 min-h-110 w-full">
-                <div className="marketing-heading-scroll fixed top-6 z-40 flex h-110 min-h-110 w-[calc(100%-2.5rem)] translate-x-1/2 right-1/2 flex-col rounded-3xl bg-[url('/services-heading.webp')] bg-cover bg-center bg-no-repeat bg-black/70 bg-blend-overlay saturate-30 text-white supports-[animation-timeline:scroll()]:h-auto">
-                    <div className={`${insideCardSpacing}`}>
-                        <NavbarPage />
-                    </div>
-                    <div className={`${insideCardSpacing} flex flex-1 flex-col justify-center overflow-hidden`}>
-                        <h1 className="text-3xl font-bold uppercase leading-none text-foreground sm:text-7xl">
-                            {title}
-                        </h1>
-                        <p className="mt-4 w-full max-w-2xl text-xs font-semibold uppercase sm:text-sm">
-                            {description}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </>
-    );
+  return (
+    <>
+      <style href="marketing-heading" precedence="component">
+        {css}
+      </style>
+      <div className="relative h-auto min-h-95 w-full">
+        <div className="marketing-heading-scroll fixed top-6 z-20 flex w-[calc(100%-2.5rem)] translate-x-1/2 right-1/2 flex-col rounded-3xl bg-[url('/services-heading.webp')] bg-cover bg-center bg-no-repeat bg-black/70 bg-blend-overlay saturate-30 text-white supports-[animation-timeline:scroll()]:h-20">
+          <div className={`${insideCardSpacing}`}>
+            <NavbarPage />
+          </div>
+          <div
+            className={`${insideCardSpacing} flex flex-1 flex-col justify-center overflow-hidden text-3xl mb-5 sm:text-2xl md:text-3xl lg:text-6xl xl:text-7xl`}
+          >
+            <h1 className="font-bold uppercase text-foreground h-fit whitespace-break-spaces">
+              {title}
+            </h1>
+            <h2 className="mt-4 w-full max-w-2xl text-xs font-semibold uppercase sm:text-sm">
+              {description}
+            </h2>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }

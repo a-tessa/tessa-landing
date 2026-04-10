@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { SITE } from "@/lib/seo/schemas";
+import { services } from "@/lib/services";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
@@ -16,10 +17,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.85,
     },
+    ...services.map((service) => ({
+      url: `${SITE.domain}/servicos/${service.slug}`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.75,
+    })),
+    {
+      url: `${SITE.domain}/representantes`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    },
     {
       url: `${SITE.domain}/blog`,
       lastModified: now,
-      changeFrequency: "weekly",
+      changeFrequency: "daily" as const,
       priority: 0.7,
     },
   ];

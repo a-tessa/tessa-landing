@@ -1,0 +1,224 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { Footer } from "@/components/marketing/Footer";
+import { Heading } from "@/components/marketing/Heading";
+import { JsonLd } from "@/lib/seo/jsonld";
+import { SITE } from "@/lib/seo/schemas";
+import { getServiceBySlug, services } from "@/lib/services";
+import {
+  cn,
+  freeSectionShellSpacing,
+  OPERATIONS_IMAGES,
+} from "@/lib/utils";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import Video from "next-video";
+import { BentoCarouselServices } from "@/components/marketing/BentoCarouselServices";
+import { Button } from "@/components/ui/button";
+import { IconArrowDown, IconArrowRight } from "@tabler/icons-react";
+import { NewsAndSocial } from "@/components/marketing/NewsAndSocial";
+import { Testimonials } from "@/components/marketing/Testimonials";
+
+type PageProps = {
+  params: Promise<{ slug: string }>;
+};
+
+const serviceCarouselCss = /* css */ `
+@keyframes service-carousel-follow-heading {
+  from { top: calc(1.5rem + 19rem + 0.75rem); }
+  to   { top: calc(1.5rem + 8.5rem + 0.75rem); }
+}
+
+.service-heading-carousel {
+  left: 50%;
+  position: fixed;
+  top: calc(1.5rem + 28rem + 0.75rem);
+  transform: translateX(-50%);
+  z-index: 30;
+}
+
+@supports (animation-timeline: scroll()) {
+  .service-heading-carousel {
+    animation: service-carousel-follow-heading linear forwards;
+    animation-timeline: scroll(root block);
+    animation-range: 0 28vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-heading-carousel {
+    animation-name: none;
+  }
+}
+`;
+
+export function generateStaticParams() {
+  return services.map((service) => ({
+    slug: service.slug,
+  }));
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const service = getServiceBySlug(slug);
+
+  if (!service) return {};
+
+  return {
+    title: `${service.title} - Serviços`,
+    description: service.description,
+    alternates: {
+      canonical: `/servicos/${service.slug}`,
+    },
+    openGraph: {
+      title: service.title,
+      description: service.description,
+      url: `/servicos/${service.slug}`,
+      images: [
+        {
+          url: service.image,
+          alt: service.title,
+        },
+      ],
+    },
+    keywords: [...SITE.keywords, service.title],
+  };
+}
+
+export default async function ServiceDetailPage({ params }: PageProps) {
+  const { slug } = await params;
+  const service = getServiceBySlug(slug);
+
+  if (!service) notFound();
+
+  const serviceJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: service.title,
+    description: service.description,
+    image: service.image.startsWith("http")
+      ? service.image
+      : `${SITE.domain}${service.image}`,
+    provider: {
+      "@type": "Organization",
+      name: SITE.name,
+      url: SITE.domain,
+    },
+    areaServed: {
+      "@type": "Country",
+      name: "Brasil",
+    },
+    url: `${SITE.domain}/servicos/${service.slug}`,
+  };
+
+  const isActive = (slug: string) => slug === service.slug;
+
+  return (
+    <>
+      <style href="service-heading-carousel" precedence="component">
+        {serviceCarouselCss}
+      </style>
+      <JsonLd id={`jsonld-service-${service.slug}`} data={serviceJsonLd} />
+
+      <main className="flex flex-col items-center justify-center gap-16">
+        <div className="relative h-auto w-fit">
+          <Heading title={service.title} description={service.description} />
+
+          <nav
+            aria-label="Navegação de serviços"
+            className={cn(
+              "service-heading-carousel z-50",
+              freeSectionShellSpacing,
+            )}
+          >
+            <Carousel className="bg-muted rounded-full flex">
+              <CarouselContent className="flex gap-4 w-full rounded-full px-8">
+                {services.map((item) => (
+                  <CarouselItem
+                    key={item.slug}
+                    className="basis-auto h-20 flex items-center"
+                  >
+                    <Link
+                      href={`/servicos/${item.slug}`}
+                      className={cn(
+                        "text-xs uppercase text-foreground relative",
+                        isActive(item.slug)
+                          ? "text-primary underline-offset-8 font-bold"
+                          : "",
+                      )}
+                    >
+                      {item.title}
+                      <span
+                        className={cn(
+                          "absolute left-0 -bottom-8 h-[3px] rounded-full bg-primary transition-all duration-300",
+                          isActive(item.slug)
+                            ? "w-full opacity-100"
+                            : "w-0 opacity-0",
+                        )}
+                      />
+                    </Link>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          </nav>
+        </div>
+
+        <section className="w-full">
+          <div
+            className={cn("mt-12 flex flex-col gap-8", freeSectionShellSpacing)}
+          >
+            <h3 className="font-normal leading-tight text-muted-foreground">
+              {service.description}
+            </h3>
+            <div className="relative flex h-auto gap-8">
+              <div className="w-1/2 gap-8 flex flex-col">
+                <p className="text-3xl uppercase font-semibold">
+                  O que acontece, <br /> na prática?
+                </p>
+                <Video className="rounded-3xl overflow-hidden h-4/5 w-auto aspect-video" />
+                <Button variant="secondary" className="w-fit ml-auto">
+                  Ir para o canal
+                  <IconArrowRight className="size-4" />
+                </Button>
+              </div>
+              <div className="w-1/2 flex-1">
+                <BentoCarouselServices
+                  images={OPERATIONS_IMAGES}
+                  className="h-full"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+        <NewsAndSocial />
+        <Testimonials />
+        <section className={cn('mb-10', freeSectionShellSpacing)}>
+          <div className="bg-secondary rounded-3xl p-8 text-white flex items-center justify-between">
+            <p className="text-left text-2xl font-semibold uppercase text-foreground">
+              <strong>Baixe agora as apresentações, folders e manuais</strong>
+              <br />
+              deste produto
+            </p>
+            <Button variant="default" className="w-fit ml-auto text-white">
+              Baixar materiais
+              <IconArrowDown className="size-4" />
+            </Button>
+          </div>
+        </section>
+      </main>
+
+      <Footer />
+    </>
+  );
+}

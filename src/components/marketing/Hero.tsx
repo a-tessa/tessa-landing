@@ -6,7 +6,7 @@ import Link from "next/link";
 import { AnimatePresence, domAnimation, LazyMotion, m } from "motion/react";
 import { ArrowRight, ChevronDown, ChevronLeft } from "lucide-react";
 import { Container } from "./Container";
-import { cn, homeSpacing } from "@/lib/utils";
+import { cn, homeSpacing, sectionCardShellSpacing } from "@/lib/utils";
 
 interface Slide {
   heading: string;
@@ -130,9 +130,8 @@ export function Hero() {
     <LazyMotion features={domAnimation}>
       <section
         aria-labelledby="hero-title"
-        className="relative overflow-hidden pb-8 pt-24 sm:pb-10 sm:pt-6 w-full px-4 sm:px-6 lg:px-6"
+        className={cn("relative overflow-hidden pb-8 pt-24 sm:pb-10 sm:pt-6", sectionCardShellSpacing)}
       >
-        <Container className="relative px-0!">
           <div className="relative overflow-hidden rounded-3xl bg-primary shadow-2xl shadow-primary/20">
             {SLIDES.map((slide, index) => (
               <m.div
@@ -296,7 +295,6 @@ export function Hero() {
               <LogoStrip />
             </div>
           </div>
-        </Container>
       </section>
     </LazyMotion>
   );

@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { IconArrowNarrowRight } from "@tabler/icons-react";
 import { Container } from "./Container";
-import { homeSpacing } from "@/lib/utils";
+import { freeSectionShellSpacing, homeSpacing } from "@/lib/utils";
 
 interface BlogPost {
   title: string;
@@ -68,147 +68,150 @@ export function NewsAndSocial() {
       aria-labelledby="news-title"
       className="w-full py-16 sm:py-20 lg:py-24"
     >
-      <Container>
-        <div className={homeSpacing}>
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
-            {/* Blog column */}
-            <div className="flex flex-col">
-              <h2
-                id="news-title"
-                className="font-barlow text-3xl font-bold uppercase leading-tight text-foreground sm:text-4xl"
+      <div className={freeSectionShellSpacing}>
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
+          {/* Blog column */}
+          <div className="flex flex-col">
+            <h2
+              id="news-title"
+              className="font-barlow text-3xl font-bold uppercase leading-tight text-foreground sm:text-4xl"
+            >
+              No centro das
+              <br />
+              novidades
+            </h2>
+
+            <article
+              className="mt-8 flex flex-1 flex-col"
+              itemScope
+              itemType="https://schema.org/BlogPosting"
+            >
+              <meta itemProp="headline" content={FEATURED_POST.title} />
+              <meta
+                itemProp="datePublished"
+                content={FEATURED_POST.publishedAt}
+              />
+              <meta itemProp="author" content={FEATURED_POST.author.name} />
+
+              <Link
+                href={FEATURED_POST.slug}
+                className="group relative flex flex-1 flex-col justify-end overflow-hidden rounded-2xl p-6 sm:p-8"
               >
-                No centro das
-                <br />
-                novidades
-              </h2>
+                <Image
+                  src={FEATURED_POST.image}
+                  alt={FEATURED_POST.imageAlt}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 45vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-black/10" />
 
-              <article
-                className="mt-8 flex flex-1 flex-col"
-                itemScope
-                itemType="https://schema.org/BlogPosting"
-              >
-                <meta itemProp="headline" content={FEATURED_POST.title} />
-                <meta itemProp="datePublished" content={FEATURED_POST.publishedAt} />
-                <meta itemProp="author" content={FEATURED_POST.author.name} />
+                {/* Instagram-like badge */}
+                <div className="absolute right-4 top-4 z-10 flex size-9 items-center justify-center rounded-full bg-primary">
+                  <BlogIcon />
+                </div>
 
-                <Link
-                  href={FEATURED_POST.slug}
-                  className="group relative flex flex-1 flex-col justify-end overflow-hidden rounded-2xl p-6 sm:p-8"
-                >
-                  <Image
-                    src={FEATURED_POST.image}
-                    alt={FEATURED_POST.imageAlt}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 45vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-black/10" />
+                <div className="relative z-10 flex flex-col gap-4">
+                  <h3 className="font-barlow text-xl font-bold uppercase leading-tight text-white sm:text-2xl">
+                    {FEATURED_POST.title}
+                  </h3>
 
-                  {/* Instagram-like badge */}
-                  <div className="absolute right-4 top-4 z-10 flex size-9 items-center justify-center rounded-full bg-primary">
-                    <BlogIcon />
-                  </div>
-
-                  <div className="relative z-10 flex flex-col gap-4">
-                    <h3 className="font-barlow text-xl font-bold uppercase leading-tight text-white sm:text-2xl">
-                      {FEATURED_POST.title}
-                    </h3>
-
-                    <div className="flex items-center gap-3">
-                      <div className="relative size-9 shrink-0 overflow-hidden rounded-full">
-                        <Image
-                          src={FEATURED_POST.author.avatar}
-                          alt={FEATURED_POST.author.name}
-                          fill
-                          className="object-cover"
-                          sizes="36px"
-                        />
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-white">
-                          {FEATURED_POST.author.name}
-                        </p>
-                        <time
-                          dateTime={FEATURED_POST.publishedAt}
-                          className="text-xs text-secondary"
-                        >
-                          Publicado em {formattedDate}
-                        </time>
-                      </div>
+                  <div className="flex items-center gap-3">
+                    <div className="relative size-9 shrink-0 overflow-hidden rounded-full">
+                      <Image
+                        src={FEATURED_POST.author.avatar}
+                        alt={FEATURED_POST.author.name}
+                        fill
+                        className="object-cover"
+                        sizes="36px"
+                      />
                     </div>
-
-                    <p className="line-clamp-3 text-sm leading-relaxed text-white/80">
-                      {FEATURED_POST.excerpt}
-                    </p>
-
-                    <span className="inline-flex w-fit items-center gap-2 rounded-md border border-white/30 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm transition-colors group-hover:bg-white/20">
-                      Ler matéria completa
-                    </span>
+                    <div>
+                      <p className="text-sm font-semibold text-white">
+                        {FEATURED_POST.author.name}
+                      </p>
+                      <time
+                        dateTime={FEATURED_POST.publishedAt}
+                        className="text-xs text-secondary"
+                      >
+                        Publicado em {formattedDate}
+                      </time>
+                    </div>
                   </div>
-                </Link>
-              </article>
 
-              <div className="mt-6 flex justify-end">
-                <Link
-                  href="/blog"
-                  className="inline-flex items-center gap-2 rounded-full bg-secondary px-6 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-                >
-                  Ir para o blog
-                  <IconArrowNarrowRight className="size-4" />
-                </Link>
-              </div>
+                  <p className="line-clamp-3 text-sm leading-relaxed text-white/80">
+                    {FEATURED_POST.excerpt}
+                  </p>
+
+                  <span className="inline-flex w-fit items-center gap-2 rounded-md border border-white/30 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm transition-colors group-hover:bg-white/20">
+                    Ler matéria completa
+                  </span>
+                </div>
+              </Link>
+            </article>
+
+            <div className="mt-6 flex justify-end">
+              <Link
+                href="/blog"
+                className="inline-flex items-center gap-2 rounded-full bg-secondary px-6 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+              >
+                Ir para o blog
+                <IconArrowNarrowRight className="size-4" />
+              </Link>
             </div>
+          </div>
 
-            {/* Social media column */}
-            <div className="flex flex-col">
-              <h2 className="font-barlow text-3xl font-bold uppercase leading-tight text-foreground sm:text-4xl">
-                Social
-                <br />
-                media
-              </h2>
+          {/* Social media column */}
+          <div className="flex flex-col">
+            <h2 className="font-barlow text-3xl font-bold uppercase leading-tight text-foreground sm:text-4xl">
+              Social
+              <br />
+              media
+            </h2>
 
-              <div className="mt-8 grid flex-1 grid-cols-2 grid-rows-2 gap-x-4">
-                {INSTAGRAM_POSTS.map((post, index) => (
-                  <a
-                    key={post.url}
-                    href={post.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`group flex flex-col rounded-2xl border border-border bg-card p-5 transition-shadow hover:shadow-lg ${
-                      index >= 2 ? "col-span-1 row-span-1 col-start-2 row-start-1" : "col-span-1 row-span-2"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
-                        Instagram
-                      </span>
-                      <div className="flex size-7 items-center justify-center rounded-full bg-primary">
-                        <InstagramIcon />
-                      </div>
-                    </div>
-
-                    <h3 className="mt-4 font-barlow text-lg font-bold uppercase leading-tight text-foreground sm:text-xl text-start">
-                      {post.title}
-                    </h3>
-                  </a>
-                ))}
-              </div>
-
-              <div className="mt-6 flex justify-center lg:justify-end">
+            <div className="mt-8 grid flex-1 grid-cols-2 grid-rows-2 gap-x-4">
+              {INSTAGRAM_POSTS.map((post, index) => (
                 <a
-                  href="https://www.instagram.com/"
+                  key={post.url}
+                  href={post.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full bg-secondary px-6 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                  className={`group flex flex-col rounded-2xl border border-border bg-card p-5 transition-shadow hover:shadow-lg ${
+                    index >= 2
+                      ? "col-span-1 row-span-1 col-start-2 row-start-1"
+                      : "col-span-1 row-span-2"
+                  }`}
                 >
-                  Ir para o instagram
-                  <IconArrowNarrowRight className="size-4" />
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                      Instagram
+                    </span>
+                    <div className="flex size-7 items-center justify-center rounded-full bg-primary">
+                      <InstagramIcon />
+                    </div>
+                  </div>
+
+                  <h3 className="mt-4 font-barlow text-lg font-bold uppercase leading-tight text-foreground sm:text-xl text-start">
+                    {post.title}
+                  </h3>
                 </a>
-              </div>
+              ))}
+            </div>
+
+            <div className="mt-6 flex justify-center lg:justify-end">
+              <a
+                href="https://www.instagram.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full bg-secondary px-6 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+              >
+                Ir para o instagram
+                <IconArrowNarrowRight className="size-4" />
+              </a>
             </div>
           </div>
         </div>
-      </Container>
+      </div>
     </section>
   );
 }

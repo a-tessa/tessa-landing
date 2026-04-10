@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { PropsWithChildren } from "react";
 import { SITE } from "@/lib/seo/schemas";
-import { cn, homeSpacing } from "@/lib/utils";
+import { cn, homeSpacing, insideCardSpacing } from "@/lib/utils";
 
 const MENU_LINKS = [
 	{ href: "/a-tessa", label: "A Tessa" },
@@ -40,7 +40,7 @@ const SOCIAL_LINKS = [
 
 function FooterShell({ children, className }: PropsWithChildren<{ className?: string }>) {
 	return (
-		<div className={cn("px-4 sm:px-6 lg:px-6", className)}>
+		<div className={cn("", className)}>
 			<div className={homeSpacing}>{children}</div>
 		</div>
 	);
@@ -51,7 +51,7 @@ export function Footer() {
 
 	return (
 		<footer
-			className="relative overflow-hidden bg-[oklch(0.22_0_0)] text-white w-[calc(100%-3rem)] rounded-3xl mb-20 mx-auto"
+			className="relative overflow-hidden w-[calc(100%-2.6rem)] rounded-3xl mb-20 mx-auto pb-6"
 			role="contentinfo"
 			aria-label="Rodapé do site Tessa"
 			itemScope
@@ -60,8 +60,8 @@ export function Footer() {
 			<meta itemProp="name" content={SITE.name} />
 			<meta itemProp="url" content={SITE.domain} />
 
-			<div className="lg:px-0 lg:pl-6">
-				<div className="grid grid-cols-1 lg:grid-cols-12 pl-86">
+			<div className="lg:px-0 bg-[oklch(0.22_0_0)] text-white">
+				<div className={cn("grid grid-cols-1 lg:grid-cols-12 pl-86", insideCardSpacing)}>
 					{/* Newsletter */}
 					<div className="lg:col-span-4 pt-14 pb-14">
 						<Link
@@ -208,7 +208,7 @@ export function Footer() {
 			</div>
 
 			{/* Barra inferior */}
-			<div className="border-t border-white/10">
+			<div className="border-t border-white/10 bg-[oklch(0.22_0_0)] text-white rounded-b-3xl">
 				<FooterShell>
 					<div className="grid grid-cols-1 gap-6 py-6 md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-6 lg:py-7">
 						<p className="text-center text-xs text-white/50 md:text-left w-[515px]">

@@ -10,7 +10,7 @@
   --font-geist-sans: var(--font-geist-sans);
   --font-geist-mono: var(--font-geist-mono);
   --radius: 0.625rem;
-  --background: oklch(0.9672 0 0)
+  --background: oklch(0.9672 0 0);
   --foreground: oklch(0.147 0.004 49.25);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.147 0.004 49.25);
@@ -93,8 +93,8 @@ body {
 }
 
 body {
-  color: hsl(var(--foreground));
-  background: hsl(var(--background));
+  color: var(--foreground);
+  background: var(--background);
   font-family: var(--font-barlow), system-ui, sans-serif;
 }
 

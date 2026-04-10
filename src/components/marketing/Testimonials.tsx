@@ -2,11 +2,14 @@
 
 import { useCallback, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { IconArrowNarrowLeft, IconArrowNarrowRight, IconStarFilled } from "@tabler/icons-react";
+import {
+  IconArrowNarrowLeft,
+  IconArrowNarrowRight,
+  IconStarFilled,
+} from "@tabler/icons-react";
 import { AnimatePresence, motion } from "motion/react";
-import { Container } from "./Container";
-import { cn, homeSpacing } from "@/lib/utils";
+import { WriteTestimonialDialog } from "@/components/marketing/WriteTestimonialDialog";
+import { cn, freeSectionShellSpacing } from "@/lib/utils";
 
 interface Testimonial {
   name: string;
@@ -53,11 +56,17 @@ function getIndex(current: number, offset: number): number {
 
 function Stars({ rating }: { rating: number }) {
   return (
-    <div className="flex items-center gap-0.5" aria-label={`${rating} de 5 estrelas`}>
+    <div
+      className="flex items-center gap-0.5"
+      aria-label={`${rating} de 5 estrelas`}
+    >
       {Array.from({ length: 5 }).map((_, i) => (
         <IconStarFilled
           key={`star-${i}`}
-          className={cn("size-3.5", i < rating ? "text-primary" : "text-muted-foreground/30")}
+          className={cn(
+            "size-3.5",
+            i < rating ? "text-primary" : "text-muted-foreground/30",
+          )}
         />
       ))}
     </div>
@@ -68,10 +77,13 @@ export function Testimonials() {
   const [current, setCurrent] = useState(1);
   const [direction, setDirection] = useState(0);
 
-  const goTo = useCallback((index: number) => {
-    setDirection(index > current ? 1 : -1);
-    setCurrent(index);
-  }, [current]);
+  const goTo = useCallback(
+    (index: number) => {
+      setDirection(index > current ? 1 : -1);
+      setCurrent(index);
+    },
+    [current],
+  );
 
   const prev = useCallback(() => {
     setDirection(-1);
@@ -92,183 +104,220 @@ export function Testimonials() {
   return (
     <section
       aria-labelledby="testimonials-title"
-      className="w-full pb-10"
+      className={cn("w-full pb-10", freeSectionShellSpacing)}
       itemScope
       itemType="https://schema.org/Product"
     >
       <meta itemProp="name" content="Serviços Tessa" />
 
       {/* Structured data for aggregate rating */}
-      <div itemProp="aggregateRating" itemScope itemType="https://schema.org/AggregateRating" className="sr-only">
+      <div
+        itemProp="aggregateRating"
+        itemScope
+        itemType="https://schema.org/AggregateRating"
+        className="sr-only"
+      >
         <meta itemProp="ratingValue" content="5" />
         <meta itemProp="reviewCount" content={String(TESTIMONIALS.length)} />
         <meta itemProp="bestRating" content="5" />
       </div>
 
-      <Container>
-        <div className={homeSpacing}>
-          <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[240px_1fr_200px] lg:gap-6">
-            {/* Left — title + CTA + prev card */}
-            <div className="flex flex-col gap-6">
-              <div>
-                <h2
-                  id="testimonials-title"
-                  className="font-barlow text-2xl font-semibold uppercase text-primary sm:text-4xl leading-none"
-                >
-                  Quem confia
-                  <br />
-                  no nosso
-                  <br />
-                  trabalho
-                </h2>
-                <Link
-                  href="/depoimento"
-                  className="mt-4 inline-flex items-center gap-2 rounded-lg bg-secondary px-5 py-2.5 text-xs font-semibold text-white transition-opacity hover:opacity-90"
-                >
-                  Escrever depoimento
-                  <IconArrowNarrowRight className="size-4" />
-                </Link>
+      <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[240px_1fr_200px] lg:gap-6">
+        {/* Left — title + CTA + prev card */}
+        <div className="flex flex-col gap-6">
+          <div>
+            <h2
+              id="testimonials-title"
+              className="font-barlow text-2xl font-semibold uppercase text-primary sm:text-4xl leading-none"
+            >
+              Quem confia
+              <br />
+              no nosso
+              <br />
+              trabalho
+            </h2>
+            <WriteTestimonialDialog>
+              <button
+                type="button"
+                className="mt-4 inline-flex items-center gap-2 rounded-lg bg-secondary px-5 py-2.5 text-xs font-semibold text-white transition-opacity hover:opacity-90"
+              >
+                Escrever depoimento
+                <IconArrowNarrowRight className="size-4" aria-hidden />
+              </button>
+            </WriteTestimonialDialog>
+          </div>
+
+          {/* Prev arrow */}
+          <button
+            type="button"
+            onClick={prev}
+            className="flex size-10 cursor-pointer items-center justify-center self-end rounded-full border border-foreground/15 bg-card text-foreground transition-colors hover:bg-muted"
+            aria-label="Depoimento anterior"
+          >
+            <IconArrowNarrowLeft className="size-5" />
+          </button>
+
+          {/* Prev card (small) */}
+          <button
+            type="button"
+            onClick={() => goTo(prevIdx)}
+            className="flex cursor-pointer items-center gap-3 rounded-2xl bg-card p-4 text-left shadow-sm transition-shadow hover:shadow-md"
+            aria-label={`Ver depoimento de ${prevT.name}`}
+          >
+            <div className="relative size-10 shrink-0 overflow-hidden rounded-full">
+              <Image
+                src={prevT.avatar}
+                alt={prevT.name}
+                fill
+                className="object-cover"
+                sizes="40px"
+              />
+            </div>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold text-foreground">
+                {prevT.name}
+              </p>
+              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                {prevT.company}
+              </p>
+              <div className="mt-1 flex items-center gap-1.5">
+                <span className="text-sm font-bold text-foreground">
+                  {prevT.rating.toFixed(1)}
+                </span>
+                <Stars rating={prevT.rating} />
+              </div>
+            </div>
+          </button>
+        </div>
+
+        {/* Center — active testimonial */}
+        <div className="flex flex-col items-center gap-6">
+          <AnimatePresence mode="wait" custom={direction}>
+            <motion.div
+              key={current}
+              custom={direction}
+              initial={{ opacity: 0, x: direction > 0 ? 80 : -80 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: direction > 0 ? -80 : 80 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+              className="flex w-full flex-col items-center gap-6 sm:flex-row sm:items-start sm:gap-8"
+            >
+              {/* Photo */}
+              <div className="relative aspect-3/4 w-48 shrink-0 overflow-hidden rounded-2xl sm:w-56 lg:w-64">
+                <Image
+                  src={active.avatar}
+                  alt={active.name}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 192px, (max-width: 1024px) 224px, 256px"
+                  priority
+                />
               </div>
 
-              {/* Prev arrow */}
-              <button
-                type="button"
-                onClick={prev}
-                className="flex size-10 cursor-pointer items-center justify-center self-end rounded-full border border-foreground/15 bg-card text-foreground transition-colors hover:bg-muted"
-                aria-label="Depoimento anterior"
+              {/* Text + info */}
+              <div
+                className="flex flex-1 flex-col justify-center"
+                itemProp="review"
+                itemScope
+                itemType="https://schema.org/Review"
               >
-                <IconArrowNarrowLeft className="size-5" />
-              </button>
-
-              {/* Prev card (small) */}
-              <button
-                type="button"
-                onClick={() => goTo(prevIdx)}
-                className="flex cursor-pointer items-center gap-3 rounded-2xl bg-card p-4 text-left shadow-sm transition-shadow hover:shadow-md"
-                aria-label={`Ver depoimento de ${prevT.name}`}
-              >
-                <div className="relative size-10 shrink-0 overflow-hidden rounded-full">
-                  <Image
-                    src={prevT.avatar}
-                    alt={prevT.name}
-                    fill
-                    className="object-cover"
-                    sizes="40px"
-                  />
-                </div>
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-foreground">{prevT.name}</p>
-                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{prevT.company}</p>
-                  <div className="mt-1 flex items-center gap-1.5">
-                    <span className="text-sm font-bold text-foreground">{prevT.rating.toFixed(1)}</span>
-                    <Stars rating={prevT.rating} />
-                  </div>
-                </div>
-              </button>
-            </div>
-
-            {/* Center — active testimonial */}
-            <div className="flex flex-col items-center gap-6">
-              <AnimatePresence mode="wait" custom={direction}>
-                <motion.div
-                  key={current}
-                  custom={direction}
-                  initial={{ opacity: 0, x: direction > 0 ? 80 : -80 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: direction > 0 ? -80 : 80 }}
-                  transition={{ duration: 0.4, ease: "easeInOut" }}
-                  className="flex w-full flex-col items-center gap-6 sm:flex-row sm:items-start sm:gap-8"
+                <blockquote
+                  className="text-sm leading-relaxed text-muted-foreground sm:text-base"
+                  itemProp="reviewBody"
                 >
-                  {/* Photo */}
-                  <div className="relative aspect-3/4 w-48 shrink-0 overflow-hidden rounded-2xl sm:w-56 lg:w-64">
-                    <Image
-                      src={active.avatar}
-                      alt={active.name}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 640px) 192px, (max-width: 1024px) 224px, 256px"
-                      priority
-                    />
-                  </div>
+                  {active.text}
+                </blockquote>
 
-                  {/* Text + info */}
-                  <div
-                    className="flex flex-1 flex-col justify-center"
-                    itemProp="review"
-                    itemScope
-                    itemType="https://schema.org/Review"
+                <div
+                  className="mt-6"
+                  itemProp="author"
+                  itemScope
+                  itemType="https://schema.org/Person"
+                >
+                  <p
+                    className="text-xl font-semibold text-foreground sm:text-2xl"
+                    itemProp="name"
                   >
-                    <blockquote className="text-sm leading-relaxed text-muted-foreground sm:text-base" itemProp="reviewBody">
-                      {active.text}
-                    </blockquote>
-
-                    <div className="mt-6" itemProp="author" itemScope itemType="https://schema.org/Person">
-                      <p className="text-xl font-semibold text-foreground sm:text-2xl" itemProp="name">
-                        {active.name}
-                      </p>
-                      <p className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
-                        {active.company}
-                      </p>
-                    </div>
-
-                    <div className="mt-3 flex items-center gap-2" itemProp="reviewRating" itemScope itemType="https://schema.org/Rating">
-                      <meta itemProp="ratingValue" content={String(active.rating)} />
-                      <meta itemProp="bestRating" content="5" />
-                      <span className="text-lg font-bold text-foreground">{active.rating.toFixed(1)}</span>
-                      <Stars rating={active.rating} />
-                    </div>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            {/* Right — next card + arrow */}
-            <div className="flex flex-col items-end gap-6">
-              {/* Next card (small with photo) */}
-              <button
-                type="button"
-                onClick={() => goTo(nextIdx)}
-                className="group relative h-44 w-full cursor-pointer overflow-hidden rounded-2xl text-left lg:h-48"
-                aria-label={`Ver depoimento de ${nextT.name}`}
-              >
-                <Image
-                  src={nextT.avatar}
-                  alt={nextT.name}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  sizes="200px"
-                />
-                <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 z-10 p-4">
-                  <p className="text-sm font-bold text-white">{nextT.name}</p>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-white/70">{nextT.company}</p>
-                  <div className="mt-1 flex items-center gap-1.5">
-                    <span className="text-sm font-bold text-white">{nextT.rating.toFixed(1)}</span>
-                    <div className="flex items-center gap-0.5">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <IconStarFilled
-                          key={`next-star-${i}`}
-                          className={cn("size-3", i < nextT.rating ? "text-primary" : "text-white/30")}
-                        />
-                      ))}
-                    </div>
-                  </div>
+                    {active.name}
+                  </p>
+                  <p className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
+                    {active.company}
+                  </p>
                 </div>
-              </button>
 
-              {/* Next arrow */}
-              <button
-                type="button"
-                onClick={next}
-                className="flex size-10 cursor-pointer items-center justify-center rounded-full bg-primary text-white transition-transform hover:scale-105"
-                aria-label="Próximo depoimento"
-              >
-                <IconArrowNarrowRight className="size-5" />
-              </button>
-            </div>
-          </div>
+                <div
+                  className="mt-3 flex items-center gap-2"
+                  itemProp="reviewRating"
+                  itemScope
+                  itemType="https://schema.org/Rating"
+                >
+                  <meta
+                    itemProp="ratingValue"
+                    content={String(active.rating)}
+                  />
+                  <meta itemProp="bestRating" content="5" />
+                  <span className="text-lg font-bold text-foreground">
+                    {active.rating.toFixed(1)}
+                  </span>
+                  <Stars rating={active.rating} />
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
         </div>
-      </Container>
+
+        {/* Right — next card + arrow */}
+        <div className="flex flex-col items-end gap-6">
+          {/* Next card (small with photo) */}
+          <button
+            type="button"
+            onClick={() => goTo(nextIdx)}
+            className="group relative h-44 w-full cursor-pointer overflow-hidden rounded-2xl text-left lg:h-48"
+            aria-label={`Ver depoimento de ${nextT.name}`}
+          >
+            <Image
+              src={nextT.avatar}
+              alt={nextT.name}
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              sizes="200px"
+            />
+            <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 z-10 p-4">
+              <p className="text-sm font-bold text-white">{nextT.name}</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-white/70">
+                {nextT.company}
+              </p>
+              <div className="mt-1 flex items-center gap-1.5">
+                <span className="text-sm font-bold text-white">
+                  {nextT.rating.toFixed(1)}
+                </span>
+                <div className="flex items-center gap-0.5">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <IconStarFilled
+                      key={`next-star-${i}`}
+                      className={cn(
+                        "size-3",
+                        i < nextT.rating ? "text-primary" : "text-white/30",
+                      )}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </button>
+
+          {/* Next arrow */}
+          <button
+            type="button"
+            onClick={next}
+            className="flex size-10 cursor-pointer items-center justify-center rounded-full bg-primary text-white transition-transform hover:scale-105"
+            aria-label="Próximo depoimento"
+          >
+            <IconArrowNarrowRight className="size-5" />
+          </button>
+        </div>
+      </div>
     </section>
   );
 }

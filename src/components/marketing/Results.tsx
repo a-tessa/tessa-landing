@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Container } from "./Container";
-import { homeSpacing } from "@/lib/utils";
+import { cn, freeSectionShellSpacing, homeSpacing, sectionCardShellSpacing } from "@/lib/utils";
 
 interface Stat {
   prefix: string;
@@ -116,31 +116,27 @@ export function Results() {
     <section
       ref={sectionRef}
       aria-label="Resultados da Tessa em números"
-      className="w-full py-8 sm:py-12"
+      className={cn("w-full py-8 sm:py-12", freeSectionShellSpacing)}
     >
-      <Container>
-        <div className={homeSpacing}>
-          <div className="flex flex-col items-center gap-8 rounded-3xl bg-primary px-8 py-10 sm:px-12 sm:py-14 lg:flex-row lg:gap-12 lg:px-16">
-            {/* Title */}
-            <h2 className="shrink-0 font-barlow text-2xl font-bold uppercase leading-tight text-white sm:text-3xl lg:text-4xl">
-              Resultados
-              <br />
-              que contam
-            </h2>
+      <div className="flex flex-col items-center gap-8 rounded-3xl bg-primary px-8 py-10 sm:px-12 sm:py-14 lg:flex-row lg:gap-12 lg:px-16">
+        {/* Title */}
+        <h2 className="shrink-0 font-barlow text-2xl font-bold uppercase leading-tight text-white sm:text-3xl lg:text-4xl">
+          Resultados
+          <br />
+          que contam
+        </h2>
 
-            {/* Stats */}
-            <div className="flex flex-1 flex-wrap items-start justify-center gap-8 sm:gap-12 lg:justify-around lg:gap-6">
-              {STATS.map((stat) => (
-                <AnimatedStat
-                  key={stat.label}
-                  stat={stat}
-                  shouldStart={hasEntered}
-                />
-              ))}
-            </div>
-          </div>
+        {/* Stats */}
+        <div className="flex flex-1 flex-wrap items-start justify-center gap-8 sm:gap-12 lg:justify-around lg:gap-6">
+          {STATS.map((stat) => (
+            <AnimatedStat
+              key={stat.label}
+              stat={stat}
+              shouldStart={hasEntered}
+            />
+          ))}
         </div>
-      </Container>
+      </div>
     </section>
   );
 }

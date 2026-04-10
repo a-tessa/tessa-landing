@@ -5,7 +5,7 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Container } from "./Container";
-import { cn, homeSpacing } from "@/lib/utils";
+import { cn, homeSpacing, sectionCardShellSpacing } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
 
 const SCROLL_THRESHOLD = 150;
@@ -112,7 +112,7 @@ export function Navbar() {
   );
 
   return (
-    <header className="fixed left-0 right-0 top-6 z-50 px-6">
+    <header className={cn("fixed left-0 right-0 top-6 z-50", sectionCardShellSpacing, 'w-full')}>
       <div
         className="flex justify-center pt-3 transition-all duration-500"
         style={{ paddingTop: `${12 * (1 - scrollProgress)}px` }}
