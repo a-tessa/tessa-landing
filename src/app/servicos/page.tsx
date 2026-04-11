@@ -49,11 +49,11 @@ export default function ServicosPage() {
 export function Scenarios() {
   return (
     <section aria-labelledby="scenarios-title" className="w-full">
-      <div className={`${freeSectionShellSpacing} flex justify-between`}>
-        <div className="w-4/12">
+      <div className={`${freeSectionShellSpacing} flex gap-10`}>
+        <div className="w-5/12 flex-1">
           <h2
             id="scenarios-title"
-            className="text-3xl font-semibold uppercase leading-tight text-foreground sm:text-4xl"
+            className="text-3xl font-semibold uppercase leading-tight text-foreground sm:text-6xl text-right"
           >
             Escolha seu cenário
           </h2>
@@ -61,7 +61,7 @@ export function Scenarios() {
             Soluções sob medida para obra, energia e produção.
           </p>
         </div>
-        <p className="w-7/12">
+        <p className="w-5/12 flex-1">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non
           risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec,
           ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { BackNavLink } from "@/components/marketing/BackNavLink";
 import { Footer } from "@/components/marketing/Footer";
 import { Heading } from "@/components/marketing/Heading";
 import { JsonLd } from "@/lib/seo/jsonld";
@@ -10,13 +12,12 @@ import {
   cn,
   freeSectionShellSpacing,
   OPERATIONS_IMAGES,
+  serviceCarouselCss,
 } from "@/lib/utils";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
 import Video from "next-video";
 import { BentoCarouselServices } from "@/components/marketing/BentoCarouselServices";
@@ -28,35 +29,6 @@ import { Testimonials } from "@/components/marketing/Testimonials";
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
-
-const serviceCarouselCss = /* css */ `
-@keyframes service-carousel-follow-heading {
-  from { top: calc(1.5rem + 19rem + 0.75rem); }
-  to   { top: calc(1.5rem + 8.5rem + 0.75rem); }
-}
-
-.service-heading-carousel {
-  left: 50%;
-  position: fixed;
-  top: calc(1.5rem + 28rem + 0.75rem);
-  transform: translateX(-50%);
-  z-index: 30;
-}
-
-@supports (animation-timeline: scroll()) {
-  .service-heading-carousel {
-    animation: service-carousel-follow-heading linear forwards;
-    animation-timeline: scroll(root block);
-    animation-range: 0 28vh;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .service-heading-carousel {
-    animation-name: none;
-  }
-}
-`;
 
 export function generateStaticParams() {
   return services.map((service) => ({
@@ -139,7 +111,7 @@ export default async function ServiceDetailPage({ params }: PageProps) {
               freeSectionShellSpacing,
             )}
           >
-            <Carousel className="bg-muted rounded-full flex">
+            <Carousel className="bg-muted rounded-full flex overflow-hidden">
               <CarouselContent className="flex gap-4 w-full rounded-full px-8">
                 {services.map((item) => (
                   <CarouselItem
@@ -168,16 +140,21 @@ export default async function ServiceDetailPage({ params }: PageProps) {
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              <CarouselPrevious />
-              <CarouselNext />
+              {/* <CarouselPrevious />
+              <CarouselNext /> */}
             </Carousel>
           </nav>
         </div>
 
         <section className="w-full">
-          <div
-            className={cn("mt-12 flex flex-col gap-8", freeSectionShellSpacing)}
-          >
+          <div className={cn("mb-4", freeSectionShellSpacing)}>
+            <BackNavLink
+              href="/servicos"
+              label="Voltar para serviços"
+              navLabel="Navegação do serviço"
+            />
+          </div>
+          <div className={cn("flex flex-col gap-8", freeSectionShellSpacing)}>
             <h3 className="font-normal leading-tight text-muted-foreground">
               {service.description}
             </h3>
@@ -203,14 +180,34 @@ export default async function ServiceDetailPage({ params }: PageProps) {
         </section>
         <NewsAndSocial />
         <Testimonials />
-        <section className={cn('mb-10', freeSectionShellSpacing)}>
-          <div className="bg-secondary rounded-3xl p-8 text-white flex items-center justify-between">
-            <p className="text-left text-2xl font-semibold uppercase text-foreground">
-              <strong>Baixe agora as apresentações, folders e manuais</strong>
+        <section
+          className={cn("mb-10", freeSectionShellSpacing)}
+          aria-labelledby="servico-materiais-heading"
+        >
+          <div className="relative isolate flex min-h-36 flex-col justify-center gap-6 overflow-hidden rounded-3xl bg-secondary px-6 py-8 sm:min-h-32 sm:flex-row sm:items-center sm:justify-between sm:px-10 lg:px-14">
+            <Image
+              src="/find-representant.webp"
+              alt=""
+              fill
+              className="z-0 object-cover object-center opacity-35 saturate-50"
+              sizes="(max-width: 768px) 100vw, 85vw"
+              aria-hidden
+            />
+
+            <p
+              id="servico-materiais-heading"
+              className="relative z-10 max-w-2xl text-left text-lg font-semibold uppercase text-secondary-foreground sm:text-2xl"
+            >
+              <strong className="font-bold">
+                Baixe agora as apresentações, folders e manuais
+              </strong>
               <br />
-              deste produto
+              <span className="font-semibold">deste produto</span>
             </p>
-            <Button variant="default" className="w-fit ml-auto text-white">
+            <Button
+              variant="default"
+              className="relative z-10 w-full shrink-0 sm:ml-auto sm:w-fit"
+            >
               Baixar materiais
               <IconArrowDown className="size-4" />
             </Button>

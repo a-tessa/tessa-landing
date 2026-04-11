@@ -134,3 +134,32 @@ export const OPERATIONS_IMAGES = [
     alt: "Detalhe de perfis metálicos empilhados",
   },
 ];
+
+export const serviceCarouselCss = /* css */ `
+@keyframes service-carousel-follow-heading {
+  from { top: calc(1.5rem + 18rem + 1.5rem); }
+  to   { top: 10.8rem; }
+}
+
+.service-heading-carousel {
+  left: 50%;
+  position: fixed;
+  top: calc(1.5rem + 27rem + 1.5rem);
+  transform: translateX(-50%);
+  z-index: 30;
+}
+
+@supports (animation-timeline: scroll()) {
+  .service-heading-carousel {
+    animation: service-carousel-follow-heading linear forwards;
+    animation-timeline: scroll(root block);
+    animation-range: 0 28vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-heading-carousel {
+    animation-name: none;
+  }
+}
+`;

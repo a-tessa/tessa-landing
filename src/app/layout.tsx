@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     description: SITE.description,
     images: [
       {
-        url: "/og-image.png",
+        url: "/tessa-logo.svg",
         width: 1200,
         height: 630,
       },

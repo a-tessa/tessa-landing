@@ -78,7 +78,7 @@ export function Heading({ title, description }: HeadingProps) {
           <div
             className={`${insideCardSpacing} flex flex-1 flex-col justify-center overflow-hidden text-3xl mb-5 sm:text-2xl md:text-3xl lg:text-6xl xl:text-7xl`}
           >
-            <h1 className="font-bold uppercase text-foreground h-fit whitespace-break-spaces">
+            <h1 className="font-bold uppercase text-white h-fit whitespace-break-spaces">
               {title}
             </h1>
             <h2 className="mt-4 w-full max-w-2xl text-xs font-semibold uppercase sm:text-sm">

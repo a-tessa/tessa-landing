@@ -118,6 +118,7 @@ export function RepresentativesDirectory() {
               className={cn(
                 "h-13! md:h-14! px-8 text-base w-full md:w-md rounded-full bg-primary text-white",
               )}
+              iconClassName="text-white"
             >
               <SelectValue placeholder="Selecione o estado" />
             </SelectTrigger>

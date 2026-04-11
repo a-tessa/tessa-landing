@@ -1,38 +1,84 @@
-import Link from "next/link";
-import React from "react";
-import { Section } from "@/components/marketing/Section";
+import type { Metadata } from "next";
+import { BlogIndex } from "@/components/marketing/BlogIndex";
+import { BlogRepresentativesCta } from "@/components/marketing/BlogRepresentativesCta";
+import { Footer } from "@/components/marketing/Footer";
+import { Heading } from "@/components/marketing/Heading";
+import { JsonLd } from "@/lib/seo/jsonld";
+import {
+  BLOG_LIST_PAGE_SIZE,
+  blogPosts,
+  filterPostsByCategory,
+  filterPostsByTitleQuery,
+  sortPostsByDate,
+} from "@/lib/blog/posts";
+import { organizationJsonLd, SITE, websiteJsonLd } from "@/lib/seo/schemas";
 
-const posts = [
-  { slug: "como-escolher-o-tijolo-certo", title: "Como escolher o tijolo certo (sem desperdício)", excerpt: "Um guia rápido com o que considerar antes de comprar." },
-  { slug: "como-calcular-quantidade-de-tijolos", title: "Como calcular a quantidade de tijolos da sua obra", excerpt: "Um método simples para estimar e reduzir erros." },
-];
+const BLOG_DESCRIPTION =
+  "Descubra conteúdos valiosos e conselhos de especialistas da nossa equipe experiente para elevar seu conhecimento e ajudar você a tomar uma decisão mais segura na hora de contratar a Tessa.";
 
-export const metadata = {
-  title: "Blog",
-  description: "Conteúdo e dicas para sua obra.",
+export const metadata: Metadata = {
+  title: "Blog — artigos e conteúdos Tessa",
+  description: BLOG_DESCRIPTION,
+  alternates: {
+    canonical: "/blog",
+  },
+  keywords: [
+    ...SITE.keywords,
+    "Blog Tessa",
+    "Artigos técnicos",
+    "Estruturas metálicas",
+    "Energia solar",
+  ],
 };
 
-export default function BlogPage() {
-  return (
-    <main>
-      <Section className="bg-white">
-        <h1 className="text-3xl font-semibold text-zinc-900">Blog</h1>
-        <p className="mt-3 text-zinc-600">Dicas rápidas (placeholder). Depois você conecta no backend/CMS.</p>
+type PageProps = {
+  searchParams: Promise<{
+    q?: string;
+    ordem?: string;
+    limite?: string;
+    categoria?: string;
+  }>;
+};
 
-        <div className="mt-10 grid gap-4 sm:grid-cols-2">
-          {posts.map((p) => (
-            <Link
-              key={p.slug}
-              href={`/blog/${p.slug}`}
-              className="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 hover:bg-zinc-100 transition-colors"
-            >
-              <h2 className="font-semibold text-zinc-900">{p.title}</h2>
-              <p className="mt-2 text-sm text-zinc-600">{p.excerpt}</p>
-              <p className="mt-4 text-sm font-medium text-zinc-900">Ler →</p>
-            </Link>
-          ))}
-        </div>
-      </Section>
-    </main>
+function parseLimite(raw: string | undefined): number {
+  const n = Number.parseInt(raw ?? "", 10);
+  if (Number.isNaN(n) || n < BLOG_LIST_PAGE_SIZE) return BLOG_LIST_PAGE_SIZE;
+  return Math.min(n, 200);
+}
+
+export default async function BlogPage({ searchParams }: PageProps) {
+  const sp = await searchParams;
+  const query = (sp.q ?? "").trim();
+  const ordem = sp.ordem === "asc" ? "asc" : "desc";
+  const limite = parseLimite(sp.limite);
+  const categoria = (sp.categoria ?? "").trim();
+
+  const byCategory = filterPostsByCategory(blogPosts, categoria);
+  const filtered = filterPostsByTitleQuery(byCategory, query);
+  const sorted = sortPostsByDate(filtered, ordem);
+  const visiblePosts = sorted.slice(0, limite);
+  const hasMore = sorted.length > limite;
+
+  return (
+    <>
+      <JsonLd id="jsonld-org-blog" data={organizationJsonLd()} />
+      <JsonLd id="jsonld-website-blog" data={websiteJsonLd()} />
+
+      <main className="flex flex-col items-center justify-center gap-0">
+        <Heading title="Blog" description={BLOG_DESCRIPTION} />
+        <BlogIndex
+          query={query}
+          ordem={ordem}
+          limite={limite}
+          categoria={categoria}
+          visiblePosts={visiblePosts}
+          totalFiltered={sorted.length}
+          hasMore={hasMore}
+        />
+        <BlogRepresentativesCta />
+      </main>
+
+      <Footer />
+    </>
   );
 }
