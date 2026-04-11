@@ -198,7 +198,9 @@ export function ContactForm() {
 							placeholder="(00) 00000-0000"
 							className={underlineInput}
 							aria-describedby="contact-phone-hint"
-							pattern="^\(\d{2}\) 9\d{4}-\d{4}$|^\(\d{2}\) \d{4}-\d{4}$"
+							pattern={
+								"^\\(\\d{2}\\) 9\\d{4}-\\d{4}$|^\\(\\d{2}\\) \\d{4}-\\d{4}$"
+							}
 							title="Use DDD e número completo, ex.: (17) 99999-9999 ou (17) 3234-5678"
 						/>
 						<p id="contact-phone-hint" className="sr-only">
