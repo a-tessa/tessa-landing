@@ -101,9 +101,8 @@ export default async function ServiceDetailPage({ params }: PageProps) {
       <JsonLd id={`jsonld-service-${service.slug}`} data={serviceJsonLd} />
 
       <main className="flex flex-col items-center justify-center gap-16">
+        <Heading title={service.title} description={service.description} />
         <div className="relative h-auto w-fit">
-          <Heading title={service.title} description={service.description} />
-
           <nav
             aria-label="Navegação de serviços"
             className={cn(
@@ -158,9 +157,9 @@ export default async function ServiceDetailPage({ params }: PageProps) {
             <h3 className="font-normal leading-tight text-muted-foreground">
               {service.description}
             </h3>
-            <div className="relative flex h-auto gap-8">
-              <div className="w-1/2 gap-8 flex flex-col">
-                <p className="text-3xl uppercase font-semibold">
+            <div className="relative flex flex-col md:flex-row h-auto gap-8">
+              <div className="w-full md:w-1/2 gap-8 flex flex-col">
+                <p className="text-xl md:text-3xl uppercase font-semibold">
                   O que acontece, <br /> na prática?
                 </p>
                 <Video className="rounded-3xl overflow-hidden h-4/5 w-auto aspect-video" />
@@ -169,7 +168,7 @@ export default async function ServiceDetailPage({ params }: PageProps) {
                   <IconArrowRight className="size-4" />
                 </Button>
               </div>
-              <div className="w-1/2 flex-1">
+              <div className="w-full md:w-1/2 md:flex-1">
                 <BentoCarouselServices
                   images={OPERATIONS_IMAGES}
                   className="h-full"

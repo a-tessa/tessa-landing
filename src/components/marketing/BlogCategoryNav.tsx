@@ -32,6 +32,53 @@ function CategoryTab({
 	);
 }
 
+function SearchForm({
+	query,
+	ordem,
+	activeCategory,
+	className,
+}: {
+	query: string;
+	ordem: string;
+	activeCategory: string;
+	className?: string;
+}) {
+	return (
+		<form
+			method="get"
+			action="/blog"
+			role="search"
+			className={cn("flex shrink-0 items-center mt-12", className)}
+		>
+			{ordem === "asc" ? (
+				<input type="hidden" name="ordem" value="asc" />
+			) : null}
+			{activeCategory ? (
+				<input type="hidden" name="categoria" value={activeCategory} />
+			) : null}
+			<label htmlFor="blog-search-q" className="sr-only">
+				Buscar artigo pelo título
+			</label>
+			<input
+				id="blog-search-q"
+				name="q"
+				type="search"
+				defaultValue={query}
+				placeholder="Buscar por título..."
+				autoComplete="off"
+				className="h-11 w-full min-w-0 flex-1 rounded-l-full bg-card px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary border-0 shadow-none"
+			/>
+			<button
+				type="submit"
+				className="flex h-11 w-11 shrink-0 items-center justify-center rounded-r-full bg-card text-primary transition-colors hover:bg-accent"
+				aria-label="Buscar"
+			>
+				<Search className="h-5 w-5" strokeWidth={2} aria-hidden />
+			</button>
+		</form>
+	);
+}
+
 interface BlogCategoryNavProps {
 	activeCategory: string;
 	query?: string;
@@ -81,49 +128,30 @@ export function BlogCategoryNav({
 					</nav>
 
 					{showSearch ? (
-						<form
-							method="get"
-							action="/blog"
-							role="search"
-							className="ml-auto flex shrink-0 items-center"
-						>
-							{ordem === "asc" ? (
-								<input type="hidden" name="ordem" value="asc" />
-							) : null}
-							{activeCategory ? (
-								<input
-									type="hidden"
-									name="categoria"
-									value={activeCategory}
-								/>
-							) : null}
-							<label htmlFor="blog-search-q" className="sr-only">
-								Buscar artigo pelo título
-							</label>
-							<input
-								id="blog-search-q"
-								name="q"
-								type="search"
-								defaultValue={query}
-								placeholder="Buscar por título..."
-								autoComplete="off"
-								className="h-11 w-full min-w-0 flex-1 rounded-l-full bg-card px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary border-0 shadow-none"
-							/>
-							<button
-								type="submit"
-								className="flex h-11 w-11 shrink-0 items-center justify-center rounded-r-full bg-card text-primary transition-colors hover:bg-accent"
-								aria-label="Buscar"
-							>
-								<Search
-									className="h-5 w-5"
-									strokeWidth={2}
-									aria-hidden
-								/>
-							</button>
-						</form>
+						<SearchForm
+							query={query}
+							ordem={ordem}
+							activeCategory={activeCategory}
+							className="ml-auto hidden sm:flex"
+						/>
 					) : null}
 				</div>
 			</div>
+
+			{showSearch ? (
+				<div
+					className={cn(
+						"mt-4 sm:hidden",
+						freeSectionShellSpacing,
+					)}
+				>
+					<SearchForm
+						query={query}
+						ordem={ordem}
+						activeCategory={activeCategory}
+					/>
+				</div>
+			) : null}
 		</>
 	);
 }

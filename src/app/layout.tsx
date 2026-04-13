@@ -4,6 +4,7 @@ import "./globals.css";
 import { SITE } from "@/lib/seo/schemas";
 import { cn } from "@/lib/utils";
 import { NavbarConditional } from "@/components/marketing/NavbarConditional";
+import { ScrollToTop } from "@/components/scroll-to-top";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -73,6 +74,7 @@ export default function RootLayout({
           "antialiased",
         )}
       >
+        <ScrollToTop />
         <NavbarConditional />
         {children}
       </body>

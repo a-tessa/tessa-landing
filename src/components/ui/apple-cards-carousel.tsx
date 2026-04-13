@@ -158,7 +158,7 @@ export const Card = ({
         <div className="relative z-40 p-8">
           <motion.p
             layoutId={layout ? `title-${card.title}` : undefined}
-            className="mt-2 max-w-xs text-left text-6xl font-semibold text-balance text-white md:text-3xl font-barlow uppercase"
+            className="mt-2 max-w-xs text-left text-lg sm:text-xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-balance text-white font-barlow uppercase"
           >
             {card.title}
           </motion.p>
@@ -198,6 +198,7 @@ export const BlurImage = ({
       decoding="async"
       blurDataURL={typeof src === "string" ? src : undefined}
       alt={alt ? alt : "Background of a beautiful view"}
+      
       {...rest}
     />
   );

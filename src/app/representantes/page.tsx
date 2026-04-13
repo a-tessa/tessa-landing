@@ -57,11 +57,11 @@ export default function RepresentantesPage() {
       <JsonLd id="jsonld-website" data={websiteJsonLd()} />
 
       <main className="flex flex-col items-center justify-center gap-20">
+        <Heading
+          title="Representantes"
+          description="Atendimento próximo, suporte técnico e agilidade para o seu projeto."
+        />
         <div className="relative h-auto w-fit">
-          <Heading
-            title="Representantes"
-            description="Atendimento próximo, suporte técnico e agilidade para o seu projeto."
-          />
           <div
             aria-label="Mapa do Brasil"
             className={cn("map z-50 hidden sm:block")}

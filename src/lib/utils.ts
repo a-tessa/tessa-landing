@@ -138,7 +138,7 @@ export const OPERATIONS_IMAGES = [
 export const serviceCarouselCss = /* css */ `
 @keyframes service-carousel-follow-heading {
   from { top: calc(1.5rem + 18rem + 1.5rem); }
-  to   { top: 10.8rem; }
+  to   { top: 11.8rem; }
 }
 
 .service-heading-carousel {

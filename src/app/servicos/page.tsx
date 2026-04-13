@@ -49,19 +49,19 @@ export default function ServicosPage() {
 export function Scenarios() {
   return (
     <section aria-labelledby="scenarios-title" className="w-full">
-      <div className={`${freeSectionShellSpacing} flex gap-10`}>
-        <div className="w-5/12 flex-1">
+      <div className={`${freeSectionShellSpacing} flex flex-col md:flex-row gap-10`}>
+        <div className="w-full md:w-5/12 flex-1">
           <h2
             id="scenarios-title"
-            className="text-3xl font-semibold uppercase leading-tight text-foreground sm:text-6xl text-right"
+            className="text-3xl font-semibold uppercase leading-tight text-foreground sm:text-6xl text-left md:text-right"
           >
             Escolha seu cenário
           </h2>
-          <p className="mt-2 text-2xl font-semibold uppercase text-foreground text-right">
+          <p className="mt-2 text-2xl font-semibold uppercase text-foreground text-left md:text-right">
             Soluções sob medida para obra, energia e produção.
           </p>
         </div>
-        <p className="w-5/12 flex-1">
+        <p className="w-full md:w-5/12 flex-1 text-left md:text-left">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non
           risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec,
           ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula

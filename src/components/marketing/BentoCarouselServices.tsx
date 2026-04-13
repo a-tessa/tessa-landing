@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import {
   IconArrowNarrowLeft,
@@ -54,6 +54,114 @@ export function BentoCarouselServices({
   images,
   className,
 }: BentoCarouselServicesProps) {
+  return (
+    <div className={cn("relative w-full", className)}>
+      <MobileCarousel images={images} />
+      <DesktopBento images={images} className={className} />
+    </div>
+  );
+}
+
+function MobileCarousel({ images }: { images: BentoImage[] }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const handleScroll = useCallback(() => {
+    if (!scrollRef.current) return;
+    const { scrollLeft, clientWidth } = scrollRef.current;
+    const index = Math.round(scrollLeft / clientWidth);
+    setActiveIndex(Math.min(index, images.length - 1));
+  }, [images.length]);
+
+  const scrollTo = (index: number): void => {
+    if (!scrollRef.current) return;
+    const { clientWidth } = scrollRef.current;
+    scrollRef.current.scrollTo({
+      left: clientWidth * index,
+      behavior: "smooth",
+    });
+  };
+
+  const handlePrev = (): void => {
+    scrollTo(Math.max(0, activeIndex - 1));
+  };
+
+  const handleNext = (): void => {
+    scrollTo(Math.min(images.length - 1, activeIndex + 1));
+  };
+
+  return (
+    <div className="relative md:hidden overflow-hidden rounded-3xl bg-[url('/operations-section-bg.webp')] bg-cover bg-primary bg-center bg-no-repeat">
+      <div className="relative px-4 py-4">
+        <div
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth [scrollbar-width:none]"
+        >
+          {images.map((img, i) => (
+            <motion.div
+              key={`mobile-svc-${i}`}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, delay: 0.05 * Math.min(i, 3) }}
+              className="relative aspect-4/3 w-full shrink-0 snap-center overflow-hidden rounded-2xl"
+            >
+              <Image
+                src={img.src}
+                alt={img.alt}
+                fill
+                sizes="90vw"
+                className="object-cover"
+              />
+            </motion.div>
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={handlePrev}
+          disabled={activeIndex === 0}
+          className="absolute left-6 top-1/2 z-10 flex size-9 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-secondary text-white shadow-lg transition-opacity hover:opacity-90 disabled:pointer-events-none disabled:opacity-0"
+          aria-label="Imagem anterior"
+        >
+          <IconArrowNarrowLeft className="size-5" />
+        </button>
+        <button
+          type="button"
+          onClick={handleNext}
+          disabled={activeIndex === images.length - 1}
+          className="absolute right-6 top-1/2 z-10 flex size-9 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-secondary text-white shadow-lg transition-opacity hover:opacity-90 disabled:pointer-events-none disabled:opacity-0"
+          aria-label="Próxima imagem"
+        >
+          <IconArrowNarrowRight className="size-5" />
+        </button>
+      </div>
+
+      <div className="flex justify-center gap-1.5 pb-4">
+        {images.map((_, i) => (
+          <button
+            key={`dot-svc-${i}`}
+            type="button"
+            onClick={() => scrollTo(i)}
+            className={cn(
+              "size-2 rounded-full transition-all duration-300",
+              i === activeIndex ? "w-6 bg-white" : "bg-white/40",
+            )}
+            aria-label={`Ir para imagem ${i + 1}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function DesktopBento({
+  images,
+  className,
+}: {
+  images: BentoImage[];
+  className?: string;
+}) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -83,7 +191,7 @@ export function BentoCarouselServices({
   const groups = chunkImages(images);
 
   return (
-    <div className={cn("relative w-full", className)}>
+    <div className={cn("relative hidden md:block", className)}>
       <div
         ref={scrollRef}
         onScroll={checkScrollability}

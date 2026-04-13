@@ -26,7 +26,7 @@ export default function HomePage() {
       <JsonLd id="jsonld-org" data={organizationJsonLd()} />
       <JsonLd id="jsonld-website" data={websiteJsonLd()} />
 
-      <main className="flex flex-col items-center justify-center">
+      <main className="flex flex-col items-center justify-center gap-10">
         <Hero />
         <Scenarios />
         <Operations />

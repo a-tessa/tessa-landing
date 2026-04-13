@@ -9,7 +9,7 @@ interface HeadingProps {
 const css = /* css */ `
 @keyframes marketing-heading-shell {
   from { min-height: 21rem; background-color: rgb(0 0 0 / 0.3); }
-  to   { min-height: 10rem; background-color: rgb(0 0 0 / 0.5); }
+  to   { min-height: 11.75rem; background-color: rgb(0 0 0 / 0.5); }
 }
 @keyframes marketing-heading-shell-sm {
   from { min-height: 6rem; background-color: rgb(0 0 0 / 0.3); }
@@ -71,14 +71,12 @@ export function Heading({ title, description }: HeadingProps) {
         {css}
       </style>
       <div className="relative h-auto min-h-95 w-full">
-        <div className="marketing-heading-scroll fixed top-6 z-20 flex w-[calc(100%-2.5rem)] translate-x-1/2 right-1/2 flex-col rounded-3xl bg-[url('/services-heading.webp')] bg-cover bg-center bg-no-repeat bg-black/70 bg-blend-overlay saturate-30 text-white supports-[animation-timeline:scroll()]:h-20">
-          <div className={`${insideCardSpacing}`}>
-            <NavbarPage />
-          </div>
+        <NavbarPage />
+        <div className="marketing-heading-scroll fixed top-6 z-20 flex w-[calc(100%-2.5rem)] translate-x-1/2 right-1/2 flex-col rounded-3xl bg-[url('/services-heading.webp')] bg-cover bg-center bg-no-repeat bg-black/75 bg-blend-overlay saturate-30 text-white supports-[animation-timeline:scroll()]:h-20">
           <div
-            className={`${insideCardSpacing} flex flex-1 flex-col justify-center overflow-hidden text-3xl mb-5 sm:text-2xl md:text-3xl lg:text-6xl xl:text-7xl`}
+            className={`${insideCardSpacing} flex flex-1 flex-col justify-center overflow-hidden text-3xl mb-5 mt-5 sm:text-2xl md:text-3xl lg:text-6xl xl:text-7xl`}
           >
-            <h1 className="font-bold uppercase text-white h-fit whitespace-break-spaces">
+            <h1 className="font-bold uppercase text-white h-fit whitespace-break-spaces mt-8">
               {title}
             </h1>
             <h2 className="mt-4 w-full max-w-2xl text-xs font-semibold uppercase sm:text-sm">
