@@ -18,6 +18,11 @@ const nextConfig: NextConfig = {
         hostname: "assets.aceternity.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "*.public.blob.vercel-storage.com",
+        pathname: "/**",
+      },
     ],
   },
   bundlePagesRouterDependencies: true,
