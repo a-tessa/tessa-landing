@@ -7,7 +7,7 @@ type FetchOptions = Omit<RequestInit, "headers"> & {
  * Prefer calling from Server Components for SEO/perf (when possible).
  */
 export async function apiFetch<T>(path: string, options: FetchOptions = {}): Promise<T> {
-  const base = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
+  const base = process.env.API_BASE_URL ?? "";
   const url = path.startsWith("http") ? path : `${base}${path}`;
 
   const res = await fetch(url, {
