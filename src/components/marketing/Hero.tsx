@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
@@ -12,6 +12,7 @@ import {
   homeSpacing,
   sectionCardShellSpacing,
 } from "@/lib/utils";
+import type { HeroTopic } from "@/lib/api/types";
 
 interface Slide {
   heading: string;
@@ -19,6 +20,10 @@ interface Slide {
   description: string;
   bgImage: string;
   bgAlt: string;
+}
+
+interface HeroProps {
+  heroSection?: HeroTopic[] | null;
 }
 
 const PARTNER_NAMES = [
@@ -98,9 +103,8 @@ function LogoStrip() {
   );
 }
 
-export function Hero() {
-  const t = useTranslations("hero");
-  const SLIDES: Slide[] = [
+function buildFallbackSlides(t: ReturnType<typeof useTranslations>): Slide[] {
+  return [
     {
       heading: t("slides.0.heading"),
       cardLabel: t("slides.0.cardLabel"),
@@ -116,6 +120,28 @@ export function Hero() {
       bgAlt: t("slides.1.bgAlt"),
     },
   ];
+}
+
+function mapApiSlidesToSlides(topics: HeroTopic[]): Slide[] {
+  return topics.map((topic) => ({
+    heading: topic.title,
+    cardLabel: topic.title.toUpperCase(),
+    description: topic.description,
+    bgImage: topic.image,
+    bgAlt: topic.title,
+  }));
+}
+
+export function Hero({ heroSection }: HeroProps) {
+  const t = useTranslations("hero");
+
+  const SLIDES = useMemo<Slide[]>(() => {
+    if (heroSection && heroSection.length > 0) {
+      return mapApiSlidesToSlides(heroSection);
+    }
+    return buildFallbackSlides(t);
+  }, [heroSection, t]);
+
   const [current, setCurrent] = useState(0);
 
   const next = useCallback(() => {
@@ -202,22 +228,37 @@ export function Hero() {
                   </AnimatePresence>
 
                   <div className="mt-8 flex flex-wrap items-center gap-3">
-                    <Link
-                      href="/contato"
-                      className="rounded-md border border-white/20 bg-white/8 px-5 py-3 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/14 sm:px-6"
-                    >
-                      {t("requestQuote")}
-                    </Link>
-                    <Link
-                      href="/servicos"
-                      className="group inline-flex items-center gap-2 rounded-md bg-chart-5 px-5 py-3 text-sm font-medium text-white transition-transform hover:-translate-y-0.5 sm:px-6"
-                    >
-                      {t("exploreSolutions")}
-                      <ArrowRight
-                        size={16}
-                        className="transition-transform group-hover:translate-x-0.5"
-                      />
-                    </Link>
+                    {heroSection?.[current]?.button ? (
+                      <Link
+                        href={heroSection[current].button.url}
+                        className="group inline-flex items-center gap-2 rounded-md bg-chart-5 px-5 py-3 text-sm font-medium text-white transition-transform hover:-translate-y-0.5 sm:px-6"
+                      >
+                        {heroSection[current].button.text}
+                        <ArrowRight
+                          size={16}
+                          className="transition-transform group-hover:translate-x-0.5"
+                        />
+                      </Link>
+                    ) : (
+                      <>
+                        <Link
+                          href="/contato"
+                          className="rounded-md border border-white/20 bg-white/8 px-5 py-3 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/14 sm:px-6"
+                        >
+                          {t("requestQuote")}
+                        </Link>
+                        <Link
+                          href="/servicos"
+                          className="group inline-flex items-center gap-2 rounded-md bg-chart-5 px-5 py-3 text-sm font-medium text-white transition-transform hover:-translate-y-0.5 sm:px-6"
+                        >
+                          {t("exploreSolutions")}
+                          <ArrowRight
+                            size={16}
+                            className="transition-transform group-hover:translate-x-0.5"
+                          />
+                        </Link>
+                      </>
+                    )}
                   </div>
                 </div>
 

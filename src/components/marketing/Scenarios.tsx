@@ -3,9 +3,14 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { cn, freeSectionShellSpacing, homeSpacing } from "@/lib/utils";
+import type { SceneryItem } from "@/lib/api/types";
 import AppleCardsCarousel from "../apple-cards-carousel";
 
-export function Scenarios() {
+interface ScenariosProps {
+  scenerySection?: SceneryItem[] | null;
+}
+
+export function Scenarios({ scenerySection }: ScenariosProps) {
   const t = useTranslations("scenarios");
 
   return (
@@ -22,7 +27,7 @@ export function Scenarios() {
         </p>
         <div className="mt-4 h-1 w-20 rounded-full bg-chart-5" />
       </div>
-      <AppleCardsCarousel />
+      <AppleCardsCarousel scenerySection={scenerySection} />
 
       <div className={`mt-8 flex justify-end sm:mt-10 ${homeSpacing}`}>
         <Link

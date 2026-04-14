@@ -9,6 +9,7 @@ import { Operations } from "@/components/marketing/Operations";
 import { NewsAndSocial } from "@/components/marketing/NewsAndSocial";
 import { Testimonials } from "@/components/marketing/Testimonials";
 import { Results } from "@/components/marketing/Results";
+import { getLandingContent } from "@/lib/api/content";
 
 export const metadata: Metadata = {
   title: "Estruturas metalicas e energia solar para projetos industriais",
@@ -20,15 +21,19 @@ export const metadata: Metadata = {
   keywords: [...SITE.keywords, "Energia solar para empresas", "Perfis sob medida"],
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const { heroSection, scenerySection } = await getLandingContent();
+  console.log("🚀 ~ HomePage ~ heroSection:", heroSection)
+  console.log("🚀 ~ HomePage ~ scenerySection:", scenerySection)
+
   return (
     <>
       <JsonLd id="jsonld-org" data={organizationJsonLd()} />
       <JsonLd id="jsonld-website" data={websiteJsonLd()} />
 
       <main className="flex flex-col items-center justify-center gap-10">
-        <Hero />
-        <Scenarios />
+        <Hero heroSection={heroSection} />
+        <Scenarios scenerySection={scenerySection} />
         <Operations />
         <NewsAndSocial />
         <Testimonials />
