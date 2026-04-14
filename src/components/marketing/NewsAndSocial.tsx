@@ -1,4 +1,5 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import { IconArrowNarrowRight } from "@tabler/icons-react";
 import { BlogFeatureCard } from "@/components/marketing/BlogFeatureCard";
 import { freeSectionShellSpacing } from "@/lib/utils";
@@ -52,6 +53,8 @@ const INSTAGRAM_POSTS: InstagramPost[] = [
 ];
 
 export function NewsAndSocial() {
+  const t = useTranslations("newsAndSocial");
+
   return (
     <section
       aria-labelledby="news-title"
@@ -63,11 +66,9 @@ export function NewsAndSocial() {
           <div className="flex flex-col">
             <h2
               id="news-title"
-              className="font-barlow text-3xl font-bold uppercase leading-tight text-foreground sm:text-4xl"
+              className="font-barlow whitespace-pre-line text-3xl font-bold uppercase leading-tight text-foreground sm:text-4xl"
             >
-              No centro das
-              <br />
-              novidades
+              {t("newsTitle")}
             </h2>
 
             <article
@@ -98,7 +99,7 @@ export function NewsAndSocial() {
                 href="/blog"
                 className="inline-flex items-center gap-2 rounded-full bg-secondary px-6 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
               >
-                Ir para o blog
+                {t("goToBlog")}
                 <IconArrowNarrowRight className="size-4" />
               </Link>
             </div>
@@ -148,7 +149,7 @@ export function NewsAndSocial() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-full bg-secondary px-6 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
               >
-                Ir para o instagram
+                {t("goToInstagram")}
                 <IconArrowNarrowRight className="size-4" />
               </a>
             </div>

@@ -1,5 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import {
 	BLOG_CATEGORIES,
 	BLOG_LIST_PAGE_SIZE,
@@ -42,6 +43,7 @@ export function BlogIndex({
   hasMore,
   className,
 }: BlogIndexProps) {
+  const t = useTranslations("blog");
   const nextLimite = limite + BLOG_LIST_PAGE_SIZE;
 
   return (
@@ -58,26 +60,26 @@ export function BlogIndex({
       >
         <div className="mt-12">
           <p className="text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-muted-foreground sm:text-xs">
-            Você está lendo
+            {t("youAreReading")}
           </p>
           <h2
             id="blog-list-heading"
             className="mt-2 text-2xl font-bold uppercase tracking-tight text-foreground sm:text-3xl"
           >
             {query.trim()
-              ? `Resultados (${totalFiltered})`
-              : getCategoryLabel(categoria) ?? "Últimos artigos"}
+              ? t("results", { count: totalFiltered })
+              : getCategoryLabel(categoria) ?? t("latestArticles")}
           </h2>
         </div>
 
         {visiblePosts.length === 0 ? (
           <p className="mt-10 text-muted-foreground">
-            Nenhum artigo encontrado para “{query.trim()}”. Tente outro termo ou
+            {t("noResults", { query: query.trim() })}{" "}
             <Link
               href="/blog"
               className="ml-1 font-semibold text-primary underline-offset-2 hover:underline"
             >
-              limpar a busca
+              {t("clearSearch")}
             </Link>
             .
           </p>
@@ -149,7 +151,7 @@ export function BlogIndex({
               })}
               className="text-sm font-bold uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground"
             >
-              Carregar mais…
+              {t("loadMore")}
             </Link>
           </div>
         ) : null}

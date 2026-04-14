@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import { useState, useCallback } from "react";
 import { Phone, MapPin, Maximize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -70,6 +71,7 @@ function formatBrazilPhoneDisplay(digits: string): string {
 }
 
 export function ContactForm() {
+	const t = useTranslations("contact");
 	const [phoneDisplay, setPhoneDisplay] = useState("");
 
 	const handlePhoneChange = useCallback(
@@ -98,10 +100,8 @@ export function ContactForm() {
 
 				<div className="relative z-10 flex flex-1 flex-col justify-between gap-8 p-8">
 					<div>
-						<h2 className="text-xl font-bold uppercase leading-tight text-primary sm:text-4xl">
-							Onde
-							<br />
-							estamos
+						<h2 className="whitespace-pre-line text-xl font-bold uppercase leading-tight text-primary sm:text-4xl">
+							{t("whereWeAre")}
 						</h2>
 					</div>
 
@@ -145,7 +145,7 @@ export function ContactForm() {
 						rel="noopener noreferrer"
 						className="inline-flex w-fit items-center gap-2 rounded-lg bg-secondary px-5 py-3 text-sm font-semibold text-secondary-foreground transition-transform hover:-translate-y-0.5"
 					>
-						Ampliar mapa
+						{t("expandMap")}
 						<Maximize2 className="size-3.5" aria-hidden />
 					</Link>
 				</div>
@@ -158,7 +158,7 @@ export function ContactForm() {
 			>
 				<div className="flex flex-col gap-2">
 					<Label htmlFor="contact-name" className={fieldLabel}>
-						Nome completo*
+						{t("fullName")}
 					</Label>
 					<Input
 						id="contact-name"
@@ -172,7 +172,7 @@ export function ContactForm() {
 				<div className="grid gap-8 sm:grid-cols-2">
 					<div className="flex flex-col gap-2">
 						<Label htmlFor="contact-email" className={fieldLabel}>
-							E-mail*
+							{t("email")}
 						</Label>
 						<Input
 							id="contact-email"
@@ -184,7 +184,7 @@ export function ContactForm() {
 					</div>
 					<div className="flex flex-col gap-2">
 						<Label htmlFor="contact-phone" className={fieldLabel}>
-							Celular / WhatsApp*
+							{t("phone")}
 						</Label>
 						<Input
 							id="contact-phone"
@@ -195,24 +195,23 @@ export function ContactForm() {
 							required
 							value={phoneDisplay}
 							onChange={handlePhoneChange}
-							placeholder="(00) 00000-0000"
+							placeholder={t("phonePlaceholder")}
 							className={underlineInput}
 							aria-describedby="contact-phone-hint"
 							pattern={
 								"^\\(\\d{2}\\) 9\\d{4}-\\d{4}$|^\\(\\d{2}\\) \\d{4}-\\d{4}$"
 							}
-							title="Use DDD e número completo, ex.: (17) 99999-9999 ou (17) 3234-5678"
+							title={t("phoneTitle")}
 						/>
 						<p id="contact-phone-hint" className="sr-only">
-							Digite DDD e número completo: celular (00) 90000-0000 ou fixo (00)
-							0000-0000.
+							{t("phoneHint")}
 						</p>
 					</div>
 				</div>
 
 				<div className="flex flex-col gap-2">
 					<Label htmlFor="contact-company" className={fieldLabel}>
-						Nome da empresa*
+						{t("companyName")}
 					</Label>
 					<Input
 						id="contact-company"
@@ -226,7 +225,7 @@ export function ContactForm() {
 				<div className="grid gap-8 sm:grid-cols-2">
 					<div className="flex flex-col gap-2">
 						<Label htmlFor="contact-city" className={fieldLabel}>
-							Cidade*
+							{t("city")}
 						</Label>
 						<Input
 							id="contact-city"
@@ -237,13 +236,13 @@ export function ContactForm() {
 						/>
 					</div>
 					<div className="flex flex-col gap-2">
-						<Label className={fieldLabel}>Estado*</Label>
+						<Label className={fieldLabel}>{t("state")}</Label>
 						<Select name="state">
 							<SelectTrigger
 								className={cn(underlineInput, "w-full h-12!")}
 								iconClassName="text-primary"
 							>
-								<SelectValue placeholder="Selecione o estado" />
+								<SelectValue placeholder={t("selectState")} />
 							</SelectTrigger>
 							<SelectContent>
 								{BRAZILIAN_STATES.map((s) => (
@@ -257,15 +256,13 @@ export function ContactForm() {
 				</div>
 
 				<div className="flex flex-col gap-2">
-					<Label className={fieldLabel}>
-						Deseja falar sobre algum serviço? (opcional)
-					</Label>
+					<Label className={fieldLabel}>{t("serviceQuestion")}</Label>
 					<Select name="service">
 						<SelectTrigger
 							className={cn(underlineInput, "w-full h-12!")}
 							iconClassName="text-primary"
 						>
-							<SelectValue placeholder="Selecione um serviço" />
+							<SelectValue placeholder={t("selectService")} />
 						</SelectTrigger>
 						<SelectContent>
 							{services.map((s) => (
@@ -279,7 +276,7 @@ export function ContactForm() {
 
 				<div className="flex flex-col gap-2">
 					<Label htmlFor="contact-message" className={fieldLabel}>
-						Mensagem (opcional)
+						{t("message")}
 					</Label>
 					<Textarea
 						id="contact-message"
@@ -291,7 +288,7 @@ export function ContactForm() {
 
 				<div className="flex justify-end">
 					<Button type="submit" variant="secondary" className="px-8">
-						Enviar contato
+						{t("submit")}
 					</Button>
 				</div>
 			</form>

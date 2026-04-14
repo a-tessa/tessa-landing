@@ -1,0 +1,219 @@
+{
+  "nav": {
+    "about": "ABOUT TESSA",
+    "services": "SERVICES",
+    "representatives": "REPRESENTATIVES",
+    "blog": "BLOG",
+    "contact": "CONTACT",
+    "since": "SINCE 2001",
+    "selectLanguage": "Select language",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "navLabel": "Navigation menu"
+  },
+  "hero": {
+    "slides": {
+      "0": {
+        "heading": "Metal structures\nand custom profiles.",
+        "cardLabel": "METAL\nSTRUCTURES\nAND CUSTOM PROFILES",
+        "description": "Galvanized steel. Applied engineering. Industrial production.\nDelivery so your project gets off the ground with predictability.",
+        "bgAlt": "Aerial view of Tessa factory with metal structures and industrial warehouses"
+      },
+      "1": {
+        "heading": "Clean energy\nthat cuts your costs.",
+        "cardLabel": "CLEAN ENERGY\nTHAT CUTS\nYOUR COSTS",
+        "description": "Solar energy solutions for businesses and industries.\nRecurring savings and more sustainable operations.",
+        "bgAlt": "Solar panels installed by Tessa at an industrial plant"
+      }
+    },
+    "requestQuote": "Request a quote",
+    "exploreSolutions": "Explore solutions",
+    "nextSolution": "Show next solution",
+    "prevSolution": "Show previous solution",
+    "trustedCompanies": "Companies that trust us"
+  },
+  "scenarios": {
+    "title": "Choose your scenario",
+    "subtitle": "Custom solutions for construction, energy and production.",
+    "viewAll": "See all services"
+  },
+  "operations": {
+    "title": "Our\noperations,\nin practice",
+    "subtitle": "See how engineering takes shape through real images.",
+    "prevImage": "Previous image",
+    "nextImage": "Next image",
+    "prevImages": "Previous images",
+    "nextImages": "Next images",
+    "goToImage": "Go to image {number}"
+  },
+  "results": {
+    "title": "Results\nthat count",
+    "ariaLabel": "Tessa results in numbers",
+    "stats": {
+      "0": { "label": "m² in metal structures" },
+      "1": { "label": "installations across Brazil" },
+      "2": { "label": "years of experience in structural engineering" }
+    }
+  },
+  "testimonials": {
+    "title": "Those who\ntrust our\nwork",
+    "writeTestimonial": "Write a testimonial",
+    "prevTestimonial": "Previous testimonial",
+    "nextTestimonial": "Next testimonial",
+    "starsLabel": "{rating} out of 5 stars",
+    "viewTestimonial": "View testimonial from {name}"
+  },
+  "testimonialForm": {
+    "dialogTitle": "Write a testimonial",
+    "dialogDescription": "Fill in the fields below. Your testimonial can have up to {max} characters.",
+    "nameLabel": "Name",
+    "companyLabel": "Company name",
+    "ratingLabel": "Rating",
+    "ratingOption": "Rating {value} out of 5",
+    "ratingHint": "Tap the stars to choose from 1 to 5.",
+    "textLabel": "Testimonial",
+    "textPlaceholder": "Tell us about your experience with Tessa...",
+    "textHint": "Maximum of {max} characters.",
+    "submitting": "Submitting…",
+    "submit": "Submit testimonial",
+    "close": "Close"
+  },
+  "newsAndSocial": {
+    "newsTitle": "At the center\nof the news",
+    "goToBlog": "Go to blog",
+    "goToInstagram": "Go to Instagram"
+  },
+  "blog": {
+    "youAreReading": "You are reading",
+    "results": "Results ({count})",
+    "latestArticles": "Latest articles",
+    "noResults": "No articles found for \"{query}\". Try another term or",
+    "clearSearch": "clear the search",
+    "loadMore": "Load more…",
+    "filterLabel": "Filter articles by category",
+    "searchLabel": "Search article by title",
+    "searchPlaceholder": "Search by title...",
+    "searchButton": "Search",
+    "publishedAt": "Published on {date}",
+    "readMore": "Read full article",
+    "relatedArticles": "Related\narticles",
+    "backToArticles": "Back to articles",
+    "articleNav": "Article navigation"
+  },
+  "blogCta": {
+    "title": "Find a representative",
+    "subtitle": "Near you.",
+    "cta": "Go to representatives"
+  },
+  "contact": {
+    "whereWeAre": "Where\nwe are",
+    "expandMap": "Expand map",
+    "fullName": "Full name*",
+    "email": "Email*",
+    "phone": "Mobile / WhatsApp*",
+    "phonePlaceholder": "(00) 00000-0000",
+    "phoneHint": "Enter area code and full number: mobile (00) 90000-0000 or landline (00) 0000-0000.",
+    "phoneTitle": "Use area code and full number, e.g.: (17) 99999-9999 or (17) 3234-5678",
+    "companyName": "Company name*",
+    "city": "City*",
+    "state": "State*",
+    "selectState": "Select state",
+    "serviceQuestion": "Want to discuss a specific service? (optional)",
+    "selectService": "Select a service",
+    "message": "Message (optional)",
+    "submit": "Send message"
+  },
+  "representatives": {
+    "title": "Find one of our representatives in your region.",
+    "selectState": "Select state",
+    "selectStatePlaceholder": "Select state",
+    "selectedState": "Selected state \"{state}\"",
+    "noRepresentatives": "There are no registered representatives for this state yet. Contact us for other regions.",
+    "segment": "Segment",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "copyLabel": "{label}: copy {value}"
+  },
+  "pages": {
+    "servicos": {
+      "title": "Services",
+      "description": "Discover Tessa's scenarios and solutions: metal structures, solar energy and applied engineering for construction and production.",
+      "chooseScenario": "Choose your scenario",
+      "customSolutions": "Custom solutions for construction, energy and production.",
+      "viewAllServices": "See all services"
+    },
+    "servicoDetail": {
+      "serviceNav": "Service navigation",
+      "backToServices": "Back to services",
+      "serviceNavLabel": "Service navigation",
+      "whatHappens": "What happens\nin practice?",
+      "goToChannel": "Go to channel",
+      "downloadTitle": "Download presentations, brochures and manuals now",
+      "downloadSub": "for this product",
+      "downloadCta": "Download materials"
+    },
+    "representantes": {
+      "title": "Representatives",
+      "description": "Local support, technical assistance and agility for your project.",
+      "mapLabel": "Map of Brazil"
+    },
+    "blog": {
+      "title": "Blog",
+      "description": "Discover valuable content and expert advice from our experienced team to elevate your knowledge and help you make a safer decision when hiring Tessa."
+    },
+    "contato": {
+      "title": "Contact",
+      "description": "Talk to our team to ask questions, request a quote or learn about our solutions."
+    }
+  },
+  "footer": {
+    "siteLabel": "Tessa website footer",
+    "homeLabel": "Tessa home page",
+    "logoAlt": "Tessa - Metal structures and solar energy",
+    "newsletterTitle": "Get news from Tessa",
+    "newsletterSub": "Technical content, updates and solutions",
+    "formLabel": "Newsletter subscription form",
+    "emailLabel": "Your corporate email",
+    "emailPlaceholder": "Your corporate email",
+    "subscribe": "Subscribe to newsletter",
+    "menuTitle": "Menu",
+    "menuLabel": "Footer menu",
+    "contactTitle": "Contact/\nLocation",
+    "allRightsReserved": "All rights reserved.",
+    "legalLabel": "Legal links",
+    "links": {
+      "about": "About Tessa",
+      "services": "Services",
+      "structures": "Structures",
+      "representatives": "Representatives",
+      "blog": "Blog",
+      "contact": "Contact/Location"
+    },
+    "legal": {
+      "terms": "Terms of use",
+      "privacy": "Privacy policy",
+      "careers": "Work with us"
+    },
+    "social": {
+      "linkedin": "Tessa on LinkedIn",
+      "youtube": "Tessa on YouTube",
+      "instagram": "Tessa on Instagram"
+    }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "This page doesn't seem to exist. Go back to the home page to explore our services, solutions and content.",
+    "cta": "Explore content",
+    "metaTitle": "Page not found",
+    "metaDescription": "The page you are looking for does not exist or has been moved. Return to the Tessa home page."
+  },
+  "metadata": {
+    "homeTitle": "Metal structures and solar energy for industrial projects",
+    "homeDescription": "Metal structures, custom profiles and solar energy for companies seeking applied engineering, industrial production and predictability in execution."
+  },
+  "languageSwitcher": {
+    "pt-BR": "Português",
+    "en": "English",
+    "es": "Español"
+  }
+}

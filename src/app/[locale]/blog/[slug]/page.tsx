@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { BackNavLink } from "@/components/marketing/BackNavLink";
@@ -10,9 +11,6 @@ import { SITE } from "@/lib/seo/schemas";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 import { BlogCategoryNav } from "@/components/marketing/BlogCategoryNav";
 import { BlogFeatureCard } from "@/components/marketing/BlogFeatureCard";
-
-const BLOG_DESCRIPTION =
-  "Descubra conteúdos valiosos e conselhos de especialistas da nossa equipe experiente para elevar seu conhecimento e ajudar você a tomar uma decisão mais segura na hora de contratar a Tessa.";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -66,6 +64,9 @@ export default async function BlogPostPage({ params }: PageProps) {
     )
     .slice(0, 2);
 
+  const t = await getTranslations("pages.blog");
+  const bt = await getTranslations("blog");
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -88,15 +89,15 @@ export default async function BlogPostPage({ params }: PageProps) {
       <JsonLd id="jsonld-post" data={jsonLd} />
 
       <main className="flex flex-col items-center justify-center gap-0">
-        <Heading title="Blog" description={BLOG_DESCRIPTION} />
+        <Heading title={t("title")} description={t("description")} />
 
         <BlogCategoryNav activeCategory={post.category} />
 
         <section className={cn("w-full pb-16 pt-6", freeSectionShellSpacing)}>
           <BackNavLink
             href="/blog"
-            label="Voltar para artigos"
-            navLabel="Navegação do artigo"
+            label={bt("backToArticles")}
+            navLabel={bt("articleNav")}
             className="mb-8 mt-8"
           />
 
@@ -138,7 +139,9 @@ export default async function BlogPostPage({ params }: PageProps) {
                       dateTime={post.publishedAt}
                       className="text-xs font-semibold text-primary"
                     >
-                      Publicado em {formatPublishedDate(post.publishedAt)}
+                      {bt("publishedAt", {
+                        date: formatPublishedDate(post.publishedAt),
+                      })}
                     </time>
                   </div>
                 </div>
@@ -153,11 +156,9 @@ export default async function BlogPostPage({ params }: PageProps) {
             >
               <h2
                 id="related-articles-heading"
-                className="font-barlow text-3xl font-bold uppercase leading-tight text-foreground sm:text-4xl"
+                className="font-barlow whitespace-pre-line text-3xl font-bold uppercase leading-tight text-foreground sm:text-4xl"
               >
-                Artigos
-                <br />
-                relacionados
+                {bt("relatedArticles")}
               </h2>
 
               <ul className="mt-8 grid list-none gap-6 lg:grid-cols-2">
@@ -185,8 +186,8 @@ export default async function BlogPostPage({ params }: PageProps) {
 
           <BackNavLink
             href="/blog"
-            label="Voltar para artigos"
-            navLabel="Navegação do artigo"
+            label={bt("backToArticles")}
+            navLabel={bt("articleNav")}
             className="mt-10"
           />
         </section>

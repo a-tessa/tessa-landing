@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 import { BackNavLink } from "@/components/marketing/BackNavLink";
 import { Footer } from "@/components/marketing/Footer";
@@ -71,6 +72,8 @@ export default async function ServiceDetailPage({ params }: PageProps) {
 
   if (!service) notFound();
 
+  const t = await getTranslations("pages.servicoDetail");
+
   const serviceJsonLd = {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -104,7 +107,7 @@ export default async function ServiceDetailPage({ params }: PageProps) {
         <Heading title={service.title} description={service.description} />
         <div className="relative h-auto w-fit">
           <nav
-            aria-label="Navegação de serviços"
+            aria-label={t("serviceNav")}
             className={cn(
               "service-heading-carousel z-50",
               freeSectionShellSpacing,
@@ -149,8 +152,8 @@ export default async function ServiceDetailPage({ params }: PageProps) {
           <div className={cn("mb-4", freeSectionShellSpacing)}>
             <BackNavLink
               href="/servicos"
-              label="Voltar para serviços"
-              navLabel="Navegação do serviço"
+              label={t("backToServices")}
+              navLabel={t("serviceNavLabel")}
             />
           </div>
           <div className={cn("flex flex-col gap-8", freeSectionShellSpacing)}>
@@ -159,12 +162,12 @@ export default async function ServiceDetailPage({ params }: PageProps) {
             </h3>
             <div className="relative flex flex-col md:flex-row h-auto gap-8">
               <div className="w-full md:w-1/2 gap-8 flex flex-col">
-                <p className="text-xl md:text-3xl uppercase font-semibold">
-                  O que acontece, <br /> na prática?
+                <p className="whitespace-pre-line text-xl md:text-3xl uppercase font-semibold">
+                  {t("whatHappens")}
                 </p>
                 <Video className="rounded-3xl overflow-hidden h-4/5 w-auto aspect-video" />
                 <Button variant="secondary" className="w-fit ml-auto">
-                  Ir para o canal
+                  {t("goToChannel")}
                   <IconArrowRight className="size-4" />
                 </Button>
               </div>
@@ -197,17 +200,15 @@ export default async function ServiceDetailPage({ params }: PageProps) {
               id="servico-materiais-heading"
               className="relative z-10 max-w-2xl text-left text-lg font-semibold uppercase text-secondary-foreground sm:text-2xl"
             >
-              <strong className="font-bold">
-                Baixe agora as apresentações, folders e manuais
-              </strong>
+              <strong className="font-bold">{t("downloadTitle")}</strong>
               <br />
-              <span className="font-semibold">deste produto</span>
+              <span className="font-semibold">{t("downloadSub")}</span>
             </p>
             <Button
               variant="default"
               className="relative z-10 w-full shrink-0 sm:ml-auto sm:w-fit"
             >
-              Baixar materiais
+              {t("downloadCta")}
               <IconArrowDown className="size-4" />
             </Button>
           </div>

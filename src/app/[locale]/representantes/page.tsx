@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { useTranslations } from "next-intl";
 import { Footer } from "@/components/marketing/Footer";
 import { Heading } from "@/components/marketing/Heading";
 import { RepresentativesDirectory } from "@/components/marketing/RepresentativesDirectory";
@@ -48,6 +49,8 @@ const mapCss = /* css */ `
 `;
 
 export default function RepresentantesPage() {
+  const t = useTranslations("pages.representantes");
+
   return (
     <>
       <style href="map" precedence="component">
@@ -57,13 +60,10 @@ export default function RepresentantesPage() {
       <JsonLd id="jsonld-website" data={websiteJsonLd()} />
 
       <main className="flex flex-col items-center justify-center gap-20">
-        <Heading
-          title="Representantes"
-          description="Atendimento próximo, suporte técnico e agilidade para o seu projeto."
-        />
+        <Heading title={t("title")} description={t("description")} />
         <div className="relative h-auto w-fit">
           <div
-            aria-label="Mapa do Brasil"
+            aria-label={t("mapLabel")}
             className={cn("map z-50 hidden sm:block")}
           >
             <Image

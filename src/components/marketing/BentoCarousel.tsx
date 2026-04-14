@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import {
   IconArrowNarrowLeft,
@@ -34,6 +35,7 @@ export function BentoCarousel({ slides, className }: BentoCarouselProps) {
 }
 
 function MobileCarousel({ slides }: { slides: BentoSlide[] }) {
+  const t = useTranslations("operations");
   const allImages = slides.flatMap((s) => s.images);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -63,15 +65,11 @@ function MobileCarousel({ slides }: { slides: BentoSlide[] }) {
     <div className="relative md:hidden overflow-hidden rounded-3xl bg-primary bg-[url('/operations-section-bg.webp')] bg-cover bg-center bg-no-repeat">
       <div className={cn("flex flex-col", insideCardSpacing)}>
         <div className="pb-6 pt-10">
-          <h3 className="font-barlow text-3xl font-bold uppercase leading-tight text-white">
-            Nossas
-            <br />
-            operações,
-            <br />
-            na prática
+          <h3 className="whitespace-pre-line font-barlow text-3xl font-bold uppercase leading-tight text-white">
+            {t("title")}
           </h3>
           <p className="mt-4 max-w-[220px] text-xs font-medium uppercase tracking-[0.14em] text-white/70">
-            Acompanhe imagens que mostram como a engenharia ganha forma.
+            {t("subtitle")}
           </p>
         </div>
       </div>
@@ -106,7 +104,7 @@ function MobileCarousel({ slides }: { slides: BentoSlide[] }) {
           onClick={handlePrev}
           disabled={activeIndex === 0}
           className="absolute left-6 top-1/2 z-10 flex size-9 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-secondary text-white shadow-lg transition-opacity hover:opacity-90 disabled:pointer-events-none disabled:opacity-0"
-          aria-label="Imagem anterior"
+          aria-label={t("prevImage")}
         >
           <IconArrowNarrowLeft className="size-5" />
         </button>
@@ -115,7 +113,7 @@ function MobileCarousel({ slides }: { slides: BentoSlide[] }) {
           onClick={handleNext}
           disabled={activeIndex === allImages.length - 1}
           className="absolute right-6 top-1/2 z-10 flex size-9 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-secondary text-white shadow-lg transition-opacity hover:opacity-90 disabled:pointer-events-none disabled:opacity-0"
-          aria-label="Próxima imagem"
+          aria-label={t("nextImage")}
         >
           <IconArrowNarrowRight className="size-5" />
         </button>
@@ -131,7 +129,7 @@ function MobileCarousel({ slides }: { slides: BentoSlide[] }) {
               "size-2 rounded-full transition-all duration-300",
               i === activeIndex ? "w-6 bg-white" : "bg-white/40",
             )}
-            aria-label={`Ir para imagem ${i + 1}`}
+            aria-label={t("goToImage", { number: i + 1 })}
           />
         ))}
       </div>
@@ -140,6 +138,7 @@ function MobileCarousel({ slides }: { slides: BentoSlide[] }) {
 }
 
 function DesktopBento({ slides }: { slides: BentoSlide[] }) {
+  const t = useTranslations("operations");
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -178,15 +177,11 @@ function DesktopBento({ slides }: { slides: BentoSlide[] }) {
       >
         <div className="relative flex shrink-0 flex-col justify-center pb-12 pt-10 lg:w-[300px] lg:pb-14">
           <div className="relative z-10">
-            <h3 className="font-barlow text-3xl font-bold uppercase leading-tight text-white lg:text-4xl">
-              Nossas
-              <br />
-              operações,
-              <br />
-              na prática
+            <h3 className="whitespace-pre-line font-barlow text-3xl font-bold uppercase leading-tight text-white lg:text-4xl">
+              {t("title")}
             </h3>
             <p className="mt-4 max-w-[220px] text-xs font-medium uppercase tracking-[0.14em] text-white/70">
-              Acompanhe imagens que mostram como a engenharia ganha forma.
+              {t("subtitle")}
             </p>
           </div>
         </div>
@@ -232,7 +227,7 @@ function DesktopBento({ slides }: { slides: BentoSlide[] }) {
         onClick={handleScrollLeft}
         disabled={!canScrollLeft}
         className="absolute left-4 top-1/2 z-30 flex size-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-secondary text-white shadow-lg transition-opacity hover:opacity-90 disabled:pointer-events-none disabled:opacity-0 lg:size-12"
-        aria-label="Imagens anteriores"
+        aria-label={t("prevImages")}
       >
         <IconArrowNarrowLeft className="size-5 lg:size-6" />
       </button>
@@ -241,7 +236,7 @@ function DesktopBento({ slides }: { slides: BentoSlide[] }) {
         onClick={handleScrollRight}
         disabled={!canScrollRight}
         className="absolute right-4 top-1/2 z-30 flex size-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-secondary text-white shadow-lg transition-opacity hover:opacity-90 disabled:pointer-events-none disabled:opacity-0 lg:size-12"
-        aria-label="Próximas imagens"
+        aria-label={t("nextImages")}
       >
         <IconArrowNarrowRight className="size-5 lg:size-6" />
       </button>

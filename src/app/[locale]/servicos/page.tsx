@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { useTranslations } from "next-intl";
 import { Footer } from "@/components/marketing/Footer";
 import { Heading } from "@/components/marketing/Heading";
 import { Testimonials } from "@/components/marketing/Testimonials";
@@ -6,7 +7,7 @@ import { JsonLd } from "@/lib/seo/jsonld";
 import { organizationJsonLd, SITE, websiteJsonLd } from "@/lib/seo/schemas";
 import { freeSectionShellSpacing, homeSpacing } from "@/lib/utils";
 import AppleCardsCarousel from "@/components/apple-cards-carousel";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { Results } from "@/components/marketing/Results";
 
 export const metadata: Metadata = {
@@ -26,16 +27,15 @@ export const metadata: Metadata = {
 };
 
 export default function ServicosPage() {
+  const t = useTranslations("pages.servicos");
+
   return (
     <>
       <JsonLd id="jsonld-org" data={organizationJsonLd()} />
       <JsonLd id="jsonld-website" data={websiteJsonLd()} />
 
       <main className="flex flex-col items-center justify-center gap-20">
-        <Heading
-          title="Serviços"
-          description="Conheça os cenários e soluções Tessa: estruturas metálicas, energia solar e engenharia aplicada para obra e produção."
-        />
+        <Heading title={t("title")} description={t("description")} />
         <Scenarios />
         <Testimonials />
         <Results />
@@ -47,6 +47,8 @@ export default function ServicosPage() {
 }
 
 export function Scenarios() {
+  const t = useTranslations("pages.servicos");
+
   return (
     <section aria-labelledby="scenarios-title" className="w-full">
       <div className={`${freeSectionShellSpacing} flex flex-col md:flex-row gap-10`}>
@@ -55,10 +57,10 @@ export function Scenarios() {
             id="scenarios-title"
             className="text-3xl font-semibold uppercase leading-tight text-foreground sm:text-6xl text-left md:text-right"
           >
-            Escolha seu cenário
+            {t("chooseScenario")}
           </h2>
           <p className="mt-2 text-2xl font-semibold uppercase text-foreground text-left md:text-right">
-            Soluções sob medida para obra, energia e produção.
+            {t("customSolutions")}
           </p>
         </div>
         <p className="w-full md:w-5/12 flex-1 text-left md:text-left">
@@ -83,7 +85,7 @@ export function Scenarios() {
           href="/servicos"
           className="inline-flex items-center gap-2 rounded-lg bg-secondary px-6 py-3 text-sm font-medium text-white transition-transform hover:-translate-y-0.5"
         >
-          Conhecer todos os serviços
+          {t("viewAllServices")}
         </Link>
       </div>
     </section>

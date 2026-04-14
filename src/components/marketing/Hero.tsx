@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { AnimatePresence, domAnimation, LazyMotion, m } from "motion/react";
 import { ArrowRight, ChevronDown, ChevronLeft } from "lucide-react";
 import {
@@ -19,26 +20,6 @@ interface Slide {
   bgImage: string;
   bgAlt: string;
 }
-
-const SLIDES: Slide[] = [
-  {
-    heading: "Estruturas metálicas\ne perfis sob medida.",
-    cardLabel: "ESTRUTURAS\nMETÁLICAS\nE PERFIS SOB MEDIDA",
-    description:
-      "Aço galvanizado. Engenharia aplicada. Produção industrial.\nEntrega para o seu projeto sair do papel com previsibilidade.",
-    bgImage: "/hero-image.png",
-    bgAlt:
-      "Vista aérea da fábrica Tessa com estruturas metálicas e galpões industriais",
-  },
-  {
-    heading: "Energia limpa\nque reduz seus custos.",
-    cardLabel: "ENERGIA LIMPA\nQUE REDUZ\nSEUS CUSTOS",
-    description:
-      "Soluções em energia solar para empresas e indústrias.\nEconomia recorrente e operação mais sustentável.",
-    bgImage: "/hero-image.png",
-    bgAlt: "Painéis solares instalados pela Tessa em planta industrial",
-  },
-];
 
 const PARTNER_NAMES = [
   "Outros Montes",
@@ -118,15 +99,32 @@ function LogoStrip() {
 }
 
 export function Hero() {
+  const t = useTranslations("hero");
+  const SLIDES: Slide[] = [
+    {
+      heading: t("slides.0.heading"),
+      cardLabel: t("slides.0.cardLabel"),
+      description: t("slides.0.description"),
+      bgImage: "/hero-image.png",
+      bgAlt: t("slides.0.bgAlt"),
+    },
+    {
+      heading: t("slides.1.heading"),
+      cardLabel: t("slides.1.cardLabel"),
+      description: t("slides.1.description"),
+      bgImage: "/hero-image.png",
+      bgAlt: t("slides.1.bgAlt"),
+    },
+  ];
   const [current, setCurrent] = useState(0);
 
   const next = useCallback(() => {
     setCurrent((prev) => (prev + 1) % SLIDES.length);
-  }, []);
+  }, [SLIDES.length]);
 
   const prev = useCallback(() => {
     setCurrent((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
-  }, []);
+  }, [SLIDES.length]);
 
   const activeSlide = SLIDES[current];
 
@@ -208,13 +206,13 @@ export function Hero() {
                       href="/contato"
                       className="rounded-md border border-white/20 bg-white/8 px-5 py-3 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/14 sm:px-6"
                     >
-                      Solicitar orçamento
+                      {t("requestQuote")}
                     </Link>
                     <Link
                       href="/servicos"
                       className="group inline-flex items-center gap-2 rounded-md bg-chart-5 px-5 py-3 text-sm font-medium text-white transition-transform hover:-translate-y-0.5 sm:px-6"
                     >
-                      Conhecer soluções
+                      {t("exploreSolutions")}
                       <ArrowRight
                         size={16}
                         className="transition-transform group-hover:translate-x-0.5"
@@ -250,7 +248,7 @@ export function Hero() {
                         type="button"
                         onClick={next}
                         className="flex h-11 w-11 items-center justify-center rounded-full bg-chart-5 text-white transition-transform hover:scale-105"
-                        aria-label="Mostrar a próxima solução"
+                        aria-label={t("nextSolution")}
                       >
                         <ArrowRight size={18} />
                       </button>
@@ -270,7 +268,7 @@ export function Hero() {
                   type="button"
                   onClick={prev}
                   className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/16"
-                  aria-label="Mostrar a solução anterior"
+                  aria-label={t("prevSolution")}
                 >
                   <ChevronLeft size={18} />
                 </button>
@@ -278,7 +276,7 @@ export function Hero() {
                   type="button"
                   onClick={next}
                   className="flex h-10 w-10 items-center justify-center rounded-full bg-chart-5 text-white transition-colors hover:brightness-110"
-                  aria-label="Mostrar a próxima solução"
+                  aria-label={t("nextSolution")}
                 >
                   <ArrowRight size={18} />
                 </button>
@@ -287,7 +285,7 @@ export function Hero() {
 
             <div className="pb-14 text-center">
               <p className="text-xs font-bold uppercase tracking-[0.22em] text-white sm:text-sm">
-                Empresas que confiam
+                {t("trustedCompanies")}
               </p>
             </div>
           </div>
@@ -296,7 +294,7 @@ export function Hero() {
             type="button"
             onClick={prev}
             className="absolute left-5 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/16 lg:flex"
-            aria-label="Mostrar a solução anterior"
+            aria-label={t("prevSolution")}
           >
             <ChevronLeft size={20} />
           </button>

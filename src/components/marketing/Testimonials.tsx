@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useCallback, useState } from "react";
 import Image from "next/image";
 import {
@@ -55,10 +56,11 @@ function getIndex(current: number, offset: number): number {
 }
 
 function Stars({ rating }: { rating: number }) {
+  const t = useTranslations("testimonials");
   return (
     <div
       className="flex items-center gap-0.5"
-      aria-label={`${rating} de 5 estrelas`}
+      aria-label={t("starsLabel", { rating })}
     >
       {Array.from({ length: 5 }).map((_, i) => (
         <IconStarFilled
@@ -74,6 +76,7 @@ function Stars({ rating }: { rating: number }) {
 }
 
 export function Testimonials() {
+  const t = useTranslations("testimonials");
   const [current, setCurrent] = useState(1);
   const [direction, setDirection] = useState(0);
 
@@ -128,20 +131,16 @@ export function Testimonials() {
           <div>
             <h2
               id="testimonials-title"
-              className="font-barlow text-2xl font-semibold uppercase text-primary sm:text-4xl leading-none"
+              className="whitespace-pre-line font-barlow text-2xl font-semibold uppercase text-primary sm:text-4xl leading-none"
             >
-              Quem confia
-              <br />
-              no nosso
-              <br />
-              trabalho
+              {t("title")}
             </h2>
             <WriteTestimonialDialog>
               <button
                 type="button"
                 className="mt-4 inline-flex items-center gap-2 rounded-lg bg-secondary px-5 py-2.5 text-xs font-semibold text-white transition-opacity hover:opacity-90"
               >
-                Escrever depoimento
+                {t("writeTestimonial")}
                 <IconArrowNarrowRight className="size-4" aria-hidden />
               </button>
             </WriteTestimonialDialog>
@@ -152,7 +151,7 @@ export function Testimonials() {
             type="button"
             onClick={prev}
             className="flex size-10 cursor-pointer items-center justify-center self-end rounded-full border border-foreground/15 bg-card text-foreground transition-colors hover:bg-muted"
-            aria-label="Depoimento anterior"
+            aria-label={t("prevTestimonial")}
           >
             <IconArrowNarrowLeft className="size-5" />
           </button>
@@ -162,7 +161,7 @@ export function Testimonials() {
             type="button"
             onClick={() => goTo(prevIdx)}
             className="flex cursor-pointer items-center gap-3 rounded-2xl bg-card p-4 text-left shadow-sm transition-shadow hover:shadow-md"
-            aria-label={`Ver depoimento de ${prevT.name}`}
+            aria-label={t("viewTestimonial", { name: prevT.name })}
           >
             <div className="relative size-10 shrink-0 overflow-hidden rounded-full">
               <Image
@@ -273,7 +272,7 @@ export function Testimonials() {
             type="button"
             onClick={() => goTo(nextIdx)}
             className="group relative h-44 w-full cursor-pointer overflow-hidden rounded-2xl text-left lg:h-48"
-            aria-label={`Ver depoimento de ${nextT.name}`}
+            aria-label={t("viewTestimonial", { name: nextT.name })}
           >
             <Image
               src={nextT.avatar}
@@ -312,7 +311,7 @@ export function Testimonials() {
             type="button"
             onClick={next}
             className="flex size-10 cursor-pointer items-center justify-center rounded-full bg-primary text-white transition-transform hover:scale-105"
-            aria-label="Próximo depoimento"
+            aria-label={t("nextTestimonial")}
           >
             <IconArrowNarrowRight className="size-5" />
           </button>

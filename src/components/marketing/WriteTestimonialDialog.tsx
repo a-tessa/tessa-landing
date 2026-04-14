@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { submitTestimonial } from "@/app/actions/testimonial";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,6 +33,7 @@ interface TestimonialFormProps {
 }
 
 function TestimonialForm({ onSuccessClose }: TestimonialFormProps) {
+  const t = useTranslations("testimonialForm");
   const [state, formAction, isPending] = useActionState(submitTestimonial, {
     status: "idle",
   });
@@ -55,7 +57,7 @@ function TestimonialForm({ onSuccessClose }: TestimonialFormProps) {
           className="w-full sm:w-auto"
           onClick={onSuccessClose}
         >
-          Fechar
+          {t("close")}
         </Button>
       </div>
     );
@@ -64,7 +66,7 @@ function TestimonialForm({ onSuccessClose }: TestimonialFormProps) {
   return (
     <form action={formAction} className="flex flex-col gap-4">
       <div className="grid gap-2">
-        <Label htmlFor={nameId}>Nome</Label>
+        <Label htmlFor={nameId}>{t("nameLabel")}</Label>
         <Input
           id={nameId}
           name="name"
@@ -83,7 +85,7 @@ function TestimonialForm({ onSuccessClose }: TestimonialFormProps) {
       </div>
 
       <div className="grid gap-2">
-        <Label htmlFor={companyId}>Nome da empresa</Label>
+        <Label htmlFor={companyId}>{t("companyLabel")}</Label>
         <Input
           id={companyId}
           name="company"
@@ -108,7 +110,7 @@ function TestimonialForm({ onSuccessClose }: TestimonialFormProps) {
           id={ratingLegendId}
           className="text-sm leading-none font-medium text-foreground"
         >
-          Nota
+          {t("ratingLabel")}
         </legend>
         <input type="hidden" name="rating" value={rating || ""} />
         <div
@@ -126,7 +128,7 @@ function TestimonialForm({ onSuccessClose }: TestimonialFormProps) {
                 "rounded-md p-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                 value <= rating ? "text-primary" : "text-muted-foreground/35",
               )}
-              aria-label={`Nota ${value} de 5`}
+              aria-label={t("ratingOption", { value })}
               onClick={() => setRating(value)}
             >
               <IconStarFilled className="size-8" aria-hidden />
@@ -136,15 +138,13 @@ function TestimonialForm({ onSuccessClose }: TestimonialFormProps) {
         {state.fieldErrors?.rating ? (
           <p className="text-sm text-destructive">{state.fieldErrors.rating}</p>
         ) : (
-          <p className="text-xs text-muted-foreground">
-            Toque nas estrelas para escolher de 1 a 5.
-          </p>
+          <p className="text-xs text-muted-foreground">{t("ratingHint")}</p>
         )}
       </fieldset>
 
       <div className="grid gap-2">
         <div className="flex items-end justify-between gap-2">
-          <Label htmlFor={textId}>Depoimento</Label>
+          <Label htmlFor={textId}>{t("textLabel")}</Label>
           <span
             className={cn(
               "text-xs tabular-nums text-muted-foreground",
@@ -161,7 +161,7 @@ function TestimonialForm({ onSuccessClose }: TestimonialFormProps) {
           required
           rows={5}
           maxLength={MAX_TEXT}
-          placeholder="Conte como foi sua experiência com a Tessa..."
+          placeholder={t("textPlaceholder")}
           aria-invalid={Boolean(state.fieldErrors?.text)}
           aria-describedby={
             state.fieldErrors?.text ? `${textId}-error` : `${textId}-hint`
@@ -169,7 +169,7 @@ function TestimonialForm({ onSuccessClose }: TestimonialFormProps) {
           onChange={(e) => setTextLen(e.target.value.length)}
         />
         <p id={`${textId}-hint`} className="sr-only">
-          Máximo de {MAX_TEXT} caracteres.
+          {t("textHint", { max: MAX_TEXT })}
         </p>
         {state.fieldErrors?.text ? (
           <p id={`${textId}-error`} className="text-sm text-destructive">
@@ -180,7 +180,7 @@ function TestimonialForm({ onSuccessClose }: TestimonialFormProps) {
 
       <DialogFooter className="gap-2 sm:gap-0">
         <Button type="submit" disabled={isPending} className="w-full sm:w-auto">
-          {isPending ? "Enviando…" : "Enviar depoimento"}
+          {isPending ? t("submitting") : t("submit")}
         </Button>
       </DialogFooter>
     </form>
@@ -196,6 +196,7 @@ export function WriteTestimonialDialog({
   triggerClassName,
   children,
 }: WriteTestimonialDialogProps) {
+  const t = useTranslations("testimonialForm");
   const [open, setOpen] = useState(false);
   const [session, setSession] = useState(0);
   const handleSuccessClose = useCallback(() => {
@@ -221,7 +222,7 @@ export function WriteTestimonialDialog({
               triggerClassName,
             )}
           >
-            Escrever depoimento
+            {t("dialogTitle")}
             <IconArrowNarrowRight className="size-4" aria-hidden />
           </button>
         )}
@@ -229,11 +230,10 @@ export function WriteTestimonialDialog({
       <DialogContent className="max-h-[min(90dvh,720px)] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="font-barlow text-xl uppercase text-primary sm:text-2xl">
-            Escrever depoimento
+            {t("dialogTitle")}
           </DialogTitle>
           <DialogDescription>
-            Preencha os campos abaixo. Seu depoimento pode ter até {MAX_TEXT}{" "}
-            caracteres.
+            {t("dialogDescription", { max: MAX_TEXT })}
           </DialogDescription>
         </DialogHeader>
         <TestimonialForm key={session} onSuccessClose={handleSuccessClose} />

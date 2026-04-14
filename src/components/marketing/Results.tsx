@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Container } from "./Container";
-import { cn, freeSectionShellSpacing, homeSpacing, sectionCardShellSpacing } from "@/lib/utils";
+import { useTranslations } from "next-intl";
+import { cn, freeSectionShellSpacing } from "@/lib/utils";
 
 interface Stat {
   prefix: string;
@@ -10,27 +10,6 @@ interface Stat {
   suffix: string;
   label: string;
 }
-
-const STATS: Stat[] = [
-  {
-    prefix: "+",
-    value: 7,
-    suffix: "MI",
-    label: "de m² em estruturas metálicas",
-  },
-  {
-    prefix: "+",
-    value: 200,
-    suffix: "K",
-    label: "instalações realizadas no Brasil",
-  },
-  {
-    prefix: "+",
-    value: 20,
-    suffix: "",
-    label: "anos de experiência em engenharia estrutural",
-  },
-];
 
 function useCountUp(
   target: number,
@@ -89,6 +68,28 @@ function AnimatedStat({
 }
 
 export function Results() {
+  const t = useTranslations("results");
+  const STATS: Stat[] = [
+    {
+      prefix: "+",
+      value: 7,
+      suffix: "MI",
+      label: t("stats.0.label"),
+    },
+    {
+      prefix: "+",
+      value: 200,
+      suffix: "K",
+      label: t("stats.1.label"),
+    },
+    {
+      prefix: "+",
+      value: 20,
+      suffix: "",
+      label: t("stats.2.label"),
+    },
+  ];
+
   const sectionRef = useRef<HTMLElement>(null);
   const [hasEntered, setHasEntered] = useState(false);
 
@@ -115,15 +116,13 @@ export function Results() {
   return (
     <section
       ref={sectionRef}
-      aria-label="Resultados da Tessa em números"
+      aria-label={t("ariaLabel")}
       className={cn("w-full py-8 sm:py-12", freeSectionShellSpacing)}
     >
       <div className="flex flex-col items-center gap-8 rounded-3xl bg-primary px-8 py-10 sm:px-12 sm:py-14 lg:flex-row lg:gap-12 lg:px-16">
         {/* Title */}
-        <h2 className="shrink-0 font-barlow text-2xl font-bold uppercase leading-tight text-white sm:text-3xl lg:text-4xl">
-          Resultados
-          <br />
-          que contam
+        <h2 className="shrink-0 whitespace-pre-line font-barlow text-2xl font-bold uppercase leading-tight text-white sm:text-3xl lg:text-4xl">
+          {t("title")}
         </h2>
 
         {/* Stats */}

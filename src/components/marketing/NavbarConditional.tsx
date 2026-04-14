@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname } from "@/i18n/navigation";
 import { Navbar } from "./Navbar";
 
 const HOME_PATHS = ["/", "/home"];

@@ -1,5 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 interface BlogFeatureCardAuthor {
@@ -38,6 +39,7 @@ export function BlogFeatureCard({
   className,
   imageSizes = "(max-width: 1024px) 100vw, 45vw",
 }: BlogFeatureCardProps) {
+  const t = useTranslations("blog");
   const authorAvatar = author.avatar ?? imageSrc;
   const formattedDate = formatDate(publishedAt);
 
@@ -80,7 +82,7 @@ export function BlogFeatureCard({
             <div>
               <p className="text-sm font-semibold text-white">{author.name}</p>
               <time dateTime={publishedAt} className="text-xs text-secondary">
-                Publicado em {formattedDate}
+                {t("publishedAt", { date: formattedDate })}
               </time>
             </div>
           </div>
@@ -90,7 +92,7 @@ export function BlogFeatureCard({
         </div>
 
         <span className="ml-auto inline-flex w-fit items-center gap-2 rounded-md border border-white/30 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm transition-colors group-hover:bg-white/20">
-          Ler matéria completa
+          {t("readMore")}
         </span>
       </div>
     </Link>

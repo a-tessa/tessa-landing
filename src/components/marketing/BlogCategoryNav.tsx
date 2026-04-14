@@ -1,4 +1,5 @@
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { BLOG_CATEGORIES, buildBlogListHref } from "@/lib/blog/posts";
 import { cn, freeSectionShellSpacing, serviceCarouselCss } from "@/lib/utils";
 import { Search } from "lucide-react";
@@ -43,6 +44,8 @@ function SearchForm({
 	activeCategory: string;
 	className?: string;
 }) {
+	const t = useTranslations("blog");
+
 	return (
 		<form
 			method="get"
@@ -57,21 +60,21 @@ function SearchForm({
 				<input type="hidden" name="categoria" value={activeCategory} />
 			) : null}
 			<label htmlFor="blog-search-q" className="sr-only">
-				Buscar artigo pelo título
+				{t("searchLabel")}
 			</label>
 			<input
 				id="blog-search-q"
 				name="q"
 				type="search"
 				defaultValue={query}
-				placeholder="Buscar por título..."
+				placeholder={t("searchPlaceholder")}
 				autoComplete="off"
 				className="h-11 w-full min-w-0 flex-1 rounded-l-full bg-card px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary border-0 shadow-none"
 			/>
 			<button
 				type="submit"
 				className="flex h-11 w-11 shrink-0 items-center justify-center rounded-r-full bg-card text-primary transition-colors hover:bg-accent"
-				aria-label="Buscar"
+				aria-label={t("searchButton")}
 			>
 				<Search className="h-5 w-5" strokeWidth={2} aria-hidden />
 			</button>
@@ -92,6 +95,8 @@ export function BlogCategoryNav({
 	ordem = "desc",
 	showSearch = false,
 }: BlogCategoryNavProps) {
+	const t = useTranslations("blog");
+
 	return (
 		<>
 			<style href="service-heading-carousel" precedence="component">
@@ -106,11 +111,11 @@ export function BlogCategoryNav({
 				<div className="flex items-center gap-0 rounded-full bg-muted px-4 sm:px-8">
 					<nav
 						className="flex items-center gap-x-6 overflow-x-auto scrollbar-none"
-						aria-label="Filtrar artigos por categoria"
+						aria-label={t("filterLabel")}
 					>
 						<CategoryTab
 							href={buildBlogListHref({ q: query, ordem })}
-							label="Últimos artigos"
+							label={t("latestArticles")}
 							isActive={!activeCategory}
 						/>
 						{BLOG_CATEGORIES.map((cat) => (

@@ -1,41 +1,30 @@
 import { Instagram, Linkedin, MapPin, Phone, Youtube } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import type { PropsWithChildren } from "react";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { SITE } from "@/lib/seo/schemas";
 import { cn, homeSpacing, insideCardSpacing } from "@/lib/utils";
 
-const MENU_LINKS = [
-	{ href: "/a-tessa", label: "A Tessa" },
-	{ href: "/servicos", label: "Serviços" },
-	{ href: "/estruturas", label: "Estruturas" },
-	{ href: "/representantes", label: "Representantes" },
-	{ href: "/blog", label: "Blog" },
-	{ href: "/contato", label: "Contato/Localização" },
+const MENU_KEYS = [
+	{ href: "/a-tessa", key: "about" },
+	{ href: "/servicos", key: "services" },
+	{ href: "/estruturas", key: "structures" },
+	{ href: "/representantes", key: "representatives" },
+	{ href: "/blog", key: "blog" },
+	{ href: "/contato", key: "contact" },
 ] as const;
 
-const BOTTOM_LINKS = [
-	{ href: "/termos-de-uso", label: "Termos de uso" },
-	{ href: "/politica-de-privacidade", label: "Política de privacidade" },
-	{ href: "/trabalhe-conosco", label: "Trabalhe conosco" },
+const LEGAL_KEYS = [
+	{ href: "/termos-de-uso", key: "terms" },
+	{ href: "/politica-de-privacidade", key: "privacy" },
+	{ href: "/trabalhe-conosco", key: "careers" },
 ] as const;
 
 const SOCIAL_LINKS = [
-	{
-		href: SITE.socials.linkedin,
-		label: "LinkedIn da Tessa",
-		icon: Linkedin,
-	},
-	{
-		href: SITE.socials.youtube,
-		label: "YouTube da Tessa",
-		icon: Youtube,
-	},
-	{
-		href: SITE.socials.instagram,
-		label: "Instagram da Tessa",
-		icon: Instagram,
-	},
+	{ href: SITE.socials.linkedin, key: "linkedin", icon: Linkedin },
+	{ href: SITE.socials.youtube, key: "youtube", icon: Youtube },
+	{ href: SITE.socials.instagram, key: "instagram", icon: Instagram },
 ] as const;
 
 function FooterShell({ children, className }: PropsWithChildren<{ className?: string }>) {
@@ -48,12 +37,13 @@ function FooterShell({ children, className }: PropsWithChildren<{ className?: st
 
 export function Footer() {
 	const currentYear = new Date().getFullYear();
+	const t = useTranslations("footer");
 
 	return (
 		<footer
 			className="relative overflow-hidden w-[calc(100%-2.6rem)] rounded-3xl mb-20 mx-auto pb-6"
 			role="contentinfo"
-			aria-label="Rodapé do site Tessa"
+			aria-label={t("siteLabel")}
 			itemScope
 			itemType="https://schema.org/Organization"
 		>
@@ -66,12 +56,12 @@ export function Footer() {
 					<div className="lg:col-span-4 pt-14 pb-14">
 						<Link
 							href="/"
-							aria-label="Página inicial Tessa"
+							aria-label={t("homeLabel")}
 							className="inline-block"
 						>
 							<Image
 								src="/tessa-logo.svg"
-								alt="Tessa - Estruturas metálicas e energia solar"
+								alt={t("logoAlt")}
 								width={160}
 								height={52}
 								className="h-11 w-auto sm:h-12"
@@ -80,19 +70,19 @@ export function Footer() {
 
 						<div className="mt-10">
 							<h2 className="font-barlow text-sm font-bold uppercase leading-snug tracking-[0.12em] text-primary sm:text-base">
-								Receba novidades da Tessa
+								{t("newsletterTitle")}
 							</h2>
 							<p className="mt-2 font-barlow text-[0.65rem] font-semibold uppercase leading-relaxed tracking-[0.14em] text-white sm:text-xs">
-								Conteúdos técnicos, novidades e soluções
+								{t("newsletterSub")}
 							</p>
 						</div>
 
 						<form
 							className="mt-6 flex max-w-md flex-col gap-3 sm:flex-row sm:items-stretch sm:gap-0"
-							aria-label="Formulário de inscrição na newsletter"
+							aria-label={t("formLabel")}
 						>
 							<label htmlFor="footer-email" className="sr-only">
-								Seu e-mail corporativo
+								{t("emailLabel")}
 							</label>
 							<input
 								id="footer-email"
@@ -100,14 +90,14 @@ export function Footer() {
 								name="email"
 								autoComplete="email"
 								required
-								placeholder="Seu e-mail corporativo"
+								placeholder={t("emailPlaceholder")}
 								className="min-h-12 min-w-0 flex-1 rounded-xl border border-white/20 bg-black/35 px-4 py-3 text-sm text-white placeholder:text-white/45 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:rounded-r-none sm:rounded-l-xl"
 							/>
 							<button
 								type="submit"
 								className="min-h-12 shrink-0 rounded-xl bg-secondary px-5 py-3 text-sm font-semibold text-secondary-foreground transition-colors hover:bg-secondary/90 sm:rounded-l-none sm:rounded-r-xl"
 							>
-								Assinar newsletter
+								{t("subscribe")}
 							</button>
 						</form>
 					</div>
@@ -115,19 +105,19 @@ export function Footer() {
 					{/* Menu */}
 					<nav
 						className="lg:col-span-2 lg:col-start-5 pt-14 pb-14"
-						aria-label="Menu do rodapé"
+						aria-label={t("menuLabel")}
 					>
 						<h2 className="font-barlow text-sm font-bold uppercase tracking-[0.14em] text-primary sm:text-base">
-							Menu
+							{t("menuTitle")}
 						</h2>
 						<ul className="mt-6 space-y-3">
-							{MENU_LINKS.map(({ href, label }) => (
+							{MENU_KEYS.map(({ href, key }) => (
 								<li key={href}>
 									<Link
 										href={href}
 										className="font-barlow text-sm font-semibold uppercase tracking-[0.06em] text-white transition-colors hover:text-primary"
 									>
-										{label}
+										{t(`links.${key}`)}
 									</Link>
 								</li>
 							))}
@@ -142,15 +132,12 @@ export function Footer() {
 						>
 							<div
 								className="absolute inset-0 bg-[url('/city-bg.webp')] bg-right bg-no-repeat opacity-25 bg-cover"
-								// style={{ backgroundSize: "min(100%, 420px) auto" }}
 							/>
 						</div>
 
 						<div className="relative z-10">
-							<h2 className="font-barlow text-sm font-bold uppercase leading-tight tracking-[0.12em] text-primary sm:text-base">
-								Contato/
-								<br />
-								Localização
+							<h2 className="font-barlow text-sm font-bold uppercase leading-tight tracking-[0.12em] text-primary sm:text-base whitespace-pre-line">
+								{t("contactTitle")}
 							</h2>
 
 							<address
@@ -212,14 +199,14 @@ export function Footer() {
 				<FooterShell>
 					<div className="grid grid-cols-1 gap-6 py-6 md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-6 lg:py-7">
 						<p className="text-center text-xs text-white/50 md:text-left w-[515px]">
-							© {currentYear} {SITE.name}. Todos os direitos reservados.
+							© {currentYear} {SITE.name}. {t("allRightsReserved")}
 						</p>
 
 						<nav
 							className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2"
-							aria-label="Links legais"
+							aria-label={t("legalLabel")}
 						>
-							{BOTTOM_LINKS.map(({ href, label }, index) => (
+							{LEGAL_KEYS.map(({ href, key }, index) => (
 								<span key={href} className="inline-flex items-center gap-2">
 									{index > 0 && (
 										<span className="text-[0.65rem] text-white/40" aria-hidden>
@@ -230,20 +217,20 @@ export function Footer() {
 										href={href}
 										className="font-barlow text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:text-primary sm:text-xs"
 									>
-										{label}
+										{t(`legal.${key}`)}
 									</Link>
 								</span>
 							))}
 						</nav>
 
 						<div className="flex items-center justify-center gap-3 md:justify-end">
-							{SOCIAL_LINKS.map(({ href, label, icon: Icon }) => (
+							{SOCIAL_LINKS.map(({ href, key, icon: Icon }) => (
 								<a
 									key={href}
 									href={href}
 									target="_blank"
 									rel="noopener noreferrer"
-									aria-label={label}
+									aria-label={t(`social.${key}`)}
 									className="flex size-9 items-center justify-center rounded-md bg-primary text-white transition-colors hover:bg-primary/90"
 									itemProp="sameAs"
 								>

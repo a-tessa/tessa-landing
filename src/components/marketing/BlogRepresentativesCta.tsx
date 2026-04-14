@@ -1,9 +1,12 @@
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 
 export function BlogRepresentativesCta() {
+	const t = useTranslations("blogCta");
+
 	return (
 		<section
 			className={cn("w-full pb-16 pt-4", freeSectionShellSpacing)}
@@ -25,10 +28,10 @@ export function BlogRepresentativesCta() {
 						id="blog-representantes-cta-heading"
 						className="text-2xl font-bold uppercase tracking-wide text-secondary-foreground sm:text-3xl"
 					>
-						Encontre um representante
+						{t("title")}
 					</h2>
 					<p className="mt-1 text-xl font-light uppercase tracking-wide text-secondary-foreground/95 sm:text-3xl">
-						Perto de você.
+						{t("subtitle")}
 					</p>
 				</div>
 
@@ -36,7 +39,7 @@ export function BlogRepresentativesCta() {
 					href="/representantes"
 					className="relative z-10 inline-flex shrink-0 items-center justify-center gap-2 self-stretch rounded-xl bg-secondary px-6 py-3.5 text-center text-sm font-semibold text-secondary-foreground transition-transform hover:-translate-y-0.5 sm:self-center sm:px-8"
 				>
-					Ir para representantes
+					{t("cta")}
 					<ArrowRight className="h-4 w-4 shrink-0" strokeWidth={2} aria-hidden />
 				</Link>
 			</div>

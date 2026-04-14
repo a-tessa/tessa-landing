@@ -1,0 +1,219 @@
+{
+  "nav": {
+    "about": "SOBRE TESSA",
+    "services": "SERVICIOS",
+    "representatives": "REPRESENTANTES",
+    "blog": "BLOG",
+    "contact": "CONTACTO",
+    "since": "DESDE 2001",
+    "selectLanguage": "Seleccionar idioma",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú",
+    "navLabel": "Menú de navegación"
+  },
+  "hero": {
+    "slides": {
+      "0": {
+        "heading": "Estructuras metálicas\ny perfiles a medida.",
+        "cardLabel": "ESTRUCTURAS\nMETÁLICAS\nY PERFILES A MEDIDA",
+        "description": "Acero galvanizado. Ingeniería aplicada. Producción industrial.\nEntrega para que su proyecto se haga realidad con previsibilidad.",
+        "bgAlt": "Vista aérea de la fábrica Tessa con estructuras metálicas y naves industriales"
+      },
+      "1": {
+        "heading": "Energía limpia\nque reduce sus costos.",
+        "cardLabel": "ENERGÍA LIMPIA\nQUE REDUCE\nSUS COSTOS",
+        "description": "Soluciones en energía solar para empresas e industrias.\nAhorro recurrente y operación más sostenible.",
+        "bgAlt": "Paneles solares instalados por Tessa en planta industrial"
+      }
+    },
+    "requestQuote": "Solicitar presupuesto",
+    "exploreSolutions": "Conocer soluciones",
+    "nextSolution": "Mostrar la siguiente solución",
+    "prevSolution": "Mostrar la solución anterior",
+    "trustedCompanies": "Empresas que confían"
+  },
+  "scenarios": {
+    "title": "Elija su escenario",
+    "subtitle": "Soluciones a medida para obra, energía y producción.",
+    "viewAll": "Conocer todos los servicios"
+  },
+  "operations": {
+    "title": "Nuestras\noperaciones,\nen la práctica",
+    "subtitle": "Acompañe imágenes que muestran cómo la ingeniería toma forma.",
+    "prevImage": "Imagen anterior",
+    "nextImage": "Siguiente imagen",
+    "prevImages": "Imágenes anteriores",
+    "nextImages": "Siguientes imágenes",
+    "goToImage": "Ir a la imagen {number}"
+  },
+  "results": {
+    "title": "Resultados\nque cuentan",
+    "ariaLabel": "Resultados de Tessa en números",
+    "stats": {
+      "0": { "label": "de m² en estructuras metálicas" },
+      "1": { "label": "instalaciones realizadas en Brasil" },
+      "2": { "label": "años de experiencia en ingeniería estructural" }
+    }
+  },
+  "testimonials": {
+    "title": "Quienes\nconfían en\nnuestro trabajo",
+    "writeTestimonial": "Escribir testimonio",
+    "prevTestimonial": "Testimonio anterior",
+    "nextTestimonial": "Siguiente testimonio",
+    "starsLabel": "{rating} de 5 estrellas",
+    "viewTestimonial": "Ver testimonio de {name}"
+  },
+  "testimonialForm": {
+    "dialogTitle": "Escribir testimonio",
+    "dialogDescription": "Complete los campos a continuación. Su testimonio puede tener hasta {max} caracteres.",
+    "nameLabel": "Nombre",
+    "companyLabel": "Nombre de la empresa",
+    "ratingLabel": "Calificación",
+    "ratingOption": "Calificación {value} de 5",
+    "ratingHint": "Toque las estrellas para elegir de 1 a 5.",
+    "textLabel": "Testimonio",
+    "textPlaceholder": "Cuente cómo fue su experiencia con Tessa...",
+    "textHint": "Máximo de {max} caracteres.",
+    "submitting": "Enviando…",
+    "submit": "Enviar testimonio",
+    "close": "Cerrar"
+  },
+  "newsAndSocial": {
+    "newsTitle": "En el centro\nde las novedades",
+    "goToBlog": "Ir al blog",
+    "goToInstagram": "Ir a Instagram"
+  },
+  "blog": {
+    "youAreReading": "Está leyendo",
+    "results": "Resultados ({count})",
+    "latestArticles": "Últimos artículos",
+    "noResults": "No se encontraron artículos para \"{query}\". Intente otro término o",
+    "clearSearch": "limpiar la búsqueda",
+    "loadMore": "Cargar más…",
+    "filterLabel": "Filtrar artículos por categoría",
+    "searchLabel": "Buscar artículo por título",
+    "searchPlaceholder": "Buscar por título...",
+    "searchButton": "Buscar",
+    "publishedAt": "Publicado el {date}",
+    "readMore": "Leer artículo completo",
+    "relatedArticles": "Artículos\nrelacionados",
+    "backToArticles": "Volver a artículos",
+    "articleNav": "Navegación del artículo"
+  },
+  "blogCta": {
+    "title": "Encuentre un representante",
+    "subtitle": "Cerca de usted.",
+    "cta": "Ir a representantes"
+  },
+  "contact": {
+    "whereWeAre": "Dónde\nestamos",
+    "expandMap": "Ampliar mapa",
+    "fullName": "Nombre completo*",
+    "email": "Correo electrónico*",
+    "phone": "Celular / WhatsApp*",
+    "phonePlaceholder": "(00) 00000-0000",
+    "phoneHint": "Ingrese código de área y número completo: celular (00) 90000-0000 o fijo (00) 0000-0000.",
+    "phoneTitle": "Use código de área y número completo, ej.: (17) 99999-9999 o (17) 3234-5678",
+    "companyName": "Nombre de la empresa*",
+    "city": "Ciudad*",
+    "state": "Estado*",
+    "selectState": "Seleccione el estado",
+    "serviceQuestion": "¿Desea hablar sobre algún servicio? (opcional)",
+    "selectService": "Seleccione un servicio",
+    "message": "Mensaje (opcional)",
+    "submit": "Enviar contacto"
+  },
+  "representatives": {
+    "title": "Consulte a uno de nuestros representantes en su región.",
+    "selectState": "Seleccionar estado",
+    "selectStatePlaceholder": "Seleccione el estado",
+    "selectedState": "Estado seleccionado \"{state}\"",
+    "noRepresentatives": "Aún no hay representantes registrados para este estado. Contáctenos para otras regiones.",
+    "segment": "Segmento",
+    "copy": "Copiar",
+    "copied": "¡Copiado!",
+    "copyLabel": "{label}: copiar {value}"
+  },
+  "pages": {
+    "servicos": {
+      "title": "Servicios",
+      "description": "Conozca los escenarios y soluciones Tessa: estructuras metálicas, energía solar e ingeniería aplicada para obra y producción.",
+      "chooseScenario": "Elija su escenario",
+      "customSolutions": "Soluciones a medida para obra, energía y producción.",
+      "viewAllServices": "Conocer todos los servicios"
+    },
+    "servicoDetail": {
+      "serviceNav": "Navegación de servicios",
+      "backToServices": "Volver a servicios",
+      "serviceNavLabel": "Navegación del servicio",
+      "whatHappens": "¿Qué sucede\nen la práctica?",
+      "goToChannel": "Ir al canal",
+      "downloadTitle": "Descargue ahora las presentaciones, folletos y manuales",
+      "downloadSub": "de este producto",
+      "downloadCta": "Descargar materiales"
+    },
+    "representantes": {
+      "title": "Representantes",
+      "description": "Atención cercana, soporte técnico y agilidad para su proyecto.",
+      "mapLabel": "Mapa de Brasil"
+    },
+    "blog": {
+      "title": "Blog",
+      "description": "Descubra contenidos valiosos y consejos de especialistas de nuestro equipo experimentado para elevar su conocimiento y ayudarle a tomar una decisión más segura al contratar a Tessa."
+    },
+    "contato": {
+      "title": "Contacto",
+      "description": "Hable con nuestro equipo para resolver dudas, solicitar presupuesto o conocer nuestras soluciones."
+    }
+  },
+  "footer": {
+    "siteLabel": "Pie de página del sitio Tessa",
+    "homeLabel": "Página principal de Tessa",
+    "logoAlt": "Tessa - Estructuras metálicas y energía solar",
+    "newsletterTitle": "Recibe novedades de Tessa",
+    "newsletterSub": "Contenidos técnicos, novedades y soluciones",
+    "formLabel": "Formulario de suscripción al boletín",
+    "emailLabel": "Tu correo corporativo",
+    "emailPlaceholder": "Tu correo corporativo",
+    "subscribe": "Suscribirse al boletín",
+    "menuTitle": "Menú",
+    "menuLabel": "Menú del pie de página",
+    "contactTitle": "Contacto/\nUbicación",
+    "allRightsReserved": "Todos los derechos reservados.",
+    "legalLabel": "Enlaces legales",
+    "links": {
+      "about": "Sobre Tessa",
+      "services": "Servicios",
+      "structures": "Estructuras",
+      "representatives": "Representantes",
+      "blog": "Blog",
+      "contact": "Contacto/Ubicación"
+    },
+    "legal": {
+      "terms": "Términos de uso",
+      "privacy": "Política de privacidad",
+      "careers": "Trabaja con nosotros"
+    },
+    "social": {
+      "linkedin": "Tessa en LinkedIn",
+      "youtube": "Tessa en YouTube",
+      "instagram": "Tessa en Instagram"
+    }
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "description": "Parece que esta página no existe. Acceda a la página principal para explorar nuestros servicios, soluciones y contenidos.",
+    "cta": "Explorar contenidos",
+    "metaTitle": "Página no encontrada",
+    "metaDescription": "La página que busca no existe o ha sido movida. Vuelva a la página principal de Tessa."
+  },
+  "metadata": {
+    "homeTitle": "Estructuras metálicas y energía solar para proyectos industriales",
+    "homeDescription": "Estructuras metálicas, perfiles a medida y energía solar para empresas que buscan ingeniería aplicada, producción industrial y previsibilidad en la ejecución."
+  },
+  "languageSwitcher": {
+    "pt-BR": "Português",
+    "en": "English",
+    "es": "Español"
+  }
+}

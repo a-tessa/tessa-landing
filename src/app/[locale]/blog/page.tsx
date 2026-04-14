@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { BlogIndex } from "@/components/marketing/BlogIndex";
 import { BlogRepresentativesCta } from "@/components/marketing/BlogRepresentativesCta";
 import { Footer } from "@/components/marketing/Footer";
@@ -13,25 +14,31 @@ import {
 } from "@/lib/blog/posts";
 import { organizationJsonLd, SITE, websiteJsonLd } from "@/lib/seo/schemas";
 
-const BLOG_DESCRIPTION =
-  "Descubra conteúdos valiosos e conselhos de especialistas da nossa equipe experiente para elevar seu conhecimento e ajudar você a tomar uma decisão mais segura na hora de contratar a Tessa.";
-
-export const metadata: Metadata = {
-  title: "Blog — artigos e conteúdos Tessa",
-  description: BLOG_DESCRIPTION,
-  alternates: {
-    canonical: "/blog",
-  },
-  keywords: [
-    ...SITE.keywords,
-    "Blog Tessa",
-    "Artigos técnicos",
-    "Estruturas metálicas",
-    "Energia solar",
-  ],
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "pages.blog" });
+  return {
+    title: "Blog — artigos e conteúdos Tessa",
+    description: t("description"),
+    alternates: {
+      canonical: "/blog",
+    },
+    keywords: [
+      ...SITE.keywords,
+      "Blog Tessa",
+      "Artigos técnicos",
+      "Estruturas metálicas",
+      "Energia solar",
+    ],
+  };
+}
 
 type PageProps = {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<{
     q?: string;
     ordem?: string;
@@ -59,13 +66,16 @@ export default async function BlogPage({ searchParams }: PageProps) {
   const visiblePosts = sorted.slice(0, limite);
   const hasMore = sorted.length > limite;
 
+  const t = await getTranslations("pages.blog");
+  const blogDescription = t("description");
+
   return (
     <>
       <JsonLd id="jsonld-org-blog" data={organizationJsonLd()} />
       <JsonLd id="jsonld-website-blog" data={websiteJsonLd()} />
 
       <main className="flex flex-col items-center justify-center gap-0">
-        <Heading title="Blog" description={BLOG_DESCRIPTION} />
+        <Heading title={t("title")} description={blogDescription} />
         <BlogIndex
           query={query}
           ordem={ordem}

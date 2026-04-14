@@ -1,46 +1,27 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { Link, usePathname } from "@/i18n/navigation";
 import { Container } from "./Container";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import { cn, homeSpacing, sectionCardShellSpacing } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
 
 const SCROLL_THRESHOLD = 150;
 
-const navLinks = [
-  { href: "/", label: "A TESSA" },
-  { href: "/servicos", label: "SERVIÇOS" },
-  { href: "/representantes", label: "REPRESENTANTES" },
-  { href: "/blog", label: "BLOG" },
-  { href: "/contato", label: "CONTATO" },
+const NAV_KEYS = [
+  { href: "/", key: "about" },
+  { href: "/servicos", key: "services" },
+  { href: "/representantes", key: "representatives" },
+  { href: "/blog", key: "blog" },
+  { href: "/contato", key: "contact" },
 ] as const;
-
-function BrazilFlagIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden>
-      <rect width="24" height="24" fill="#009739" rx="2" />
-      <path
-        d="M12 2L14.5 9L22 9L16 13L18 21L12 16L6 21L8 13L2 9L9.5 9Z"
-        fill="#FEDD00"
-      />
-      <circle cx="12" cy="12" r="4.5" fill="#002776" />
-      <g fill="white">
-        <circle cx="12" cy="10" r="0.5" />
-        <circle cx="12.8" cy="10.8" r="0.5" />
-        <circle cx="11.2" cy="10.8" r="0.5" />
-        <circle cx="13.2" cy="12" r="0.5" />
-        <circle cx="10.8" cy="12" r="0.5" />
-        <circle cx="12" cy="14" r="0.5" />
-      </g>
-    </svg>
-  );
-}
 
 export function Navbar() {
   const pathname = usePathname();
+  const t = useTranslations("nav");
   const [scrollY, setScrollY] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -71,12 +52,12 @@ export function Navbar() {
         </Link>
         <span className="hidden h-4 w-px shrink-0 bg-white/40 sm:block" aria-hidden />
         <span className="hidden text-xs font-medium uppercase tracking-wide text-white/60 sm:block">
-          DESDE 2001
+          {t("since")}
         </span>
       </div>
 
       <div className="flex items-center gap-4 sm:gap-6">
-        {navLinks.map(({ href, label }) => {
+        {NAV_KEYS.map(({ href, key }) => {
           const isActive = pathname === href || pathname.startsWith(href + "/");
           return (
             <Link
@@ -87,22 +68,16 @@ export function Navbar() {
                 isActive ? "text-[#FF6F00]" : "text-white/90 hover:text-white",
               )}
             >
-              {label}
+              {t(key)}
             </Link>
           );
         })}
-        <button
-          type="button"
-          className="flex h-8 w-8 items-center justify-center rounded transition-opacity hover:opacity-80"
-          aria-label="Selecionar idioma"
-        >
-          <BrazilFlagIcon className="h-6 w-6 rounded-sm" />
-        </button>
+        <LanguageSwitcher />
         <button
           type="button"
           className="flex h-9 w-9 items-center justify-center rounded text-white sm:hidden"
           onClick={() => setMobileMenuOpen((o) => !o)}
-          aria-label={mobileMenuOpen ? "Fechar menu" : "Abrir menu"}
+          aria-label={mobileMenuOpen ? t("closeMenu") : t("openMenu")}
           aria-expanded={mobileMenuOpen}
         >
           {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -147,10 +122,10 @@ export function Navbar() {
         <div
           className="absolute left-0 right-0 border-b border-white/10 bg-[#37474F] sm:hidden"
           role="dialog"
-          aria-label="Menu de navegação"
+          aria-label={t("navLabel")}
         >
           <Container className="flex flex-col gap-1 py-4">
-            {navLinks.map(({ href, label }) => {
+            {NAV_KEYS.map(({ href, key }) => {
               const isActive =
                 pathname === href || pathname.startsWith(href + "/");
               return (
@@ -163,7 +138,7 @@ export function Navbar() {
                     isActive ? "text-[#FF6F00]" : "text-white/90",
                   )}
                 >
-                  {label}
+                  {t(key)}
                 </Link>
               );
             })}

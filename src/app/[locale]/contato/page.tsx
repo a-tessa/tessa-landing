@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { useTranslations } from "next-intl";
 import { Footer } from "@/components/marketing/Footer";
 import { Heading } from "@/components/marketing/Heading";
 import { JsonLd } from "@/lib/seo/jsonld";
@@ -22,16 +23,15 @@ export const metadata: Metadata = {
 };
 
 export default function ContatoPage() {
+	const t = useTranslations("pages.contato");
+
 	return (
 		<>
 			<JsonLd id="jsonld-org-contato" data={organizationJsonLd()} />
 			<JsonLd id="jsonld-website-contato" data={websiteJsonLd()} />
 
 			<main className="flex flex-col items-center justify-center gap-0">
-				<Heading
-					title="Contato"
-					description="Fale com nossa equipe para tirar dúvidas, solicitar orçamento ou conhecer nossas soluções."
-				/>
+				<Heading title={t("title")} description={t("description")} />
 
 				<section className={cn("w-full pb-20 pt-10", freeSectionShellSpacing)}>
 					<ContactForm />

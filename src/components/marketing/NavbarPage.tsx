@@ -1,22 +1,24 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { Link, usePathname } from "@/i18n/navigation";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
 
-const NAV_LINKS = [
-  { href: "/", label: "A TESSA" },
-  { href: "/servicos", label: "SERVIÇOS" },
-  { href: "/representantes", label: "REPRESENTANTES" },
-  { href: "/blog", label: "BLOG" },
-  { href: "/contato", label: "CONTATO" },
+const NAV_KEYS = [
+  { href: "/", key: "about" },
+  { href: "/servicos", key: "services" },
+  { href: "/representantes", key: "representatives" },
+  { href: "/blog", key: "blog" },
+  { href: "/contato", key: "contact" },
 ] as const;
 
 export function NavbarPage() {
   const pathname = usePathname();
+  const t = useTranslations("nav");
   const [menuOpen, setMenuOpen] = useState(false);
 
   const isActive = (href: string): boolean =>
@@ -35,12 +37,12 @@ export function NavbarPage() {
         />
         <span className="hidden h-4 w-px bg-white/40 sm:block" aria-hidden />
         <span className="hidden text-xs font-medium uppercase tracking-wide text-white/60 sm:block">
-          DESDE 2001
+          {t("since")}
         </span>
       </Link>
 
       <div className="flex items-center gap-4 sm:gap-6">
-        {NAV_LINKS.map(({ href, label }) => (
+        {NAV_KEYS.map(({ href, key }) => (
           <Link
             key={href}
             href={href}
@@ -49,15 +51,17 @@ export function NavbarPage() {
               isActive(href) ? "text-primary" : "text-white/90 hover:text-white",
             )}
           >
-            {label}
+            {t(key)}
           </Link>
         ))}
+
+        <LanguageSwitcher />
 
         <button
           type="button"
           className="size-9 items-center justify-center rounded text-white sm:hidden flex"
           onClick={() => setMenuOpen((v) => !v)}
-          aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
+          aria-label={menuOpen ? t("closeMenu") : t("openMenu")}
           aria-expanded={menuOpen}
         >
           {menuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -68,9 +72,9 @@ export function NavbarPage() {
         <div
           className="absolute inset-x-0 top-full z-10 border-b border-white/10 bg-[#37474F] px-4 py-4 sm:hidden"
           role="dialog"
-          aria-label="Menu de navegação"
+          aria-label={t("navLabel")}
         >
-          {NAV_LINKS.map(({ href, label }) => (
+          {NAV_KEYS.map(({ href, key }) => (
             <Link
               key={href}
               href={href}
@@ -80,7 +84,7 @@ export function NavbarPage() {
                 isActive(href) ? "text-primary" : "text-white/90",
               )}
             >
-              {label}
+              {t(key)}
             </Link>
           ))}
         </div>

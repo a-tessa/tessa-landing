@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ReactElement } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import Image, { type ImageProps } from "next/image";
 import {
   IconArrowNarrowLeft,

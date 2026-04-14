@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import {
   Select,
   SelectContent,
@@ -26,6 +27,7 @@ interface RepresentativeCardProps {
 }
 
 function CopyFieldButton({ label, value }: { label: string; value: string }) {
+  const t = useTranslations("representatives");
   const [copied, setCopied] = useState(false);
 
   const handleCopy = useCallback(async () => {
@@ -45,16 +47,17 @@ function CopyFieldButton({ label, value }: { label: string; value: string }) {
       variant="ghost"
       size="xs"
       onClick={handleCopy}
-      aria-label={`${label}: copiar ${value}`}
+      aria-label={t("copyLabel", { label, value })}
       className="text-primary cursor-pointer"
     >
       <Copy className="size-4 stroke-3" aria-hidden />
-      {copied ? "Copiado!" : "Copiar"}
+      {copied ? t("copied") : t("copy")}
     </Button>
   );
 }
 
 function RepresentativeCard({ representative }: RepresentativeCardProps) {
+  const t = useTranslations("representatives");
   const { name, segment, phone, email, city, stateUf } = representative;
   const locationLabel = `${city} / ${stateUf}`;
 
@@ -67,7 +70,9 @@ function RepresentativeCard({ representative }: RepresentativeCardProps) {
     >
       <header className="flex flex-col">
         <h3 className="text-xl font-medium text-foreground mb-1">{name}</h3>
-        <p className="text-xs text-muted-foreground leading-none">Segmento</p>
+        <p className="text-xs text-muted-foreground leading-none">
+          {t("segment")}
+        </p>
         <p className="text-sm font-semibold text-foreground">{segment}</p>
       </header>
 
@@ -94,6 +99,7 @@ function RepresentativeCard({ representative }: RepresentativeCardProps) {
 const DEFAULT_UF = "MG";
 
 export function RepresentativesDirectory() {
+  const t = useTranslations("representatives");
   const [uf, setUf] = useState<string>(DEFAULT_UF);
   const stateName = getStateNameByUf(uf) ?? uf;
   const list = representativesForState(uf);
@@ -109,18 +115,18 @@ export function RepresentativesDirectory() {
             id="representantes-titulo"
             className="text-balance text-xl font-bold uppercase tracking-tight text-foreground sm:text-2xl md:text-3xl"
           >
-            Consulte um dos nossos representantes da sua região.
+            {t("title")}
           </h2>
 
           <Select value={uf} onValueChange={setUf}>
             <SelectTrigger
-              aria-label="Selecionar estado"
+              aria-label={t("selectState")}
               className={cn(
                 "h-13! md:h-14! px-8 text-base w-full md:w-md rounded-full bg-primary text-white",
               )}
               iconClassName="text-white"
             >
-              <SelectValue placeholder="Selecione o estado" />
+              <SelectValue placeholder={t("selectStatePlaceholder")} />
             </SelectTrigger>
             <SelectContent
               position="popper"
@@ -153,14 +159,11 @@ export function RepresentativesDirectory() {
         aria-label={`Representantes em ${stateName}`}
       >
         <p className="mb-8 text-base font-bold text-foreground">
-          Estado selecionado &quot;{stateName}&quot;
+          {t("selectedState", { state: stateName })}
         </p>
 
         {list.length === 0 ? (
-          <p className="text-muted-foreground">
-            Ainda não há representantes cadastrados para este estado. Entre em
-            contato conosco para outras regiões.
-          </p>
+          <p className="text-muted-foreground">{t("noRepresentatives")}</p>
         ) : (
           <ul className="grid gap-6 md:grid-cols-2">
             {list.map((rep) => (

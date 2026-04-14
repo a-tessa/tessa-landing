@@ -1,8 +1,10 @@
 import { withNextVideo } from "next-video/process";
+import createNextIntlPlugin from "next-intl/plugin";
 import type { NextConfig } from "next";
 
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
+
 const nextConfig: NextConfig = {
-  /* config options here */
   reactCompiler: true,
   images: {
     remotePatterns: [
@@ -19,9 +21,8 @@ const nextConfig: NextConfig = {
     ],
   },
   bundlePagesRouterDependencies: true,
-  serverExternalPackages: ['package-name'],
+  serverExternalPackages: ["package-name"],
 
-  // Router cache configuration
   experimental: {
     staleTimes: {
       dynamic: 30,
@@ -30,4 +31,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withNextVideo(nextConfig);
+export default withNextVideo(withNextIntl(nextConfig));
