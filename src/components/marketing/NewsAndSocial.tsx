@@ -72,7 +72,7 @@ export function NewsAndSocial() {
             </h2>
 
             <article
-              className="mt-8 flex flex-1 flex-col"
+              className="mt-8 flex flex-1 flex-col min-h-[500px]"
               itemScope
               itemType="https://schema.org/BlogPosting"
             >

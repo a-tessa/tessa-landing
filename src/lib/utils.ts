@@ -5,13 +5,13 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const homeSpacing = "px-12 sm:px-64 lg:px-80"
+export const homeSpacing = "px-12 sm:px-64 md:px-54 lg:px-54 xl:px-54"
 
-export const sectionCardShellSpacing = "w-screen px-4 sm:px-5 lg:px-7"
+export const sectionCardShellSpacing = "w-full px-4 sm:px-5 lg:px-7"
 
-export const freeSectionShellSpacing = "w-screen px-6 sm:px-24 md:px-25 lg:px-37 xl:px-85 mx-auto"
+export const freeSectionShellSpacing = "w-full px-6 sm:px-24 md:px-25 lg:px-37 xl:px-60 mx-auto"
 
-export const insideCardSpacing = "px-8 sm:px-16 md:px-20 lg:px-32 xl:px-80"
+export const insideCardSpacing = "px-8 sm:px-16 md:px-20 lg:px-32 xl:px-54"
 
 export const OPERATIONS_SLIDES = [
   {

@@ -10,6 +10,7 @@ import {
   cn,
   freeSectionShellSpacing,
   homeSpacing,
+  insideCardSpacing,
   sectionCardShellSpacing,
 } from "@/lib/utils";
 import type { ClientLogo, HeroTopic } from "@/lib/api/types";
@@ -240,7 +241,7 @@ export function Hero({ heroSection, clients }: HeroProps) {
       <section
         aria-labelledby="hero-title"
         className={cn(
-          "relative overflow-hidden pb-8 pt-24 sm:pb-14 sm:pt-6 md:aspect-video aspect-9/16",
+          "relative overflow-hidden pt-24 sm:pt-6 md:aspect-video aspect-16/16",
           sectionCardShellSpacing,
           "w-full",
         )}
@@ -273,7 +274,7 @@ export function Hero({ heroSection, clients }: HeroProps) {
             <div
               className={cn(
                 "flex flex-1 sm:items-end pt-10 sm:pt-24",
-                homeSpacing,
+                insideCardSpacing,
               )}
             >
               <div className="w-full gap-10 flex flex-col lg:flex-row justify-between">
