@@ -15,12 +15,25 @@ export interface SceneryItem {
   image: string;
 }
 
+export interface ClientLogo {
+  id?: string;
+  name: string;
+  alt: string;
+  website?: string;
+  logoUrl: string;
+}
+
 export interface PublicContentResponse {
   content: {
     heroSection?: HeroTopic[];
     scenerySection?: SceneryItem[];
+    clients?: ClientLogo[];
     [key: string]: unknown;
   };
   publishedAt: string | null;
   updatedAt: string | null;
+}
+
+export interface PublicClientsResponse {
+  clients: ClientLogo[];
 }

@@ -28,8 +28,8 @@
     },
     "requestQuote": "Request a quote",
     "exploreSolutions": "Explore solutions",
-    "nextSolution": "Show next solution",
-    "prevSolution": "Show previous solution",
+    "nextHeroBanner": "Show next hero banner",
+    "prevHeroBanner": "Show previous hero banner",
     "trustedCompanies": "Companies that trust us"
   },
   "scenarios": {

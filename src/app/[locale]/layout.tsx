@@ -94,6 +94,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
           barlow.variable,
           barlow.className,
           "antialiased",
+          "max-w-[1920px] mx-auto",
         )}
       >
         <NextIntlClientProvider messages={messages}>

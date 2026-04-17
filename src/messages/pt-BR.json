@@ -28,8 +28,8 @@
     },
     "requestQuote": "Solicitar orçamento",
     "exploreSolutions": "Conhecer soluções",
-    "nextSolution": "Mostrar a próxima solução",
-    "prevSolution": "Mostrar a solução anterior",
+    "nextHeroBanner": "Mostrar o próximo banner da seção principal",
+    "prevHeroBanner": "Mostrar o banner anterior da seção principal",
     "trustedCompanies": "Empresas que confiam"
   },
   "scenarios": {

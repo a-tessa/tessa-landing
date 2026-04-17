@@ -22,17 +22,15 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const { heroSection, scenerySection } = await getLandingContent();
-  console.log("🚀 ~ HomePage ~ heroSection:", heroSection)
-  console.log("🚀 ~ HomePage ~ scenerySection:", scenerySection)
+  const { heroSection, scenerySection, clients } = await getLandingContent();
 
   return (
     <>
       <JsonLd id="jsonld-org" data={organizationJsonLd()} />
       <JsonLd id="jsonld-website" data={websiteJsonLd()} />
 
-      <main className="flex flex-col items-center justify-center gap-10">
-        <Hero heroSection={heroSection} />
+      <main className="flex flex-col items-center justify-center gap-10 mx-auto">
+        <Hero heroSection={heroSection} clients={clients} />
         <Scenarios scenerySection={scenerySection} />
         <Operations />
         <NewsAndSocial />

@@ -12,7 +12,8 @@ import {
   homeSpacing,
   sectionCardShellSpacing,
 } from "@/lib/utils";
-import type { HeroTopic } from "@/lib/api/types";
+import type { ClientLogo, HeroTopic } from "@/lib/api/types";
+import { Button } from "../ui/button";
 
 interface Slide {
   heading: string;
@@ -24,6 +25,7 @@ interface Slide {
 
 interface HeroProps {
   heroSection?: HeroTopic[] | null;
+  clients?: ClientLogo[] | null;
 }
 
 const PARTNER_NAMES = [
@@ -35,6 +37,8 @@ const PARTNER_NAMES = [
   "Brandit",
   "Vintage",
 ] as const;
+
+const LOGO_MARQUEE_MIN_ITEMS = 6;
 
 function ScrollIndicator() {
   return (
@@ -67,7 +71,84 @@ function ScrollIndicator() {
   );
 }
 
-function LogoStrip() {
+interface LogoStripProps {
+  clients?: ClientLogo[] | null;
+}
+
+function fillLogosToMin<T>(items: T[], min: number): T[] {
+  if (items.length === 0) return items;
+
+  const filled: T[] = [...items];
+  let cursor = 0;
+  while (filled.length < min) {
+    filled.push(items[cursor % items.length]!);
+    cursor += 1;
+  }
+  return filled;
+}
+
+function LogoStrip({ clients }: LogoStripProps) {
+  const hasClients = Array.isArray(clients) && clients.length > 0;
+
+  if (hasClients) {
+    const baseLogos = fillLogosToMin(clients, LOGO_MARQUEE_MIN_ITEMS);
+    const marqueeLogos = [...baseLogos, ...baseLogos].map((client, index) => ({
+      key: `${client.id ?? client.logoUrl}-${Math.floor(index / baseLogos.length)}`,
+      client,
+    }));
+
+    return (
+      <div>
+        <ul className="sr-only">
+          {clients.map((client) => (
+            <li key={client.id ?? client.logoUrl}>{client.name}</li>
+          ))}
+        </ul>
+
+        <div aria-hidden="true" className="overflow-hidden">
+          <m.div
+            className="flex w-max items-center gap-12 sm:gap-16"
+            animate={{ x: ["0%", "-50%"] }}
+            transition={{ duration: 26, repeat: Infinity, ease: "linear" }}
+          >
+            {marqueeLogos.map(({ key, client }) => {
+              const logo = (
+                <Image
+                  src={client.logoUrl}
+                  alt={client.alt}
+                  width={140}
+                  height={56}
+                  sizes="(max-width: 640px) 96px, 140px"
+                  className="h-10 w-auto object-contain sm:h-12"
+                />
+              );
+
+              const wrapperClassName =
+                "inline-flex shrink-0 items-center justify-center grayscale opacity-60 transition duration-300 hover:grayscale-0 hover:opacity-100";
+
+              return client.website ? (
+                <a
+                  key={key}
+                  href={client.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Site de ${client.name}`}
+                  className={wrapperClassName}
+                >
+                  {logo}
+                </a>
+              ) : (
+                <span key={key} className={wrapperClassName}>
+                  {logo}
+                </span>
+              );
+            })}
+          </m.div>
+        </div>
+      </div>
+    );
+  }
+
   const marqueeItems = [...PARTNER_NAMES, ...PARTNER_NAMES].map(
     (partner, index) => ({
       key: `${partner}-${Math.floor(index / PARTNER_NAMES.length)}`,
@@ -132,7 +213,7 @@ function mapApiSlidesToSlides(topics: HeroTopic[]): Slide[] {
   }));
 }
 
-export function Hero({ heroSection }: HeroProps) {
+export function Hero({ heroSection, clients }: HeroProps) {
   const t = useTranslations("hero");
 
   const SLIDES = useMemo<Slide[]>(() => {
@@ -159,11 +240,12 @@ export function Hero({ heroSection }: HeroProps) {
       <section
         aria-labelledby="hero-title"
         className={cn(
-          "relative overflow-hidden pb-8 pt-24 sm:pb-14 sm:pt-6",
+          "relative overflow-hidden pb-8 pt-24 sm:pb-14 sm:pt-6 md:aspect-video aspect-9/16",
           sectionCardShellSpacing,
+          "w-full",
         )}
       >
-        <div className="relative overflow-hidden rounded-3xl bg-primary shadow-2xl shadow-primary/20">
+        <div className="relative overflow-hidden rounded-3xl bg-primary shadow-2xl shadow-primary/20 aspect-video w-full h-full">
           {SLIDES.map((slide, index) => (
             <m.div
               key={slide.bgAlt}
@@ -178,7 +260,7 @@ export function Hero({ heroSection }: HeroProps) {
                 alt={slide.bgAlt}
                 fill
                 priority={index === 0}
-                className="object-cover"
+                className="object-cover aspect-video w-full h-full"
                 sizes="(max-width: 768px) 100vw, 97vw"
               />
             </m.div>
@@ -187,7 +269,7 @@ export function Hero({ heroSection }: HeroProps) {
           <div className="absolute inset-0 z-1 bg-linear-to-r from-black/65 via-black/35 to-black/10" />
           <div className="absolute inset-0 z-1 bg-linear-to-t from-black/60 via-transparent to-transparent" />
 
-          <div className="relative z-10 flex h-[calc(100vh-5rem)] sm:h-screen flex-col">
+          <div className="relative z-10 flex h-full flex-col">
             <div
               className={cn(
                 "flex flex-1 sm:items-end pt-10 sm:pt-24",
@@ -285,14 +367,13 @@ export function Hero({ heroSection }: HeroProps) {
 
                     <div className="flex items-center justify-end gap-3">
                       <div className="h-1 flex-1 rounded-full bg-chart-5/70" />
-                      <button
-                        type="button"
+                      <Button
                         onClick={next}
-                        className="flex h-11 w-11 items-center justify-center rounded-full bg-chart-5 text-white transition-transform hover:scale-105"
-                        aria-label={t("nextSolution")}
+                        aria-label={t("nextHeroBanner")}
+                        className="cursor-pointer size-11 rounded-full transition-transform hover:scale-105"
                       >
                         <ArrowRight size={18} />
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -305,22 +386,20 @@ export function Hero({ heroSection }: HeroProps) {
               </div>
 
               <div className="flex items-center gap-3 lg:hidden">
-                <button
-                  type="button"
+                <Button
                   onClick={prev}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/16"
-                  aria-label={t("prevSolution")}
+                  aria-label={t("prevHeroBanner")}
+                  className="cursor-pointer size-10 rounded-full border border-white/15 bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/16"
                 >
                   <ChevronLeft size={18} />
-                </button>
-                <button
-                  type="button"
+                </Button>
+                <Button
                   onClick={next}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-chart-5 text-white transition-colors hover:brightness-110"
-                  aria-label={t("nextSolution")}
+                  aria-label={t("nextHeroBanner")}
+                  className="cursor-pointer size-10 rounded-full bg-chart-5 text-white transition-colors hover:brightness-110"
                 >
                   <ArrowRight size={18} />
-                </button>
+                </Button>
               </div>
             </div>
 
@@ -335,17 +414,17 @@ export function Hero({ heroSection }: HeroProps) {
             type="button"
             onClick={prev}
             className="absolute left-5 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/16 lg:flex"
-            aria-label={t("prevSolution")}
+            aria-label={t("prevHeroBanner")}
           >
             <ChevronLeft size={20} />
           </button>
         </div>
-      </section>
-      <div className={cn("relative z-10 -mt-32", freeSectionShellSpacing)}>
-        <div className="rounded-full bg-card py-6 shadow-2xl shadow-primary/10 sm:py-10">
-          <LogoStrip />
+        <div className="relative z-10 -mt-10">
+          <div className="rounded-full bg-card py-6 shadow-2xl shadow-primary/10 sm:py-10">
+            <LogoStrip clients={clients} />
+          </div>
         </div>
-      </div>
+      </section>
     </LazyMotion>
   );
 }

@@ -1,4 +1,10 @@
-import type { HeroTopic, PublicContentResponse, SceneryItem } from "./types";
+import type {
+  ClientLogo,
+  HeroTopic,
+  PublicClientsResponse,
+  PublicContentResponse,
+  SceneryItem,
+} from "./types";
 
 const API_BASE_URL = process.env.API_BASE_URL ?? "";
 const REVALIDATE_SECONDS = 60;
@@ -33,11 +39,32 @@ export async function getScenerySection(): Promise<SceneryItem[] | null> {
   return data?.content.scenerySection ?? null;
 }
 
+export async function getClients(): Promise<ClientLogo[] | null> {
+  if (!API_BASE_URL) return null;
+
+  const url = `${API_BASE_URL}/api/content/public/clients`;
+
+  try {
+    const res = await fetch(url, {
+      next: { revalidate: REVALIDATE_SECONDS, tags: ["landing-clients"] },
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    });
+
+    if (!res.ok) return null;
+
+    const data = (await res.json()) as PublicClientsResponse;
+    return Array.isArray(data.clients) ? data.clients : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function getLandingContent() {
-  const data = await getPublicContent();
+  const [data, clients] = await Promise.all([getPublicContent(), getClients()]);
 
   return {
     heroSection: data?.content.heroSection ?? null,
     scenerySection: data?.content.scenerySection ?? null,
+    clients: clients ?? data?.content.clients ?? null,
   };
 }
