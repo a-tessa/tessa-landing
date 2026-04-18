@@ -4,7 +4,6 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
-import { Container } from "./Container";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { cn, homeSpacing, sectionCardShellSpacing } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
@@ -87,36 +86,37 @@ export function Navbar() {
   );
 
   return (
-    <header className={cn("fixed left-0 right-0 top-6 z-50", sectionCardShellSpacing, 'w-full')}>
-      <div
-        className="flex justify-center pt-3 transition-all duration-500"
-        style={{ paddingTop: `${12 * (1 - scrollProgress)}px` }}
-      >
-        <nav
-          className={cn(
-            "flex w-full items-center text-base font-medium justify-between transition-all duration-500 rounded-lg h-18",
-            expanded ? "border-white/10 w-screen" : "border-transparent w-6xl",
-            expanded ? "px-16!" : "",
-          )}
-          style={{
-            backgroundColor: expanded
-              ? `rgba(55, 71, 79, ${Math.max(bgOpacity, 0.65)})`
-              : "transparent",
-            backdropFilter: `blur(${8 + scrollProgress * 4}px)`,
-            textShadow: "0 1px 3px rgba(0, 0, 0, 0.4)",
-          }}
+    <header className={cn("fixed left-0 right-0 top-6 z-50 w-full", sectionCardShellSpacing)}>
+      <div className={homeSpacing}>
+        <div
+          className="flex justify-center pt-3 transition-all duration-500"
+          style={{ paddingTop: `${12 * (1 - scrollProgress)}px` }}
         >
-          {navContent}
-        </nav>
-      </div>
-
-      {!expanded && (
-        <div className={cn("mx-auto transition-all duration-500", homeSpacing, expanded ? "px-16!" : "")}>
-          <div className="mt-0 h-px bg-white/15" />
+          <nav
+            className={cn(
+              "flex h-18 w-full items-center justify-between rounded-lg border text-base font-medium transition-all duration-500",
+              expanded ? "border-white/10" : "border-transparent",
+            )}
+            style={{
+              backgroundColor: expanded
+                ? `rgba(55, 71, 79, ${Math.max(bgOpacity, 0.65)})`
+                : "transparent",
+              backdropFilter: `blur(${8 + scrollProgress * 4}px)`,
+              textShadow: "0 1px 3px rgba(0, 0, 0, 0.4)",
+            }}
+          >
+            {navContent}
+          </nav>
         </div>
-      )}
 
-      {expanded && <div className="h-px w-full bg-white/10" />}
+        {!expanded ? (
+          <div className="transition-all duration-500">
+            <div className="mt-0 h-px bg-white/15" />
+          </div>
+        ) : (
+          <div className="h-px w-full bg-white/10" />
+        )}
+      </div>
 
       {mobileMenuOpen && (
         <div
@@ -124,7 +124,7 @@ export function Navbar() {
           role="dialog"
           aria-label={t("navLabel")}
         >
-          <Container className="flex flex-col gap-1 py-4">
+          <div className={cn("flex flex-col gap-1 py-4", homeSpacing)}>
             {NAV_KEYS.map(({ href, key }) => {
               const isActive =
                 pathname === href || pathname.startsWith(href + "/");
@@ -142,7 +142,7 @@ export function Navbar() {
                 </Link>
               );
             })}
-          </Container>
+          </div>
         </div>
       )}
     </header>

@@ -8,8 +8,6 @@ import { AnimatePresence, domAnimation, LazyMotion, m } from "motion/react";
 import { ArrowRight, ChevronDown, ChevronLeft } from "lucide-react";
 import {
   cn,
-  freeSectionShellSpacing,
-  homeSpacing,
   insideCardSpacing,
   sectionCardShellSpacing,
 } from "@/lib/utils";
@@ -119,7 +117,7 @@ function LogoStrip({ clients }: LogoStripProps) {
                   alt={client.alt}
                   width={140}
                   height={56}
-                  sizes="(max-width: 640px) 96px, 140px"
+                  sizes="(max-width: 640px) 96px, 90pxpx"
                   className="h-10 w-auto object-contain sm:h-12"
                 />
               );
@@ -241,12 +239,12 @@ export function Hero({ heroSection, clients }: HeroProps) {
       <section
         aria-labelledby="hero-title"
         className={cn(
-          "relative overflow-hidden pt-24 sm:pt-6 md:aspect-video aspect-16/16",
+          "relative overflow-hidden pt-24 sm:pt-6 flex flex-col",
           sectionCardShellSpacing,
           "w-full",
         )}
       >
-        <div className="relative overflow-hidden rounded-3xl bg-primary shadow-2xl shadow-primary/20 aspect-video w-full h-full">
+        <div className="relative rounded-3xl shadow-2xl shadow-primary/20 aspect-video w-full xl:max-h-screen">
           {SLIDES.map((slide, index) => (
             <m.div
               key={slide.bgAlt}
@@ -261,14 +259,14 @@ export function Hero({ heroSection, clients }: HeroProps) {
                 alt={slide.bgAlt}
                 fill
                 priority={index === 0}
-                className="object-cover aspect-video w-full h-full"
+                className="object-cover w-full h-full rounded-3xl"
                 sizes="(max-width: 768px) 100vw, 97vw"
               />
             </m.div>
           ))}
 
-          <div className="absolute inset-0 z-1 bg-linear-to-r from-black/65 via-black/35 to-black/10" />
-          <div className="absolute inset-0 z-1 bg-linear-to-t from-black/60 via-transparent to-transparent" />
+          <div className="absolute rounded-3xl inset-0 z-1 bg-linear-to-r from-black/65 via-black/35 to-black/10" />
+          <div className="absolute rounded-3xl inset-0 z-1 bg-linear-to-t from-black/60 via-transparent to-transparent" />
 
           <div className="relative z-10 flex h-full flex-col">
             <div
@@ -420,8 +418,8 @@ export function Hero({ heroSection, clients }: HeroProps) {
             <ChevronLeft size={20} />
           </button>
         </div>
-        <div className="relative z-10 -mt-10">
-          <div className="rounded-full bg-card py-6 shadow-2xl shadow-primary/10 sm:py-10">
+        <div className="relative z-10 h-fit -mt-10">
+          <div className="rounded-full bg-card py-6 shadow-2xl shadow-primary/10 sm:py-10 overflow-hidden">
             <LogoStrip clients={clients} />
           </div>
         </div>

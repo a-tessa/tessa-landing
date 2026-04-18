@@ -2,7 +2,7 @@ import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { IconArrowNarrowRight } from "@tabler/icons-react";
 import { BlogFeatureCard } from "@/components/marketing/BlogFeatureCard";
-import { freeSectionShellSpacing } from "@/lib/utils";
+import { cn, freeSectionShellSpacing } from "@/lib/utils";
 
 interface BlogPost {
   title: string;
@@ -113,18 +113,19 @@ export function NewsAndSocial() {
               media
             </h2>
 
-            <div className="mt-8 grid flex-1 grid-cols-2 grid-rows-2 gap-x-4">
+            <div className="mt-8 grid flex-1 grid-cols-2 gap-x-4 gap-y-4 grid-rows-[auto_auto]">
               {INSTAGRAM_POSTS.map((post, index) => (
                 <a
                   key={post.url}
                   href={post.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`group flex flex-col rounded-2xl border border-border bg-card p-5 transition-shadow hover:shadow-lg ${
-                    index >= 2
-                      ? "col-span-1 row-span-1 col-start-2 row-start-1"
-                      : "col-span-1 row-span-2"
-                  }`}
+                  className={cn(
+                    "group flex h-full min-h-0 flex-col rounded-2xl border border-border bg-card p-5 transition-shadow hover:shadow-lg",
+                    index === 0 && "col-start-1 row-span-2 row-start-1",
+                    index === 1 && "col-start-2 row-start-2",
+                    index === 2 && "col-start-2 row-start-1",
+                  )}
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
