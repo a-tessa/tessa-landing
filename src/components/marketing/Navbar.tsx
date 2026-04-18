@@ -5,7 +5,12 @@ import React, { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { LanguageSwitcher } from "./LanguageSwitcher";
-import { cn, homeSpacing, sectionCardShellSpacing } from "@/lib/utils";
+import {
+  cn,
+  homeSpacing,
+  insideCardSpacing,
+  sectionCardShellSpacing,
+} from "@/lib/utils";
 import { Menu, X } from "lucide-react";
 
 const SCROLL_THRESHOLD = 150;
@@ -32,7 +37,6 @@ export function Navbar() {
   }, []);
 
   const scrollProgress = Math.min(scrollY / SCROLL_THRESHOLD, 1);
-  const bgOpacity = scrollProgress;
 
   const expanded = scrollProgress >= 1;
 
@@ -49,7 +53,10 @@ export function Navbar() {
             priority
           />
         </Link>
-        <span className="hidden h-4 w-px shrink-0 bg-white/40 sm:block" aria-hidden />
+        <span
+          className="hidden h-4 w-px shrink-0 bg-white/40 sm:block"
+          aria-hidden
+        />
         <span className="hidden text-xs font-medium uppercase tracking-wide text-white/60 sm:block">
           {t("since")}
         </span>
@@ -86,22 +93,30 @@ export function Navbar() {
   );
 
   return (
-    <header className={cn("fixed left-0 right-0 top-6 z-50 w-full", sectionCardShellSpacing)}>
-      <div className={homeSpacing}>
+    <header
+      className={cn(
+        "fixed left-0 right-0 top-6 z-50 w-full",
+        sectionCardShellSpacing,
+        expanded ? "w-[calc(100%+80px)] -translate-x-1/2 left-1/2" : null,
+      )}
+    >
+      <div className={cn(insideCardSpacing)}>
         <div
-          className="flex justify-center pt-3 transition-all duration-500"
+          className={("flex justify-center pt-3 transition-all duration-500")}
           style={{ paddingTop: `${12 * (1 - scrollProgress)}px` }}
         >
           <nav
             className={cn(
-              "flex h-18 w-full items-center justify-between rounded-lg border text-base font-medium transition-all duration-500",
-              expanded ? "border-white/10" : "border-transparent",
+              "flex h-18 w-full items-center justify-between rounded-lg border text-base font-medium transition-[background-color,width,backdrop-filter,border-color] duration-500",
+              expanded
+                ? "border-white/10 bg-black/30 backdrop-blur-xl px-10"
+                : "border-transparent bg-transparent",
             )}
             style={{
-              backgroundColor: expanded
-                ? `rgba(55, 71, 79, ${Math.max(bgOpacity, 0.65)})`
-                : "transparent",
-              backdropFilter: `blur(${8 + scrollProgress * 4}px)`,
+              ...(expanded && {
+                backdropFilter: `blur(${8 + scrollProgress * 4}px)`,
+                WebkitBackdropFilter: `blur(${8 + scrollProgress * 4}px)`,
+              }),
               textShadow: "0 1px 3px rgba(0, 0, 0, 0.4)",
             }}
           >
@@ -109,12 +124,10 @@ export function Navbar() {
           </nav>
         </div>
 
-        {!expanded ? (
+        {!expanded && (
           <div className="transition-all duration-500">
             <div className="mt-0 h-px bg-white/15" />
           </div>
-        ) : (
-          <div className="h-px w-full bg-white/10" />
         )}
       </div>
 
