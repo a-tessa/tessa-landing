@@ -95,22 +95,22 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "fixed left-0 right-0 top-6 z-50 w-full",
+        "fixed left-0 right-0 top-0 md:top-6 z-50 w-full ",
         sectionCardShellSpacing,
         expanded ? "w-[calc(100%+80px)] -translate-x-1/2 left-1/2" : null,
       )}
     >
-      <div className={cn(insideCardSpacing)}>
+      <div className={cn(insideCardSpacing, 'px-0')}>
         <div
-          className={("flex justify-center pt-3 transition-all duration-500")}
+          className={cn("flex justify-center pt-3 transition-all duration-500 max-w-[1439px]", expanded ? "max-w-[calc(1439px+80px)]" : null)}
           style={{ paddingTop: `${12 * (1 - scrollProgress)}px` }}
         >
           <nav
             className={cn(
-              "flex h-18 w-full items-center justify-between rounded-lg border text-base font-medium transition-[background-color,width,backdrop-filter,border-color] duration-500",
+              "flex h-18 w-full items-center justify-between rounded-lg border text-base font-medium transition-[background-color,width,backdrop-filter,border-color] duration-500 bg-neutral-800 md:bg-transparent px-7 md:px-0",
               expanded
-                ? "border-white/10 bg-black/30 backdrop-blur-xl px-10"
-                : "border-transparent bg-transparent",
+                ? "border-white/10 bg-black/30 backdrop-blur-xl md:px-10"
+                : "border-transparent",
             )}
             style={{
               ...(expanded && {

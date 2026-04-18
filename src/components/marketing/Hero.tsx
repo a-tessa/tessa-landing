@@ -13,6 +13,7 @@ import {
 } from "@/lib/utils";
 import type { ClientLogo, HeroTopic } from "@/lib/api/types";
 import { Button } from "../ui/button";
+import { Marquee } from "../ui/marquee";
 
 interface Slide {
   heading: string;
@@ -36,8 +37,6 @@ const PARTNER_NAMES = [
   "Brandit",
   "Vintage",
 ] as const;
-
-const LOGO_MARQUEE_MIN_ITEMS = 6;
 
 function ScrollIndicator() {
   return (
@@ -74,111 +73,93 @@ interface LogoStripProps {
   clients?: ClientLogo[] | null;
 }
 
-function fillLogosToMin<T>(items: T[], min: number): T[] {
-  if (items.length === 0) return items;
+const LOGO_WRAPPER_CLASSNAME =
+  "inline-flex shrink-0 items-center justify-center grayscale opacity-60 transition-all hover:grayscale-0 hover:opacity-100";
 
-  const filled: T[] = [...items];
-  let cursor = 0;
-  while (filled.length < min) {
-    filled.push(items[cursor % items.length]!);
-    cursor += 1;
-  }
-  return filled;
+const MARQUEE_CLASSNAME =
+  "[--duration:26s] [--gap:3rem] sm:[--gap:4rem] [&_img]:[content-visibility:auto]";
+
+function LogoItem({ client }: { client: ClientLogo }) {
+  const logo = (
+    <Image
+      src={client.logoUrl}
+      alt={client.alt}
+      width={140}
+      height={56}
+      sizes="(max-width: 640px) 96px, 140px"
+      loading="lazy"
+      decoding="async"
+      className="h-10 w-auto object-contain sm:h-12"
+    />
+  );
+
+  return client.website ? (
+    <a
+      href={client.website}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`Site de ${client.name}`}
+      className={LOGO_WRAPPER_CLASSNAME}
+    >
+      {logo}
+    </a>
+  ) : (
+    <span className={LOGO_WRAPPER_CLASSNAME}>{logo}</span>
+  );
 }
 
 function LogoStrip({ clients }: LogoStripProps) {
   const hasClients = Array.isArray(clients) && clients.length > 0;
 
-  if (hasClients) {
-    const baseLogos = fillLogosToMin(clients, LOGO_MARQUEE_MIN_ITEMS);
-    const marqueeLogos = [...baseLogos, ...baseLogos].map((client, index) => ({
-      key: `${client.id ?? client.logoUrl}-${Math.floor(index / baseLogos.length)}`,
-      client,
-    }));
-
-    return (
-      <div>
-        <ul className="sr-only">
-          {clients.map((client) => (
-            <li key={client.id ?? client.logoUrl}>{client.name}</li>
-          ))}
-        </ul>
-
-        <div aria-hidden="true" className="overflow-hidden">
-          <m.div
-            className="flex w-max items-center gap-12 sm:gap-16"
-            animate={{ x: ["0%", "-50%"] }}
-            transition={{ duration: 26, repeat: Infinity, ease: "linear" }}
-          >
-            {marqueeLogos.map(({ key, client }) => {
-              const logo = (
-                <Image
-                  src={client.logoUrl}
-                  alt={client.alt}
-                  width={140}
-                  height={56}
-                  sizes="(max-width: 640px) 96px, 90pxpx"
-                  className="h-10 w-auto object-contain sm:h-12"
-                />
-              );
-
-              const wrapperClassName =
-                "inline-flex shrink-0 items-center justify-center grayscale opacity-60 transition duration-300 hover:grayscale-0 hover:opacity-100";
-
-              return client.website ? (
-                <a
-                  key={key}
-                  href={client.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Site de ${client.name}`}
-                  className={wrapperClassName}
-                >
-                  {logo}
-                </a>
-              ) : (
-                <span key={key} className={wrapperClassName}>
-                  {logo}
-                </span>
-              );
-            })}
-          </m.div>
-        </div>
-      </div>
-    );
-  }
-
-  const marqueeItems = [...PARTNER_NAMES, ...PARTNER_NAMES].map(
-    (partner, index) => ({
-      key: `${partner}-${Math.floor(index / PARTNER_NAMES.length)}`,
-      label: partner,
-    }),
-  );
-
   return (
     <div>
-      <ul className="sr-only">
-        {PARTNER_NAMES.map((partner) => (
-          <li key={partner}>{partner}</li>
-        ))}
-      </ul>
+      {hasClients ? (
+        <>
+          <ul className="sr-only">
+            {clients!.map((client) => (
+              <li key={client.id ?? client.logoUrl}>{client.name}</li>
+            ))}
+          </ul>
 
-      <div aria-hidden="true" className="overflow-hidden">
-        <m.div
-          className="flex w-max items-center gap-12 sm:gap-16"
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{ duration: 26, repeat: Infinity, ease: "linear" }}
-        >
-          {marqueeItems.map((item) => (
-            <span
-              key={item.key}
-              className="whitespace-nowrap text-sm font-semibold uppercase tracking-[0.24em] text-muted-foreground/70 sm:text-base"
-            >
-              {item.label}
-            </span>
-          ))}
-        </m.div>
-      </div>
+          <Marquee
+            aria-hidden="true"
+            pauseOnHover
+            repeat={4}
+            className={MARQUEE_CLASSNAME}
+          >
+            {clients!.map((client) => (
+              <LogoItem
+                key={client.id ?? client.logoUrl}
+                client={client}
+              />
+            ))}
+          </Marquee>
+        </>
+      ) : (
+        <>
+          <ul className="sr-only">
+            {PARTNER_NAMES.map((partner) => (
+              <li key={partner}>{partner}</li>
+            ))}
+          </ul>
+
+          <Marquee
+            aria-hidden="true"
+            pauseOnHover
+            repeat={4}
+            className={MARQUEE_CLASSNAME}
+          >
+            {PARTNER_NAMES.map((partner) => (
+              <span
+                key={partner}
+                className="whitespace-nowrap text-sm font-semibold uppercase tracking-[0.24em] text-muted-foreground/70 sm:text-base"
+              >
+                {partner}
+              </span>
+            ))}
+          </Marquee>
+        </>
+      )}
     </div>
   );
 }
