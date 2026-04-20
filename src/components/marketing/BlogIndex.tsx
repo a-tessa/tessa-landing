@@ -55,7 +55,7 @@ export function BlogIndex({
         showSearch
       />
       <section
-        className={cn("w-full pb-20", freeSectionShellSpacing, className)}
+        className={cn("w-full pb-20 pt-14", freeSectionShellSpacing, className)}
         aria-labelledby="blog-list-heading"
       >
         <div className="mt-12">

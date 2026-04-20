@@ -44,7 +44,11 @@
     "nextImage": "Next image",
     "prevImages": "Previous images",
     "nextImages": "Next images",
-    "goToImage": "Go to image {number}"
+    "goToImage": "Go to image {number}",
+    "expandImage": "Expand image",
+    "collapseImage": "Collapse image",
+    "closeImage": "Close image",
+    "imageDescription": "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
   },
   "results": {
     "title": "Results\nthat count",
@@ -94,6 +98,8 @@
     "searchLabel": "Search article by title",
     "searchPlaceholder": "Search by title...",
     "searchButton": "Search",
+    "scrollLeft": "Scroll categories left",
+    "scrollRight": "Scroll categories right",
     "publishedAt": "Published on {date}",
     "readMore": "Read full article",
     "relatedArticles": "Related\narticles",

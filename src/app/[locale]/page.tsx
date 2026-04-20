@@ -1,33 +1,46 @@
 import type { Metadata } from "next";
-import React from "react";
+import { getTranslations } from "next-intl/server";
 import { Hero } from "@/components/marketing/Hero";
 import { Footer } from "@/components/marketing/Footer";
-import { JsonLd } from "@/lib/seo/jsonld";
-import { organizationJsonLd, SITE, websiteJsonLd } from "@/lib/seo/schemas";
 import { Scenarios } from "@/components/marketing/Scenarios";
 import { Operations } from "@/components/marketing/Operations";
 import { NewsAndSocial } from "@/components/marketing/NewsAndSocial";
 import { Testimonials } from "@/components/marketing/Testimonials";
 import { Results } from "@/components/marketing/Results";
+import { JsonLd } from "@/lib/seo/jsonld";
+import { breadcrumbJsonLd } from "@/lib/seo/schemas";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 import { getLandingContent } from "@/lib/api/content";
 
-export const metadata: Metadata = {
-  title: "Estruturas metalicas e energia solar para projetos industriais",
-  description:
-    "Estruturas metalicas, perfis sob medida e energia solar para empresas que buscam engenharia aplicada, producao industrial e previsibilidade na execucao.",
-  alternates: {
-    canonical: "/",
-  },
-  keywords: [...SITE.keywords, "Energia solar para empresas", "Perfis sob medida"],
-};
+interface HomePageProps {
+  params: Promise<{ locale: string }>;
+}
 
-export default async function HomePage() {
+export async function generateMetadata({
+  params,
+}: HomePageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "metadata" });
+
+  return buildPageMetadata({
+    locale,
+    path: "/",
+    title: t("homeTitle"),
+    description: t("homeDescription"),
+    keywords: ["Energia solar para empresas", "Perfis sob medida"],
+  });
+}
+
+export default async function HomePage({ params }: HomePageProps) {
+  const { locale } = await params;
   const { heroSection, scenerySection, clients } = await getLandingContent();
 
   return (
     <>
-      <JsonLd id="jsonld-org" data={organizationJsonLd()} />
-      <JsonLd id="jsonld-website" data={websiteJsonLd()} />
+      <JsonLd
+        id="jsonld-breadcrumb-home"
+        data={breadcrumbJsonLd(locale, [])}
+      />
 
       <main className="flex flex-col items-center justify-center gap-10 mx-auto">
         <Hero heroSection={heroSection} clients={clients} />

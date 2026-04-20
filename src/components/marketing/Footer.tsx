@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { SITE } from "@/lib/seo/schemas";
-import { cn, homeSpacing, insideCardSpacing } from "@/lib/utils";
+import { cn, insideCardSpacing } from "@/lib/utils";
 
 const MENU_KEYS = [
   { href: "/a-tessa", key: "about" },
@@ -32,7 +32,7 @@ export function Footer() {
 
   return (
     <footer
-      className="w-full px-6  mb-20 mx-auto pb-6"
+      className="w-full mb-20 mx-auto pb-6 max-w-[1920px] px-4"
       role="contentinfo"
       aria-label={t("siteLabel")}
       itemScope

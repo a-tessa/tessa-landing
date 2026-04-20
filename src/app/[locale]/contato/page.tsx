@@ -1,44 +1,80 @@
 import type { Metadata } from "next";
-import { useTranslations } from "next-intl";
-import { Footer } from "@/components/marketing/Footer";
-import { Heading } from "@/components/marketing/Heading";
-import { JsonLd } from "@/lib/seo/jsonld";
-import { organizationJsonLd, SITE, websiteJsonLd } from "@/lib/seo/schemas";
-import { cn, freeSectionShellSpacing } from "@/lib/utils";
+import { getTranslations } from "next-intl/server";
 import { ContactForm } from "@/components/marketing/ContactForm";
+import { Footer } from "@/components/marketing/Footer";
+import { RouteHeading } from "@/components/marketing/RouteHeading";
+import { JsonLd } from "@/lib/seo/jsonld";
+import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
+import { buildPageMetadata } from "@/lib/seo/metadata";
+import { cn, freeSectionShellSpacing } from "@/lib/utils";
 
-export const metadata: Metadata = {
-	title: "Contato — fale com a Tessa",
-	description:
-		"Entre em contato com a Tessa para solicitar orçamento, esclarecer dúvidas ou conhecer nossas soluções em estruturas metálicas e energia solar.",
-	alternates: {
-		canonical: "/contato",
-	},
-	keywords: [
-		...SITE.keywords,
-		"Contato Tessa",
-		"Orçamento estruturas metálicas",
-		"Fale conosco",
-	],
-};
+interface ContatoPageProps {
+  params: Promise<{ locale: string }>;
+}
 
-export default function ContatoPage() {
-	const t = useTranslations("pages.contato");
+export async function generateMetadata({
+  params,
+}: ContatoPageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "pages.contato" });
 
-	return (
-		<>
-			<JsonLd id="jsonld-org-contato" data={organizationJsonLd()} />
-			<JsonLd id="jsonld-website-contato" data={websiteJsonLd()} />
+  return buildPageMetadata({
+    locale,
+    path: "/contato",
+    title: t("title"),
+    description: t("description"),
+    keywords: [
+      "Contato Tessa",
+      "Orçamento estruturas metálicas",
+      "Fale conosco",
+    ],
+  });
+}
 
-			<main className="flex flex-col items-center justify-center gap-0">
-				<Heading title={t("title")} description={t("description")} />
+function contactPointJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    name: SITE.name,
+    url: `${SITE.domain}/contato`,
+    mainEntity: {
+      "@type": "Organization",
+      name: SITE.name,
+      contactPoint: SITE.phones.map((telephone) => ({
+        "@type": "ContactPoint",
+        telephone,
+        contactType: "customer service",
+        areaServed: "BR",
+        availableLanguage: ["Portuguese", "English", "Spanish"],
+        email: SITE.email,
+      })),
+    },
+  };
+}
 
-				<section className={cn("w-full pb-20 pt-10", freeSectionShellSpacing)}>
-					<ContactForm />
-				</section>
-			</main>
+export default async function ContatoPage({ params }: ContatoPageProps) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "pages.contato" });
 
-			<Footer />
-		</>
-	);
+  return (
+    <>
+      <JsonLd
+        id="jsonld-breadcrumb-contato"
+        data={breadcrumbJsonLd(locale, [
+          { name: t("title"), path: "/contato" },
+        ])}
+      />
+      <JsonLd id="jsonld-contact" data={contactPointJsonLd()} />
+
+      <main className="flex flex-col items-center justify-center gap-20">
+        <RouteHeading />
+
+        <section className={cn("w-full pb-20 pt-10", freeSectionShellSpacing)}>
+          <ContactForm />
+        </section>
+      </main>
+
+      <Footer />
+    </>
+  );
 }

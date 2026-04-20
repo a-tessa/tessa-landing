@@ -1,13 +1,25 @@
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
 import Image from "next/image";
-import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
+import Video from "next-video";
+import { IconArrowDown, IconArrowRight } from "@tabler/icons-react";
+import { getTranslations } from "next-intl/server";
 import { BackNavLink } from "@/components/marketing/BackNavLink";
+import { BentoCarouselServices } from "@/components/marketing/BentoCarouselServices";
 import { Footer } from "@/components/marketing/Footer";
 import { Heading } from "@/components/marketing/Heading";
+import { NewsAndSocial } from "@/components/marketing/NewsAndSocial";
+import { Testimonials } from "@/components/marketing/Testimonials";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
 import { JsonLd } from "@/lib/seo/jsonld";
-import { SITE } from "@/lib/seo/schemas";
+import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 import { getServiceBySlug, services } from "@/lib/services";
 import {
   cn,
@@ -15,21 +27,10 @@ import {
   OPERATIONS_IMAGES,
   serviceCarouselCss,
 } from "@/lib/utils";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
-import Video from "next-video";
-import { BentoCarouselServices } from "@/components/marketing/BentoCarouselServices";
-import { Button } from "@/components/ui/button";
-import { IconArrowDown, IconArrowRight } from "@tabler/icons-react";
-import { NewsAndSocial } from "@/components/marketing/NewsAndSocial";
-import { Testimonials } from "@/components/marketing/Testimonials";
 
-type PageProps = {
-  params: Promise<{ slug: string }>;
-};
+interface ServiceDetailPageProps {
+  params: Promise<{ locale: string; slug: string }>;
+}
 
 export function generateStaticParams() {
   return services.map((service) => ({
@@ -37,51 +38,55 @@ export function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const service = getServiceBySlug(slug);
-
-  if (!service) return {};
-
-  return {
-    title: `${service.title} - Serviços`,
-    description: service.description,
-    alternates: {
-      canonical: `/servicos/${service.slug}`,
-    },
-    openGraph: {
-      title: service.title,
-      description: service.description,
-      url: `/servicos/${service.slug}`,
-      images: [
-        {
-          url: service.image,
-          alt: service.title,
-        },
-      ],
-    },
-    keywords: [...SITE.keywords, service.title],
-  };
+function absoluteImageUrl(src: string): string {
+  return src.startsWith("http") ? src : `${SITE.domain}${src}`;
 }
 
-export default async function ServiceDetailPage({ params }: PageProps) {
-  const { slug } = await params;
+export async function generateMetadata({
+  params,
+}: ServiceDetailPageProps): Promise<Metadata> {
+  const { locale, slug } = await params;
   const service = getServiceBySlug(slug);
 
+  if (!service) {
+    return buildPageMetadata({
+      locale,
+      path: `/servicos/${slug}`,
+      title: "404",
+      description: SITE.description,
+      noIndex: true,
+    });
+  }
+
+  return buildPageMetadata({
+    locale,
+    path: `/servicos/${service.slug}`,
+    title: service.title,
+    description: service.description,
+    keywords: [service.title],
+    image: {
+      url: absoluteImageUrl(service.image),
+      alt: service.title,
+    },
+  });
+}
+
+export default async function ServiceDetailPage({
+  params,
+}: ServiceDetailPageProps) {
+  const { locale, slug } = await params;
+  const service = getServiceBySlug(slug);
   if (!service) notFound();
 
-  const t = await getTranslations("pages.servicoDetail");
+  const t = await getTranslations({ locale, namespace: "pages.servicoDetail" });
+  const ts = await getTranslations({ locale, namespace: "pages.servicos" });
 
   const serviceJsonLd = {
     "@context": "https://schema.org",
     "@type": "Service",
     name: service.title,
     description: service.description,
-    image: service.image.startsWith("http")
-      ? service.image
-      : `${SITE.domain}${service.image}`,
+    image: absoluteImageUrl(service.image),
     provider: {
       "@type": "Organization",
       name: SITE.name,
@@ -91,20 +96,29 @@ export default async function ServiceDetailPage({ params }: PageProps) {
       "@type": "Country",
       name: "Brasil",
     },
-    url: `${SITE.domain}/servicos/${service.slug}`,
+    url: `${SITE.domain}/${locale}/servicos/${service.slug}`,
   };
 
-  const isActive = (slug: string) => slug === service.slug;
+  const isActive = (candidateSlug: string) => candidateSlug === service.slug;
 
   return (
     <>
       <style href="service-heading-carousel" precedence="component">
         {serviceCarouselCss}
       </style>
+
+      <JsonLd
+        id="jsonld-breadcrumb-servico"
+        data={breadcrumbJsonLd(locale, [
+          { name: ts("title"), path: "/servicos" },
+          { name: service.title, path: `/servicos/${service.slug}` },
+        ])}
+      />
       <JsonLd id={`jsonld-service-${service.slug}`} data={serviceJsonLd} />
 
       <main className="flex flex-col items-center justify-center gap-16">
         <Heading title={service.title} description={service.description} />
+
         <div className="relative h-auto w-fit">
           <nav
             aria-label={t("serviceNav")}
@@ -122,6 +136,7 @@ export default async function ServiceDetailPage({ params }: PageProps) {
                   >
                     <Link
                       href={`/servicos/${item.slug}`}
+                      aria-current={isActive(item.slug) ? "page" : undefined}
                       className={cn(
                         "text-xs uppercase text-foreground relative",
                         isActive(item.slug)
@@ -142,8 +157,6 @@ export default async function ServiceDetailPage({ params }: PageProps) {
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              {/* <CarouselPrevious />
-              <CarouselNext /> */}
             </Carousel>
           </nav>
         </div>
@@ -157,9 +170,9 @@ export default async function ServiceDetailPage({ params }: PageProps) {
             />
           </div>
           <div className={cn("flex flex-col gap-8", freeSectionShellSpacing)}>
-            <h3 className="font-normal leading-tight text-muted-foreground">
+            <h2 className="font-normal leading-tight text-muted-foreground">
               {service.description}
-            </h3>
+            </h2>
             <div className="relative flex flex-col md:flex-row h-auto gap-8">
               <div className="w-full md:w-1/2 gap-8 flex flex-col">
                 <p className="whitespace-pre-line text-xl md:text-3xl uppercase font-semibold">
@@ -180,8 +193,10 @@ export default async function ServiceDetailPage({ params }: PageProps) {
             </div>
           </div>
         </section>
+
         <NewsAndSocial />
         <Testimonials />
+
         <section
           className={cn("mb-10", freeSectionShellSpacing)}
           aria-labelledby="servico-materiais-heading"

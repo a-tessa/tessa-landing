@@ -1,62 +1,76 @@
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { BackNavLink } from "@/components/marketing/BackNavLink";
+import { BlogCategoryNav } from "@/components/marketing/BlogCategoryNav";
+import { BlogFeatureCard } from "@/components/marketing/BlogFeatureCard";
 import { Footer } from "@/components/marketing/Footer";
 import { Heading } from "@/components/marketing/Heading";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { getBlogPostBySlug, blogPosts } from "@/lib/blog/posts";
-import { SITE } from "@/lib/seo/schemas";
+import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
-import { BlogCategoryNav } from "@/components/marketing/BlogCategoryNav";
-import { BlogFeatureCard } from "@/components/marketing/BlogFeatureCard";
 
-type PageProps = { params: Promise<{ slug: string }> };
+interface BlogPostPageProps {
+  params: Promise<{ locale: string; slug: string }>;
+}
 
 export function generateStaticParams(): { slug: string }[] {
   return blogPosts.map((p) => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const post = getBlogPostBySlug(slug);
-  if (!post) return {};
-  return {
-    title: post.title,
-    description: post.description,
-    alternates: { canonical: `/blog/${slug}` },
-    openGraph: {
-      type: "article",
-      title: post.title,
-      description: post.description,
-      url: `/blog/${slug}`,
-      images: [
-        {
-          url: post.imageSrc.startsWith("http")
-            ? post.imageSrc
-            : `${SITE.domain}${post.imageSrc}`,
-          alt: post.imageAlt,
-        },
-      ],
-    },
-  };
+function absoluteImageUrl(src: string): string {
+  return src.startsWith("http") ? src : `${SITE.domain}${src}`;
 }
 
-function formatPublishedDate(iso: string): string {
-  return new Intl.DateTimeFormat("pt-BR", {
+export async function generateMetadata({
+  params,
+}: BlogPostPageProps): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const post = getBlogPostBySlug(slug);
+
+  if (!post) {
+    return buildPageMetadata({
+      locale,
+      path: `/blog/${slug}`,
+      title: "404",
+      description: SITE.description,
+      noIndex: true,
+    });
+  }
+
+  return buildPageMetadata({
+    locale,
+    path: `/blog/${slug}`,
+    title: post.title,
+    description: post.description,
+    type: "article",
+    publishedAt: post.publishedAt,
+    image: {
+      url: absoluteImageUrl(post.imageSrc),
+      alt: post.imageAlt,
+    },
+    keywords: [post.category, post.title],
+  });
+}
+
+function formatPublishedDate(iso: string, locale: string): string {
+  const intlLocale =
+    locale === "pt-BR" ? "pt-BR" : locale === "es" ? "es-ES" : "en-US";
+  return new Intl.DateTimeFormat(intlLocale, {
     day: "2-digit",
     month: "long",
     year: "numeric",
   }).format(new Date(iso));
 }
 
-export default async function BlogPostPage({ params }: PageProps) {
-  const { slug } = await params;
+export default async function BlogPostPage({ params }: BlogPostPageProps) {
+  const { locale, slug } = await params;
   const post = getBlogPostBySlug(slug);
   if (!post) notFound();
+
   const relatedPosts = blogPosts
     .filter(
       (candidate) =>
@@ -64,29 +78,46 @@ export default async function BlogPostPage({ params }: PageProps) {
     )
     .slice(0, 2);
 
-  const t = await getTranslations("pages.blog");
-  const bt = await getTranslations("blog");
+  const t = await getTranslations({ locale, namespace: "pages.blog" });
+  const bt = await getTranslations({ locale, namespace: "blog" });
 
-  const jsonLd = {
+  const postJsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: post.title,
     description: post.description,
     datePublished: post.publishedAt,
+    inLanguage: locale,
     author: {
       "@type": "Person",
       name: post.author.name,
     },
-    publisher: { "@type": "Organization", name: SITE.name },
-    mainEntityOfPage: `${SITE.domain}/blog/${slug}`,
-    image: post.imageSrc.startsWith("http")
-      ? post.imageSrc
-      : `${SITE.domain}${post.imageSrc}`,
+    publisher: {
+      "@type": "Organization",
+      name: SITE.name,
+      url: SITE.domain,
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE.domain}/tessa-logo.svg`,
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${SITE.domain}/${locale}/blog/${slug}`,
+    },
+    image: absoluteImageUrl(post.imageSrc),
   };
 
   return (
     <>
-      <JsonLd id="jsonld-post" data={jsonLd} />
+      <JsonLd
+        id="jsonld-breadcrumb-blog-post"
+        data={breadcrumbJsonLd(locale, [
+          { name: t("title"), path: "/blog" },
+          { name: post.title, path: `/blog/${slug}` },
+        ])}
+      />
+      <JsonLd id={`jsonld-blog-post-${slug}`} data={postJsonLd} />
 
       <main className="flex flex-col items-center justify-center gap-0">
         <Heading title={t("title")} description={t("description")} />
@@ -140,7 +171,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                       className="text-xs font-semibold text-primary"
                     >
                       {bt("publishedAt", {
-                        date: formatPublishedDate(post.publishedAt),
+                        date: formatPublishedDate(post.publishedAt, locale),
                       })}
                     </time>
                   </div>

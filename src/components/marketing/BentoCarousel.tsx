@@ -3,11 +3,18 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
+import { motion } from "motion/react";
 import {
   IconArrowNarrowLeft,
   IconArrowNarrowRight,
+  IconX,
 } from "@tabler/icons-react";
-import { motion } from "motion/react";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { VisuallyHidden } from "radix-ui";
 import { cn, insideCardSpacing } from "@/lib/utils";
 
 interface BentoImage {
@@ -39,6 +46,7 @@ function MobileCarousel({ slides }: { slides: BentoSlide[] }) {
   const allImages = slides.flatMap((s) => s.images);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [openImage, setOpenImage] = useState<BentoImage | null>(null);
 
   const handleScroll = useCallback(() => {
     if (!scrollRef.current) return;
@@ -81,12 +89,15 @@ function MobileCarousel({ slides }: { slides: BentoSlide[] }) {
           className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth [scrollbar-width:none]"
         >
           {allImages.map((img, i) => (
-            <motion.div
+            <motion.button
               key={`mobile-${i}`}
+              type="button"
+              onClick={() => setOpenImage(img)}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4, delay: 0.05 * Math.min(i, 3) }}
-              className="relative aspect-4/3 w-full shrink-0 snap-center overflow-hidden rounded-2xl"
+              className="relative aspect-4/3 w-full shrink-0 cursor-pointer snap-center overflow-hidden rounded-2xl"
+              aria-label={t("expandImage")}
             >
               <Image
                 src={img.src}
@@ -95,7 +106,7 @@ function MobileCarousel({ slides }: { slides: BentoSlide[] }) {
                 sizes="90vw"
                 className="object-cover"
               />
-            </motion.div>
+            </motion.button>
           ))}
         </div>
 
@@ -133,6 +144,47 @@ function MobileCarousel({ slides }: { slides: BentoSlide[] }) {
           />
         ))}
       </div>
+
+      <Dialog
+        open={openImage !== null}
+        onOpenChange={(open) => !open && setOpenImage(null)}
+      >
+        <DialogContent
+          showCloseButton={false}
+          className="grid max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden border-0 bg-primary p-0 sm:max-w-2xl"
+        >
+          <VisuallyHidden.Root>
+            <DialogTitle>{openImage?.alt ?? ""}</DialogTitle>
+          </VisuallyHidden.Root>
+          {openImage && (
+            <>
+              <div className="relative aspect-4/3 w-full">
+                <Image
+                  src={openImage.src}
+                  alt={openImage.alt}
+                  fill
+                  sizes="100vw"
+                  className="object-cover"
+                  priority
+                />
+                <button
+                  type="button"
+                  onClick={() => setOpenImage(null)}
+                  className="absolute right-3 top-3 flex size-9 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition-colors hover:bg-black/80"
+                  aria-label={t("closeImage")}
+                >
+                  <IconX className="size-5" />
+                </button>
+              </div>
+              <div className="max-h-[40vh] overflow-y-auto bg-primary px-5 py-4">
+                <p className="wrap-break-word text-sm leading-relaxed text-white/90">
+                  {t("imageDescription")}
+                </p>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
@@ -142,6 +194,11 @@ function DesktopBento({ slides }: { slides: BentoSlide[] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [expanded, setExpanded] = useState<{
+    slideIndex: number;
+    colIndex: number;
+    image: BentoImage;
+  } | null>(null);
 
   const checkScrollability = useCallback(() => {
     if (scrollRef.current) {
@@ -165,13 +222,22 @@ function DesktopBento({ slides }: { slides: BentoSlide[] }) {
     return () => window.removeEventListener("resize", checkScrollability);
   }, [checkScrollability]);
 
+  useEffect(() => {
+    if (!expanded) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setExpanded(null);
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [expanded]);
+
   return (
     <div className="relative hidden md:block">
       <div
         ref={scrollRef}
         onScroll={checkScrollability}
         className={cn(
-          "flex w-full items-stretch overflow-x-scroll overscroll-x-auto scroll-smooth rounded-3xl bg-primary [scrollbar-width:none] h-250 bg-[url('/operations-section-bg.webp')] bg-cover bg-center bg-no-repeat py-12",
+          "relative flex w-full items-stretch overflow-x-scroll overscroll-x-auto scroll-smooth rounded-3xl bg-primary [scrollbar-width:none] h-176 bg-[url('/operations-section-bg.webp')] bg-cover bg-center bg-no-repeat py-12",
           insideCardSpacing,
         )}
       >
@@ -186,40 +252,122 @@ function DesktopBento({ slides }: { slides: BentoSlide[] }) {
           </div>
         </div>
 
-        {slides.map((slide, slideIndex) => (
-          <motion.div
-            key={`bento-${slideIndex}`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{
-              opacity: 1,
-              y: 0,
-              transition: {
-                duration: 0.5,
-                delay: 0.12 * (slideIndex + 1),
-                ease: "easeOut",
-              },
-            }}
-            className="grid shrink-0 grid-cols-6 grid-rows-3 gap-8 h-full w-[560px] lg:w-[780px] p-4"
-          >
-            {slide.images.map((img, imgIndex) => (
-              <div
-                key={`${slideIndex}-${imgIndex}`}
-                className={cn(
-                  "relative overflow-hidden rounded-xl lg:rounded-2xl",
-                  img.span ?? getDefaultSpan(imgIndex),
-                )}
+        {slides.map((slide, slideIndex) => {
+          const columns = chunkPairs(slide.images);
+          const isExpandedSlide = expanded?.slideIndex === slideIndex;
+
+          return (
+            <motion.div
+              key={`bento-${slideIndex}`}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                transition: {
+                  duration: 0.5,
+                  delay: 0.12 * (slideIndex + 1),
+                  ease: "easeOut",
+                },
+              }}
+              layout
+              transition={{ layout: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } }}
+              className={cn(
+                "relative shrink-0 h-full p-4",
+                isExpandedSlide
+                  ? "w-[820px] lg:w-[1100px]"
+                  : "w-[560px] lg:w-[780px]",
+              )}
+            >
+              <motion.div
+                layout
+                className="flex h-full gap-6"
               >
-                <Image
-                  src={img.src}
-                  alt={img.alt}
-                  fill
-                  sizes="(max-width: 768px) 45vw, 22vw"
-                  className="object-cover transition-transform duration-500 hover:scale-105"
-                />
-              </div>
-            ))}
-          </motion.div>
-        ))}
+                {columns.map((col, colIndex) => {
+                  const isExpandedCol =
+                    isExpandedSlide && expanded?.colIndex === colIndex;
+
+                  return (
+                    <motion.div
+                      key={`col-${slideIndex}-${colIndex}`}
+                      layout
+                      transition={{
+                        layout: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
+                      }}
+                      className={cn(
+                        "relative flex h-full min-w-0 flex-col gap-6",
+                        isExpandedCol
+                          ? "flex-3"
+                          : isExpandedSlide
+                            ? "flex-1 opacity-70"
+                            : "flex-1",
+                      )}
+                    >
+                      {isExpandedCol && expanded ? (
+                        <motion.div
+                          key={`expanded-${slideIndex}-${colIndex}`}
+                          layout
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 0.25, delay: 0.15 }}
+                          className="flex h-full flex-col overflow-hidden rounded-xl lg:rounded-2xl"
+                        >
+                          <div className="relative w-full flex-1 min-h-0">
+                            <Image
+                              src={expanded.image.src}
+                              alt={expanded.image.alt}
+                              fill
+                              sizes="(max-width: 1024px) 60vw, 720px"
+                              className="object-cover"
+                              priority
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setExpanded(null)}
+                              className="absolute right-3 top-3 flex size-10 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition-colors hover:bg-black/80"
+                              aria-label={t("collapseImage")}
+                            >
+                              <IconX className="size-5" />
+                            </button>
+                          </div>
+                          <div className="max-h-[35%] shrink-0 overflow-y-auto bg-neutral-400 px-5 py-4">
+                            <p className="wrap-break-word text-sm leading-relaxed text-white/90 lg:text-base">
+                              {t("imageDescription")}
+                            </p>
+                          </div>
+                        </motion.div>
+                      ) : (
+                        col.map((img, imgIndex) => (
+                          <motion.button
+                            key={`${slideIndex}-${colIndex}-${imgIndex}`}
+                            type="button"
+                            onClick={() =>
+                              setExpanded({
+                                slideIndex,
+                                colIndex,
+                                image: img,
+                              })
+                            }
+                            layout
+                            className="group relative h-full min-h-0 flex-1 cursor-pointer overflow-hidden rounded-xl lg:rounded-2xl"
+                            aria-label={t("expandImage")}
+                          >
+                            <Image
+                              src={img.src}
+                              alt={img.alt}
+                              fill
+                              sizes="(max-width: 1024px) 30vw, 260px"
+                              className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            />
+                          </motion.button>
+                        ))
+                      )}
+                    </motion.div>
+                  );
+                })}
+              </motion.div>
+            </motion.div>
+          );
+        })}
       </div>
 
       <button
@@ -245,27 +393,20 @@ function DesktopBento({ slides }: { slides: BentoSlide[] }) {
 }
 
 /**
- * Default bento layout for a 3-row × 6-col grid with 6 images.
+ * Splits a flat image list into vertical column pairs (2 stacked images per column).
  *
- * ┌──────────┬───────────────┬──────────┐
- * │  img[0]  │    img[1]     │  img[2]  │
- * │  2×2     │    2×2        │  2×1     │
- * │          │               ├──────────┤
- * │          │               │  img[3]  │
- * ├──────────┴───────────────┤  2×1     │
- * │       img[4]             ├──────────┤
- * │       4×1                │  img[5]  │
- * │                          │  2×1     │
- * └──────────────────────────┴──────────┘
+ * Layout: each slide renders as N columns; each column shows 2 images stacked vertically.
+ *
+ * ┌────────┬────────┬────────┐
+ * │ img[0] │ img[2] │ img[4] │
+ * ├────────┼────────┼────────┤
+ * │ img[1] │ img[3] │ img[5] │
+ * └────────┴────────┴────────┘
  */
-function getDefaultSpan(index: number): string {
-  const spans: Record<number, string> = {
-    0: "col-span-4 row-span-1",
-    1: "col-span-2 row-span-2",
-    2: "col-span-2 row-span-1",
-    3: "col-span-2 row-span-1",
-    4: "col-span-4 row-span-1",
-    5: "col-span-2 row-span-1",
-  };
-  return spans[index] ?? "col-span-1 row-span-1";
+function chunkPairs<T>(items: T[]): T[][] {
+  const result: T[][] = [];
+  for (let i = 0; i < items.length; i += 2) {
+    result.push(items.slice(i, i + 2));
+  }
+  return result;
 }

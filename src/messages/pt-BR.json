@@ -44,7 +44,11 @@
     "nextImage": "Próxima imagem",
     "prevImages": "Imagens anteriores",
     "nextImages": "Próximas imagens",
-    "goToImage": "Ir para imagem {number}"
+    "goToImage": "Ir para imagem {number}",
+    "expandImage": "Expandir imagem",
+    "collapseImage": "Recolher imagem",
+    "closeImage": "Fechar imagem",
+    "imageDescription": "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
   },
   "results": {
     "title": "Resultados\nque contam",
@@ -94,6 +98,8 @@
     "searchLabel": "Buscar artigo pelo título",
     "searchPlaceholder": "Buscar por título...",
     "searchButton": "Buscar",
+    "scrollLeft": "Rolar categorias para a esquerda",
+    "scrollRight": "Rolar categorias para a direita",
     "publishedAt": "Publicado em {date}",
     "readMore": "Ler matéria completa",
     "relatedArticles": "Artigos\nrelacionados",

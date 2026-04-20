@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { BlogIndex } from "@/components/marketing/BlogIndex";
 import { BlogRepresentativesCta } from "@/components/marketing/BlogRepresentativesCta";
 import { Footer } from "@/components/marketing/Footer";
-import { Heading } from "@/components/marketing/Heading";
+import { RouteHeading } from "@/components/marketing/RouteHeading";
 import { JsonLd } from "@/lib/seo/jsonld";
 import {
   BLOG_LIST_PAGE_SIZE,
@@ -12,32 +12,10 @@ import {
   filterPostsByTitleQuery,
   sortPostsByDate,
 } from "@/lib/blog/posts";
-import { organizationJsonLd, SITE, websiteJsonLd } from "@/lib/seo/schemas";
+import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}): Promise<Metadata> {
-  const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "pages.blog" });
-  return {
-    title: "Blog — artigos e conteúdos Tessa",
-    description: t("description"),
-    alternates: {
-      canonical: "/blog",
-    },
-    keywords: [
-      ...SITE.keywords,
-      "Blog Tessa",
-      "Artigos técnicos",
-      "Estruturas metálicas",
-      "Energia solar",
-    ],
-  };
-}
-
-type PageProps = {
+interface BlogPageProps {
   params: Promise<{ locale: string }>;
   searchParams: Promise<{
     q?: string;
@@ -45,7 +23,27 @@ type PageProps = {
     limite?: string;
     categoria?: string;
   }>;
-};
+}
+
+export async function generateMetadata({
+  params,
+}: BlogPageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "pages.blog" });
+
+  return buildPageMetadata({
+    locale,
+    path: "/blog",
+    title: t("title"),
+    description: t("description"),
+    keywords: [
+      "Blog Tessa",
+      "Artigos técnicos",
+      "Estruturas metálicas",
+      "Energia solar",
+    ],
+  });
+}
 
 function parseLimite(raw: string | undefined): number {
   const n = Number.parseInt(raw ?? "", 10);
@@ -53,7 +51,26 @@ function parseLimite(raw: string | undefined): number {
   return Math.min(n, 200);
 }
 
-export default async function BlogPage({ searchParams }: PageProps) {
+function blogJsonLd(locale: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    name: `${SITE.shortName} — Blog`,
+    url: `${SITE.domain}/${locale}/blog`,
+    inLanguage: locale,
+    publisher: {
+      "@type": "Organization",
+      name: SITE.name,
+      url: SITE.domain,
+    },
+  };
+}
+
+export default async function BlogPage({
+  params,
+  searchParams,
+}: BlogPageProps) {
+  const { locale } = await params;
   const sp = await searchParams;
   const query = (sp.q ?? "").trim();
   const ordem = sp.ordem === "asc" ? "asc" : "desc";
@@ -66,16 +83,18 @@ export default async function BlogPage({ searchParams }: PageProps) {
   const visiblePosts = sorted.slice(0, limite);
   const hasMore = sorted.length > limite;
 
-  const t = await getTranslations("pages.blog");
-  const blogDescription = t("description");
+  const t = await getTranslations({ locale, namespace: "pages.blog" });
 
   return (
     <>
-      <JsonLd id="jsonld-org-blog" data={organizationJsonLd()} />
-      <JsonLd id="jsonld-website-blog" data={websiteJsonLd()} />
+      <JsonLd
+        id="jsonld-breadcrumb-blog"
+        data={breadcrumbJsonLd(locale, [{ name: t("title"), path: "/blog" }])}
+      />
+      <JsonLd id="jsonld-blog" data={blogJsonLd(locale)} />
 
-      <main className="flex flex-col items-center justify-center gap-0">
-        <Heading title={t("title")} description={blogDescription} />
+      <main className="flex flex-col items-center justify-center gap-20">
+        <RouteHeading />
         <BlogIndex
           query={query}
           ordem={ordem}

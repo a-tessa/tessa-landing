@@ -1,36 +1,106 @@
 import { useTranslations } from "next-intl";
+import { Search } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { BLOG_CATEGORIES, buildBlogListHref } from "@/lib/blog/posts";
-import { cn, freeSectionShellSpacing, serviceCarouselCss } from "@/lib/utils";
-import { Search } from "lucide-react";
+import { cn, freeSectionShellSpacing } from "@/lib/utils";
+import { BlogCategoryNavScroller } from "@/components/marketing/BlogCategoryNavScroller";
 
-function CategoryTab({
-	href,
-	label,
-	isActive,
-}: {
+/**
+ * Breakpoint-aware scroll-driven positioning.
+ *
+ * `--nav-top-from` / `--nav-top-to` = vertical position for the
+ * expanded / shrunk states of the `<HeroNavbar />` above.
+ *
+ * Formula: hero-top (1.5rem) + hero-height + gap (1rem)
+ *   - expanded hero heights: 18 / 20 / 22 / 24 rem
+ *   - shrunk hero heights:    6.5 / 7 / 7.5 / 8 rem
+ *
+ * Keep `animation-range` in sync with `HeroNavbar` (`0 220px`).
+ */
+const CATEGORY_NAV_CSS = /* css */ `
+.blog-category-nav {
+  --nav-top-from: 20.5rem;
+  --nav-top-to: 9rem;
+
+  position: fixed;
+  top: var(--nav-top-from);
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  z-index: 30;
+  will-change: top;
+}
+
+@media (min-width: 640px) {
+  .blog-category-nav { --nav-top-from: 22.5rem; --nav-top-to: 9.5rem; }
+}
+@media (min-width: 768px) {
+  .blog-category-nav { --nav-top-from: 24.5rem; --nav-top-to: 10rem; }
+}
+@media (min-width: 1024px) {
+  .blog-category-nav { --nav-top-from: 18.8rem; --nav-top-to: 9.5rem; }
+}
+
+@keyframes blog-category-nav-follow {
+  to { top: var(--nav-top-to); }
+}
+
+@supports (animation-timeline: scroll()) {
+  .blog-category-nav {
+    animation: blog-category-nav-follow linear forwards;
+    animation-timeline: scroll(root block);
+    animation-range: 0 220px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blog-category-nav { animation-name: none; }
+}
+
+.blog-category-scroller {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.blog-category-scroller::-webkit-scrollbar {
+  display: none;
+}
+`;
+
+const CATEGORY_TAB_BASE_CLASSES =
+	"relative flex h-14 shrink-0 items-center text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-foreground sm:text-xs";
+
+interface CategoryTabProps {
 	href: string;
 	label: string;
 	isActive: boolean;
-}) {
+}
+
+function CategoryTab({ href, label, isActive }: CategoryTabProps) {
 	return (
 		<Link
 			href={href}
+			aria-current={isActive ? "page" : undefined}
 			className={cn(
-				"relative flex h-20 shrink-0 items-center text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-foreground sm:text-xs",
-				isActive && "text-primary font-bold",
+				CATEGORY_TAB_BASE_CLASSES,
+				isActive && "font-bold text-primary",
 			)}
 		>
 			{label}
 			<span
+				aria-hidden
 				className={cn(
 					"absolute bottom-0 left-0 h-1 rounded-full bg-primary transition-all",
 					isActive ? "w-full opacity-100" : "w-0 opacity-0",
 				)}
-				aria-hidden
 			/>
 		</Link>
 	);
+}
+
+interface SearchFormProps {
+	query: string;
+	ordem: "asc" | "desc";
+	activeCategory: string;
+	className?: string;
 }
 
 function SearchForm({
@@ -38,12 +108,7 @@ function SearchForm({
 	ordem,
 	activeCategory,
 	className,
-}: {
-	query: string;
-	ordem: string;
-	activeCategory: string;
-	className?: string;
-}) {
+}: SearchFormProps) {
 	const t = useTranslations("blog");
 
 	return (
@@ -51,7 +116,7 @@ function SearchForm({
 			method="get"
 			action="/blog"
 			role="search"
-			className={cn("flex shrink-0 items-center mt-12", className)}
+			className={cn("flex shrink-0 items-center", className)}
 		>
 			{ordem === "asc" ? (
 				<input type="hidden" name="ordem" value="asc" />
@@ -69,14 +134,14 @@ function SearchForm({
 				defaultValue={query}
 				placeholder={t("searchPlaceholder")}
 				autoComplete="off"
-				className="h-11 w-full min-w-0 flex-1 rounded-l-full bg-card px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary border-0 shadow-none"
+				className="h-10 w-full min-w-0 flex-1 rounded-l-full border-0 bg-card px-4 text-sm text-foreground shadow-none placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
 			/>
 			<button
 				type="submit"
-				className="flex h-11 w-11 shrink-0 items-center justify-center rounded-r-full bg-card text-primary transition-colors hover:bg-accent"
 				aria-label={t("searchButton")}
+				className="flex h-10 w-10 shrink-0 items-center justify-center rounded-r-full bg-card text-primary transition-colors hover:bg-accent"
 			>
-				<Search className="h-5 w-5" strokeWidth={2} aria-hidden />
+				<Search className="h-4 w-4" strokeWidth={2} aria-hidden />
 			</button>
 		</form>
 	);
@@ -99,20 +164,17 @@ export function BlogCategoryNav({
 
 	return (
 		<>
-			<style href="service-heading-carousel" precedence="component">
-				{serviceCarouselCss}
+			<style href="blog-category-nav" precedence="component">
+				{CATEGORY_NAV_CSS}
 			</style>
 			<div
 				className={cn(
-					"relative z-50 service-heading-carousel w-full",
+					"blog-category-nav w-full max-w-[1920px]",
 					freeSectionShellSpacing,
 				)}
 			>
-				<div className="flex items-center gap-0 rounded-full bg-muted px-4 sm:px-8">
-					<nav
-						className="flex items-center gap-x-6 overflow-x-auto scrollbar-none"
-						aria-label={t("filterLabel")}
-					>
+				<div className="flex items-center rounded-full bg-muted px-4 sm:px-8">
+					<BlogCategoryNavScroller label={t("filterLabel")}>
 						<CategoryTab
 							href={buildBlogListHref({ q: query, ordem })}
 							label={t("latestArticles")}
@@ -130,26 +192,21 @@ export function BlogCategoryNav({
 								isActive={activeCategory === cat.slug}
 							/>
 						))}
-					</nav>
+					</BlogCategoryNavScroller>
 
 					{showSearch ? (
 						<SearchForm
 							query={query}
 							ordem={ordem}
 							activeCategory={activeCategory}
-							className="ml-auto hidden sm:flex"
+							className="ml-4 hidden sm:flex"
 						/>
 					) : null}
 				</div>
 			</div>
 
 			{showSearch ? (
-				<div
-					className={cn(
-						"mt-4 sm:hidden",
-						freeSectionShellSpacing,
-					)}
-				>
+				<div className={cn("mt-4 sm:hidden", freeSectionShellSpacing)}>
 					<SearchForm
 						query={query}
 						ordem={ordem}
