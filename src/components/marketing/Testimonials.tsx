@@ -24,45 +24,6 @@ interface Testimonial {
   text: string;
 }
 
-const FALLBACK_TESTIMONIALS: Testimonial[] = [
-  {
-    id: "fallback-1",
-    name: "Óliver Bennet",
-    company: "DOKA",
-    profileImage: null,
-    reviewImage: "/choose-scenary-section/estruturas-metalicas-para-telhado.webp",
-    rating: 5,
-    text: "Excelente trabalho da equipe Tessa. Desde o projeto até a entrega, tudo foi conduzido com profissionalismo e dentro do prazo. A qualidade do aço galvanizado e a precisão dos perfis superaram nossas expectativas.",
-  },
-  {
-    id: "fallback-2",
-    name: "Emília Tornatto",
-    company: "SKF",
-    profileImage: null,
-    reviewImage: "/choose-scenary-section/estrutura-de-solo.webp",
-    rating: 5,
-    text: "A Tessa entregou exatamente o que precisávamos... desde qualidade até pontualidade com suporte muito eficiente. Tanto a cobertura dos seis galpões com estrutura metálica quanto a instalação das placas fotovoltaicas foram executadas com alto padrão e excelente organização. Parceria segura e profissional, recomendo!",
-  },
-  {
-    id: "fallback-3",
-    name: "Bárbara Souza",
-    company: "SEDA SDS",
-    profileImage: null,
-    reviewImage: "/choose-scenary-section/estruturas-de-aviario.webp",
-    rating: 5,
-    text: "Contratamos a Tessa para a estrutura metálica do nosso novo galpão e ficamos impressionados com a agilidade e a qualidade do serviço. A equipe técnica é muito competente e a comunicação durante todo o projeto foi transparente.",
-  },
-  {
-    id: "fallback-4",
-    name: "Ricardo Almeida",
-    company: "Agro Plus",
-    profileImage: null,
-    reviewImage: "/choose-scenary-section/estruturas-metalicas-para-telhado.webp",
-    rating: 5,
-    text: "Precisávamos de uma solução confiável para os aviários e a Tessa entregou com excelência. Estrutura robusta, dentro do prazo e com custo competitivo. Já estamos planejando a próxima etapa com eles.",
-  },
-];
-
 function mapPublicTestimonial(item: PublicTestimonial): Testimonial {
   return {
     id: item.id,
@@ -145,17 +106,12 @@ interface TestimonialsProps {
 export function Testimonials({ items }: TestimonialsProps = {}) {
   const t = useTranslations("testimonials");
 
-  const isEmptyFromApi = items !== undefined && items !== null && items.length === 0;
-
   const resolvedTestimonials = useMemo<Testimonial[]>(() => {
     if (items && items.length > 0) {
       return items.map(mapPublicTestimonial);
     }
-    if (isEmptyFromApi) {
-      return [];
-    }
-    return FALLBACK_TESTIMONIALS;
-  }, [items, isEmptyFromApi]);
+    return [];
+  }, [items]);
 
   const length = resolvedTestimonials.length;
   const initialIndex = length > 1 ? 1 : 0;
@@ -182,7 +138,7 @@ export function Testimonials({ items }: TestimonialsProps = {}) {
     setCurrent((c) => getIndex(c, 1, length));
   }, [length]);
 
-  if (isEmptyFromApi) {
+  if (length === 0) {
     return (
       <section
         aria-labelledby="testimonials-title"
@@ -216,8 +172,6 @@ export function Testimonials({ items }: TestimonialsProps = {}) {
       </section>
     );
   }
-
-  if (length === 0) return null;
 
   const safeCurrent = current >= length ? 0 : current;
   const prevIdx = getIndex(safeCurrent, -1, length);

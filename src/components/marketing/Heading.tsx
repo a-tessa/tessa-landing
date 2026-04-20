@@ -31,12 +31,12 @@ const css = /* css */ `
   .marketing-heading-scroll {
     animation: marketing-heading-shell linear forwards;
     animation-timeline: scroll(root block);
-    animation-range: 0 28vh;
+    animation-range: 0 20vh;
   }
   .marketing-heading-scroll h1 {
     animation: marketing-heading-title-sm linear forwards;
     animation-timeline: scroll(root block);
-    animation-range: 0 28vh;
+    animation-range: 0 20vh;
   }
   @media (min-width: 640px) {
     .marketing-heading-shell {

@@ -93,7 +93,7 @@ export default async function BlogPage({
       />
       <JsonLd id="jsonld-blog" data={blogJsonLd(locale)} />
 
-      <main className="flex flex-col items-center justify-center gap-20">
+      <main className="flex flex-col items-center pt-20 sm:pt-10">
         <RouteHeading />
         <BlogIndex
           query={query}

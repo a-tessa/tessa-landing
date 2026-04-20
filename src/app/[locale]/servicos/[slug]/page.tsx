@@ -20,6 +20,7 @@ import { Link } from "@/i18n/navigation";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { getApprovedTestimonials } from "@/lib/api/testimonials";
 import { getServiceBySlug, services } from "@/lib/services";
 import {
   cn,
@@ -78,8 +79,11 @@ export default async function ServiceDetailPage({
   const service = getServiceBySlug(slug);
   if (!service) notFound();
 
-  const t = await getTranslations({ locale, namespace: "pages.servicoDetail" });
-  const ts = await getTranslations({ locale, namespace: "pages.servicos" });
+  const [t, ts, testimonials] = await Promise.all([
+    getTranslations({ locale, namespace: "pages.servicoDetail" }),
+    getTranslations({ locale, namespace: "pages.servicos" }),
+    getApprovedTestimonials(),
+  ]);
 
   const serviceJsonLd = {
     "@context": "https://schema.org",
@@ -195,7 +199,7 @@ export default async function ServiceDetailPage({
         </section>
 
         <NewsAndSocial />
-        <Testimonials />
+        <Testimonials items={testimonials} />
 
         <section
           className={cn("mb-10", freeSectionShellSpacing)}

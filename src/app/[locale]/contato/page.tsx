@@ -66,7 +66,7 @@ export default async function ContatoPage({ params }: ContatoPageProps) {
       />
       <JsonLd id="jsonld-contact" data={contactPointJsonLd()} />
 
-      <main className="flex flex-col items-center justify-center gap-20">
+      <main className="flex flex-col items-center pt-10">
         <RouteHeading />
 
         <section className={cn("w-full pb-20 pt-10", freeSectionShellSpacing)}>

@@ -66,154 +66,153 @@ const CATEGORY_NAV_CSS = /* css */ `
 `;
 
 const CATEGORY_TAB_BASE_CLASSES =
-	"relative flex h-14 shrink-0 items-center text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-foreground sm:text-xs";
+  "relative flex h-14 shrink-0 items-center text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-foreground sm:text-xs";
 
 interface CategoryTabProps {
-	href: string;
-	label: string;
-	isActive: boolean;
+  href: string;
+  label: string;
+  isActive: boolean;
 }
 
 function CategoryTab({ href, label, isActive }: CategoryTabProps) {
-	return (
-		<Link
-			href={href}
-			aria-current={isActive ? "page" : undefined}
-			className={cn(
-				CATEGORY_TAB_BASE_CLASSES,
-				isActive && "font-bold text-primary",
-			)}
-		>
-			{label}
-			<span
-				aria-hidden
-				className={cn(
-					"absolute bottom-0 left-0 h-1 rounded-full bg-primary transition-all",
-					isActive ? "w-full opacity-100" : "w-0 opacity-0",
-				)}
-			/>
-		</Link>
-	);
+  return (
+    <Link
+      href={href}
+      aria-current={isActive ? "page" : undefined}
+      className={cn(
+        CATEGORY_TAB_BASE_CLASSES,
+        isActive && "font-bold text-primary",
+      )}
+    >
+      {label}
+      <span
+        aria-hidden
+        className={cn(
+          "absolute bottom-0 left-0 h-1 rounded-full bg-primary transition-all",
+          isActive ? "w-full opacity-100" : "w-0 opacity-0",
+        )}
+      />
+    </Link>
+  );
 }
 
 interface SearchFormProps {
-	query: string;
-	ordem: "asc" | "desc";
-	activeCategory: string;
-	className?: string;
+  query: string;
+  ordem: "asc" | "desc";
+  activeCategory: string;
+  className?: string;
 }
 
 function SearchForm({
-	query,
-	ordem,
-	activeCategory,
-	className,
+  query,
+  ordem,
+  activeCategory,
+  className,
 }: SearchFormProps) {
-	const t = useTranslations("blog");
+  const t = useTranslations("blog");
 
-	return (
-		<form
-			method="get"
-			action="/blog"
-			role="search"
-			className={cn("flex shrink-0 items-center", className)}
-		>
-			{ordem === "asc" ? (
-				<input type="hidden" name="ordem" value="asc" />
-			) : null}
-			{activeCategory ? (
-				<input type="hidden" name="categoria" value={activeCategory} />
-			) : null}
-			<label htmlFor="blog-search-q" className="sr-only">
-				{t("searchLabel")}
-			</label>
-			<input
-				id="blog-search-q"
-				name="q"
-				type="search"
-				defaultValue={query}
-				placeholder={t("searchPlaceholder")}
-				autoComplete="off"
-				className="h-10 w-full min-w-0 flex-1 rounded-l-full border-0 bg-card px-4 text-sm text-foreground shadow-none placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-			/>
-			<button
-				type="submit"
-				aria-label={t("searchButton")}
-				className="flex h-10 w-10 shrink-0 items-center justify-center rounded-r-full bg-card text-primary transition-colors hover:bg-accent"
-			>
-				<Search className="h-4 w-4" strokeWidth={2} aria-hidden />
-			</button>
-		</form>
-	);
+  return (
+    <form
+      method="get"
+      action="/blog"
+      role="search"
+      className={cn("flex shrink-0 items-center", className)}
+    >
+      {ordem === "asc" ? (
+        <input type="hidden" name="ordem" value="asc" />
+      ) : null}
+      {activeCategory ? (
+        <input type="hidden" name="categoria" value={activeCategory} />
+      ) : null}
+      <label htmlFor="blog-search-q" className="sr-only">
+        {t("searchLabel")}
+      </label>
+      <input
+        id="blog-search-q"
+        name="q"
+        type="search"
+        defaultValue={query}
+        placeholder={t("searchPlaceholder")}
+        autoComplete="off"
+        className="h-10 w-full min-w-0 flex-1 rounded-l-full border-0 bg-card px-4 text-sm text-foreground shadow-none placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+      />
+      <button
+        type="submit"
+        aria-label={t("searchButton")}
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-r-full bg-card text-primary transition-colors hover:bg-accent"
+      >
+        <Search className="h-4 w-4" strokeWidth={2} aria-hidden />
+      </button>
+    </form>
+  );
 }
 
 interface BlogCategoryNavProps {
-	activeCategory: string;
-	query?: string;
-	ordem?: "asc" | "desc";
-	showSearch?: boolean;
+  activeCategory: string;
+  query?: string;
+  ordem?: "asc" | "desc";
+  showSearch?: boolean;
 }
 
 export function BlogCategoryNav({
-	activeCategory,
-	query = "",
-	ordem = "desc",
-	showSearch = false,
+  activeCategory,
+  query = "",
+  ordem = "desc",
+  showSearch = false,
 }: BlogCategoryNavProps) {
-	const t = useTranslations("blog");
+  const t = useTranslations("blog");
 
-	return (
-		<>
-			<style href="blog-category-nav" precedence="component">
-				{CATEGORY_NAV_CSS}
-			</style>
-			<div
-				className={cn(
-					"blog-category-nav w-full max-w-[1920px]",
-					freeSectionShellSpacing,
-				)}
-			>
-				<div className="flex items-center rounded-full bg-muted px-4 sm:px-8">
-					<BlogCategoryNavScroller label={t("filterLabel")}>
-						<CategoryTab
-							href={buildBlogListHref({ q: query, ordem })}
-							label={t("latestArticles")}
-							isActive={!activeCategory}
-						/>
-						{BLOG_CATEGORIES.map((cat) => (
-							<CategoryTab
-								key={cat.slug}
-								href={buildBlogListHref({
-									q: query,
-									ordem,
-									categoria: cat.slug,
-								})}
-								label={cat.label}
-								isActive={activeCategory === cat.slug}
-							/>
-						))}
-					</BlogCategoryNavScroller>
+  return (
+    <>
+      <style href="blog-category-nav" precedence="component">
+        {CATEGORY_NAV_CSS}
+      </style>
+      <div
+        className={cn(
+          "blog-category-nav w-full max-w-[1920px]",
+          freeSectionShellSpacing,
+        )}
+      >
+        <div className="flex items-center rounded-full bg-muted px-4 sm:px-8">
+          <BlogCategoryNavScroller label={t("filterLabel")}>
+            <CategoryTab
+              href={buildBlogListHref({ q: query, ordem })}
+              label={t("latestArticles")}
+              isActive={!activeCategory}
+            />
+            {BLOG_CATEGORIES.map((cat) => (
+              <CategoryTab
+                key={cat.slug}
+                href={buildBlogListHref({
+                  q: query,
+                  ordem,
+                  categoria: cat.slug,
+                })}
+                label={cat.label}
+                isActive={activeCategory === cat.slug}
+              />
+            ))}
+          </BlogCategoryNavScroller>
 
-					{showSearch ? (
-						<SearchForm
-							query={query}
-							ordem={ordem}
-							activeCategory={activeCategory}
-							className="ml-4 hidden sm:flex"
-						/>
-					) : null}
-				</div>
-			</div>
-
-			{showSearch ? (
-				<div className={cn("mt-4 sm:hidden", freeSectionShellSpacing)}>
-					<SearchForm
-						query={query}
-						ordem={ordem}
-						activeCategory={activeCategory}
-					/>
-				</div>
-			) : null}
-		</>
-	);
+          {showSearch ? (
+            <SearchForm
+              query={query}
+              ordem={ordem}
+              activeCategory={activeCategory}
+              className="ml-4 hidden sm:flex"
+            />
+          ) : null}
+        </div>
+        {showSearch ? (
+          <div className={cn("mt-2 sm:hidden", freeSectionShellSpacing)}>
+            <SearchForm
+              query={query}
+              ordem={ordem}
+              activeCategory={activeCategory}
+            />
+          </div>
+        ) : null}
+      </div>
+    </>
+  );
 }
