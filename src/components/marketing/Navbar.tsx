@@ -30,14 +30,14 @@ export function Navbar() {
       className={cn(
         "fixed inset-x-0 top-0 z-50 w-full md:top-6 max-w-[2000px] mx-auto transition-[max-width,width] duration-500",
         sectionCardShellSpacing,
-        expanded && "left-1/2 w-[calc(100%+80px)] -translate-x-1/2 transition-[width,max-width] duration-500",
+        expanded && "md:left-1/2 md:w-[calc(100%+80px)] md:-translate-x-1/2 transition-[width,max-width] duration-500",
       )}
     >
       <div className={cn(insideCardSpacing, "px-0")}>
         <div
           className={cn(
             "mx-auto flex max-w-[1439px] justify-center transition-[max-width] duration-500",
-            expanded && "max-w-[calc(1439px+80px)]",
+            expanded && "md:max-w-[calc(1439px+80px)]",
           )}
           style={{ paddingTop: `${12 * (1 - scrollProgress)}px` }}
         >

@@ -11,6 +11,7 @@ import { JsonLd } from "@/lib/seo/jsonld";
 import { breadcrumbJsonLd } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { getLandingContent } from "@/lib/api/content";
+import { getApprovedTestimonials } from "@/lib/api/testimonials";
 
 interface HomePageProps {
   params: Promise<{ locale: string }>;
@@ -33,7 +34,10 @@ export async function generateMetadata({
 
 export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
-  const { heroSection, scenerySection, clients } = await getLandingContent();
+  const [{ heroSection, scenerySection, clients }, testimonials] = await Promise.all([
+    getLandingContent(),
+    getApprovedTestimonials(),
+  ]);
 
   return (
     <>
@@ -47,7 +51,7 @@ export default async function HomePage({ params }: HomePageProps) {
         <Scenarios scenerySection={scenerySection} />
         <Operations />
         <NewsAndSocial />
-        <Testimonials />
+        <Testimonials items={testimonials} />
         <Results />
       </main>
 

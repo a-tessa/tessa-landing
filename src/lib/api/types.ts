@@ -37,3 +37,21 @@ export interface PublicContentResponse {
 export interface PublicClientsResponse {
   clients: ClientLogo[];
 }
+
+export interface PublicTestimonial {
+  id: string;
+  authorName: string;
+  authorRole: string | null;
+  companyName: string | null;
+  rating: number;
+  comment: string;
+  question: string | null;
+  profileImageUrl: string | null;
+  reviewImageUrl: string | null;
+  createdAt: string;
+  reviewedAt: string | null;
+}
+
+export interface PublicTestimonialsResponse {
+  testimonials: PublicTestimonial[];
+}

@@ -65,7 +65,9 @@
     "prevTestimonial": "Previous testimonial",
     "nextTestimonial": "Next testimonial",
     "starsLabel": "{rating} out of 5 stars",
-    "viewTestimonial": "View testimonial from {name}"
+    "viewTestimonial": "View testimonial from {name}",
+    "emptyTitle": "You will be the first to review.",
+    "emptyDescription": "Leave your testimonial and be part of this story!"
   },
   "testimonialForm": {
     "dialogTitle": "Write a testimonial",
@@ -78,6 +80,12 @@
     "textLabel": "Testimonial",
     "textPlaceholder": "Tell us about your experience with Tessa...",
     "textHint": "Maximum of {max} characters.",
+    "profileImageLabel": "Profile photo (optional)",
+    "reviewImageLabel": "Service review photo (optional)",
+    "imageHint": "JPG, PNG or WebP up to {size} MB.",
+    "imageSelect": "Select photo",
+    "imageReplace": "Replace photo",
+    "imageRemove": "Remove",
     "submitting": "Submitting…",
     "submit": "Submit testimonial",
     "close": "Close"

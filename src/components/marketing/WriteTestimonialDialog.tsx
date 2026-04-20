@@ -16,17 +16,177 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { IconArrowNarrowRight, IconStarFilled } from "@tabler/icons-react";
 import {
+  IconArrowNarrowRight,
+  IconPhotoPlus,
+  IconStarFilled,
+  IconX,
+} from "@tabler/icons-react";
+import {
+  type ChangeEvent,
   type ReactNode,
   useActionState,
   useCallback,
+  useEffect,
   useId,
+  useRef,
   useState,
 } from "react";
 
 const MAX_TEXT = 500;
 const MAX_NAME = 120;
+const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
+const ACCEPTED_IMAGE_TYPES = "image/jpeg,image/png,image/webp";
+
+interface ImagePickerProps {
+  fieldName: "profileImage" | "reviewImage";
+  label: string;
+  helpText: string;
+  selectLabel: string;
+  replaceLabel: string;
+  removeLabel: string;
+  error?: string;
+  inputId: string;
+  previewShape?: "circle" | "rect";
+}
+
+function ImagePicker({
+  fieldName,
+  label,
+  helpText,
+  selectLabel,
+  replaceLabel,
+  removeLabel,
+  error,
+  inputId,
+  previewShape = "rect",
+}: ImagePickerProps) {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
+
+  const handleChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] ?? null;
+
+    if (!file) {
+      setPreviewUrl(null);
+      setFileName(null);
+      return;
+    }
+
+    const url = URL.createObjectURL(file);
+    setPreviewUrl((previous) => {
+      if (previous) URL.revokeObjectURL(previous);
+      return url;
+    });
+    setFileName(file.name);
+  }, []);
+
+  const handleRemove = useCallback(() => {
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
+    setPreviewUrl((previous) => {
+      if (previous) URL.revokeObjectURL(previous);
+      return null;
+    });
+    setFileName(null);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
+
+  const errorId = `${inputId}-error`;
+  const hintId = `${inputId}-hint`;
+
+  return (
+    <div className="grid gap-2">
+      <Label htmlFor={inputId}>{label}</Label>
+      <div className="flex items-center gap-3">
+        {previewUrl ? (
+          <div
+            className={cn(
+              "relative size-16 shrink-0 overflow-hidden border border-border bg-muted",
+              previewShape === "circle" ? "rounded-full" : "rounded-md",
+            )}
+          >
+            {/* Using native img for local object URL previews */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={previewUrl}
+              alt=""
+              aria-hidden
+              className="size-full object-cover"
+            />
+          </div>
+        ) : (
+          <div
+            className={cn(
+              "flex size-16 shrink-0 items-center justify-center border border-dashed border-border bg-muted text-muted-foreground",
+              previewShape === "circle" ? "rounded-full" : "rounded-md",
+            )}
+            aria-hidden
+          >
+            <IconPhotoPlus className="size-6" />
+          </div>
+        )}
+
+        <div className="flex min-w-0 flex-1 flex-col gap-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={() => inputRef.current?.click()}
+            >
+              {previewUrl ? replaceLabel : selectLabel}
+            </Button>
+            {previewUrl ? (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={handleRemove}
+                aria-label={removeLabel}
+              >
+                <IconX className="size-4" aria-hidden />
+                {removeLabel}
+              </Button>
+            ) : null}
+          </div>
+          {fileName ? (
+            <p className="truncate text-xs text-muted-foreground" title={fileName}>
+              {fileName}
+            </p>
+          ) : null}
+        </div>
+      </div>
+      <input
+        ref={inputRef}
+        id={inputId}
+        name={fieldName}
+        type="file"
+        accept={ACCEPTED_IMAGE_TYPES}
+        className="sr-only"
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? errorId : hintId}
+        onChange={handleChange}
+      />
+      {error ? (
+        <p id={errorId} className="text-sm text-destructive">
+          {error}
+        </p>
+      ) : (
+        <p id={hintId} className="text-xs text-muted-foreground">
+          {helpText}
+        </p>
+      )}
+    </div>
+  );
+}
 
 interface TestimonialFormProps {
   onSuccessClose: () => void;
@@ -44,6 +204,8 @@ function TestimonialForm({ onSuccessClose }: TestimonialFormProps) {
   const companyId = useId();
   const textId = useId();
   const ratingLegendId = useId();
+  const profileImageId = useId();
+  const reviewImageId = useId();
 
   if (state.status === "success" && state.message) {
     return (
@@ -64,7 +226,20 @@ function TestimonialForm({ onSuccessClose }: TestimonialFormProps) {
   }
 
   return (
-    <form action={formAction} className="flex flex-col gap-4">
+    <form
+      action={formAction}
+      encType="multipart/form-data"
+      className="flex flex-col gap-4"
+    >
+      {state.status === "error" && state.message ? (
+        <p
+          className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+          role="alert"
+        >
+          {state.message}
+        </p>
+      ) : null}
+
       <div className="grid gap-2">
         <Label htmlFor={nameId}>{t("nameLabel")}</Label>
         <Input
@@ -177,6 +352,30 @@ function TestimonialForm({ onSuccessClose }: TestimonialFormProps) {
           </p>
         ) : null}
       </div>
+
+      <ImagePicker
+        fieldName="profileImage"
+        inputId={profileImageId}
+        label={t("profileImageLabel")}
+        helpText={t("imageHint", { size: MAX_IMAGE_BYTES / 1024 / 1024 })}
+        selectLabel={t("imageSelect")}
+        replaceLabel={t("imageReplace")}
+        removeLabel={t("imageRemove")}
+        error={state.fieldErrors?.profileImage}
+        previewShape="circle"
+      />
+
+      <ImagePicker
+        fieldName="reviewImage"
+        inputId={reviewImageId}
+        label={t("reviewImageLabel")}
+        helpText={t("imageHint", { size: MAX_IMAGE_BYTES / 1024 / 1024 })}
+        selectLabel={t("imageSelect")}
+        replaceLabel={t("imageReplace")}
+        removeLabel={t("imageRemove")}
+        error={state.fieldErrors?.reviewImage}
+        previewShape="rect"
+      />
 
       <DialogFooter className="gap-2 sm:gap-0">
         <Button type="submit" disabled={isPending} className="w-full sm:w-auto">

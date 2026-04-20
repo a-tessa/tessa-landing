@@ -65,7 +65,9 @@
     "prevTestimonial": "Depoimento anterior",
     "nextTestimonial": "Próximo depoimento",
     "starsLabel": "{rating} de 5 estrelas",
-    "viewTestimonial": "Ver depoimento de {name}"
+    "viewTestimonial": "Ver depoimento de {name}",
+    "emptyTitle": "Você será o primeiro a avaliar.",
+    "emptyDescription": "Deixe seu depoimento e participe dessa história!"
   },
   "testimonialForm": {
     "dialogTitle": "Escrever depoimento",
@@ -78,6 +80,12 @@
     "textLabel": "Depoimento",
     "textPlaceholder": "Conte como foi sua experiência com a Tessa...",
     "textHint": "Máximo de {max} caracteres.",
+    "profileImageLabel": "Foto de perfil (opcional)",
+    "reviewImageLabel": "Foto da avaliação do serviço (opcional)",
+    "imageHint": "JPG, PNG ou WebP de até {size} MB.",
+    "imageSelect": "Selecionar foto",
+    "imageReplace": "Trocar foto",
+    "imageRemove": "Remover",
     "submitting": "Enviando…",
     "submit": "Enviar depoimento",
     "close": "Fechar"
