@@ -98,11 +98,17 @@ function RepresentativeCard({ representative }: RepresentativeCardProps) {
 
 const DEFAULT_UF = "MG";
 
-export function RepresentativesDirectory() {
+interface RepresentativesDirectoryProps {
+  representatives: Representative[];
+}
+
+export function RepresentativesDirectory({
+  representatives,
+}: RepresentativesDirectoryProps) {
   const t = useTranslations("representatives");
   const [uf, setUf] = useState<string>(DEFAULT_UF);
   const stateName = getStateNameByUf(uf) ?? uf;
-  const list = representativesForState(uf);
+  const list = representativesForState(representatives, uf);
 
   return (
     <section

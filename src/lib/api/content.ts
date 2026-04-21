@@ -3,6 +3,7 @@ import type {
   HeroTopic,
   PublicClientsResponse,
   PublicContentResponse,
+  PublicRepresentative,
   SceneryItem,
 } from "./types";
 
@@ -37,6 +38,12 @@ export async function getHeroSection(): Promise<HeroTopic[] | null> {
 export async function getScenerySection(): Promise<SceneryItem[] | null> {
   const data = await getPublicContent();
   return data?.content.scenerySection ?? null;
+}
+
+export async function getRepresentatives(): Promise<PublicRepresentative[] | null> {
+  const data = await getPublicContent();
+  const list = data?.content.representantsBase;
+  return Array.isArray(list) ? list : null;
 }
 
 export async function getClients(): Promise<ClientLogo[] | null> {

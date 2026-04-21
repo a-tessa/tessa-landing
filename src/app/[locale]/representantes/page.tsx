@@ -9,6 +9,8 @@ import { JsonLd } from "@/lib/seo/jsonld";
 import { breadcrumbJsonLd } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { getApprovedTestimonials } from "@/lib/api/testimonials";
+import { getRepresentatives } from "@/lib/api/content";
+import { mapApiRepresentatives } from "@/lib/representatives";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 
 interface RepresentantesPageProps {
@@ -70,13 +72,15 @@ export default async function RepresentantesPage({
   params,
 }: RepresentantesPageProps) {
   const { locale } = await params;
-  const [t, testimonials] = await Promise.all([
+  const [t, testimonials, apiRepresentatives] = await Promise.all([
     getTranslations({
       locale,
       namespace: "pages.representantes",
     }),
     getApprovedTestimonials(),
+    getRepresentatives(),
   ]);
+  const representatives = mapApiRepresentatives(apiRepresentatives);
 
   return (
     <>
@@ -111,7 +115,7 @@ export default async function RepresentantesPage({
         </div>
 
         <section className={freeSectionShellSpacing}>
-          <RepresentativesDirectory />
+          <RepresentativesDirectory representatives={representatives} />
         </section>
 
         <Testimonials items={testimonials} />

@@ -23,11 +23,22 @@ export interface ClientLogo {
   logoUrl: string;
 }
 
+export interface PublicRepresentative {
+  name: string;
+  companyName?: string;
+  segment: string;
+  phone: string;
+  city: string;
+  state: string;
+  email: string;
+}
+
 export interface PublicContentResponse {
   content: {
     heroSection?: HeroTopic[];
     scenerySection?: SceneryItem[];
     clients?: ClientLogo[];
+    representantsBase?: PublicRepresentative[];
     [key: string]: unknown;
   };
   publishedAt: string | null;
