@@ -114,11 +114,11 @@ export default async function RepresentantesPage({
           </div>
         </div>
 
-        <section className={cn(freeSectionShellSpacing, "mt-10")}>
+        <section className={freeSectionShellSpacing}>
           <RepresentativesDirectory representatives={representatives} />
         </section>
 
-        <Testimonials items={testimonials} />
+        <Testimonials items={testimonials} className="mt-10" />
       </main>
 
       <Footer />

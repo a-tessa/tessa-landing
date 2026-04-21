@@ -101,9 +101,10 @@ function AvatarImage({
 
 interface TestimonialsProps {
   items?: PublicTestimonial[] | null;
+  className?: string;
 }
 
-export function Testimonials({ items }: TestimonialsProps = {}) {
+export function Testimonials({ items, className }: TestimonialsProps = {}) {
   const t = useTranslations("testimonials");
 
   const resolvedTestimonials = useMemo<Testimonial[]>(() => {
@@ -142,7 +143,7 @@ export function Testimonials({ items }: TestimonialsProps = {}) {
     return (
       <section
         aria-labelledby="testimonials-title"
-        className={cn("w-full pb-10", freeSectionShellSpacing)}
+        className={cn("w-full pb-10", freeSectionShellSpacing, className)}
       >
         <div className="mx-auto flex max-w-2xl flex-col items-center gap-6 rounded-3xl bg-card px-6 py-12 text-center shadow-sm sm:px-10 sm:py-16">
           <h2
