@@ -50,7 +50,7 @@ export default async function ServicosPage({ params }: ServicosPageProps) {
       <main className="flex flex-col items-center pt-10">
         <RouteHeading />
         <ServicosIntro locale={locale} />
-        <Testimonials items={testimonials} />
+        <Testimonials items={testimonials} className="mt-10" />
         <Results />
       </main>
 

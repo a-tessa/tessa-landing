@@ -51,7 +51,7 @@ export default async function HomePage({ params }: HomePageProps) {
         <Scenarios scenerySection={scenerySection} />
         <Operations />
         <NewsAndSocial />
-        <Testimonials items={testimonials} />
+        <Testimonials items={testimonials} className="mt-10" />
         <Results />
       </main>
 

@@ -199,7 +199,7 @@ export default async function ServiceDetailPage({
         </section>
 
         <NewsAndSocial />
-        <Testimonials items={testimonials} />
+        <Testimonials items={testimonials} className="mt-10" />
 
         <section
           className={cn("mb-10", freeSectionShellSpacing)}
