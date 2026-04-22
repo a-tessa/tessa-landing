@@ -20,11 +20,13 @@ import { Link } from "@/i18n/navigation";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { fetchBlogArticles } from "@/lib/api/blog";
 import { getApprovedTestimonials } from "@/lib/api/testimonials";
 import {
   getServicePageBySlug,
   getServicesPages,
 } from "@/lib/api/content";
+import { toBlogPostFromListItem } from "@/lib/blog/mappers";
 import {
   cn,
   freeSectionShellSpacing,
@@ -98,6 +100,25 @@ export default async function ServiceDetailPage({
   if (!service) notFound();
 
   const navServices = servicesPages ?? [service];
+
+  const categorySlug = service.category?.trim() || undefined;
+  const [categoryLatestResp, fallbackLatestResp] = await Promise.all([
+    categorySlug
+      ? fetchBlogArticles({
+          page: 1,
+          perPage: 1,
+          order: "desc",
+          categorySlug,
+        })
+      : Promise.resolve(null),
+    fetchBlogArticles({ page: 1, perPage: 1, order: "desc" }),
+  ]);
+
+  const latestArticleDto =
+    categoryLatestResp?.articles[0] ?? fallbackLatestResp?.articles[0] ?? null;
+  const latestPost = latestArticleDto
+    ? toBlogPostFromListItem(latestArticleDto)
+    : null;
 
   const bentoImages =
     service.images.length > 0
@@ -258,7 +279,7 @@ export default async function ServiceDetailPage({
           </div>
         </section>
 
-        <NewsAndSocial />
+        <NewsAndSocial latestPost={latestPost} />
         <Testimonials items={testimonials} className="mt-10" />
 
         <section
