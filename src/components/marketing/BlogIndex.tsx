@@ -58,7 +58,7 @@ export function BlogIndex({
         className={cn("w-full", freeSectionShellSpacing, className)}
         aria-labelledby="blog-list-heading"
       >
-        <div className="mt-12">
+        <div className="mt-32 sm:mt-12">
           <p className="text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-muted-foreground sm:text-xs">
             {t("youAreReading")}
           </p>
@@ -74,14 +74,31 @@ export function BlogIndex({
 
         {visiblePosts.length === 0 ? (
           <p className="mt-10 text-muted-foreground">
-            {t("noResults", { query: query.trim() })}{" "}
-            <Link
-              href="/blog"
-              className="ml-1 font-semibold text-primary underline-offset-2 hover:underline"
-            >
-              {t("clearSearch")}
-            </Link>
-            .
+            {query.trim() ? (
+              <>
+                {t("noResults", { query: query.trim() })}{" "}
+                <Link
+                  href="/blog"
+                  className="ml-1 font-semibold text-primary underline-offset-2 hover:underline"
+                >
+                  {t("clearSearch")}
+                </Link>
+                .
+              </>
+            ) : categoria.trim() ? (
+              <>
+                {t("noResultsInCategory")}{" "}
+                <Link
+                  href="/blog"
+                  className="ml-1 font-semibold text-primary underline-offset-2 hover:underline"
+                >
+                  {t("viewAllArticles")}
+                </Link>
+                .
+              </>
+            ) : (
+              t("emptyList")
+            )}
           </p>
         ) : (
           <ul className="mt-10 grid list-none gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

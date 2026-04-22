@@ -119,7 +119,7 @@ export function RepresentativesDirectory({
         <div className="flex max-w-xl flex-1 flex-col gap-5">
           <h2
             id="representantes-titulo"
-            className="text-balance text-xl font-bold uppercase tracking-tight text-foreground sm:text-2xl md:text-3xl"
+            className="text-balance text-lg font-bold uppercase tracking-tight text-foreground sm:text-xl md:text-2xl"
           >
             {t("title")}
           </h2>
@@ -128,7 +128,7 @@ export function RepresentativesDirectory({
             <SelectTrigger
               aria-label={t("selectState")}
               className={cn(
-                "h-13! md:h-14! px-8 text-base w-full md:w-md rounded-full bg-primary text-white",
+                "h-13! md:h-12! px-8 text-base w-full md:w-md rounded-full bg-primary text-white",
               )}
               iconClassName="text-white"
             >

@@ -9,7 +9,7 @@ export function BlogRepresentativesCta() {
 
 	return (
 		<section
-			className={cn("w-full pb-16", freeSectionShellSpacing)}
+			className={cn("w-full pb-16 mt-10", freeSectionShellSpacing)}
 			aria-labelledby="blog-representantes-cta-heading"
 		>
 			<div className="relative isolate flex min-h-36 flex-col justify-center gap-6 overflow-hidden rounded-3xl bg-primary px-6 py-8 sm:min-h-32 sm:flex-row sm:items-center sm:justify-between sm:px-10 lg:px-14">

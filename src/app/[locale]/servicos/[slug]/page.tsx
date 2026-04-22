@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import Video from "next-video";
 import { IconArrowDown, IconArrowRight } from "@tabler/icons-react";
 import { getTranslations } from "next-intl/server";
 import { BackNavLink } from "@/components/marketing/BackNavLink";
@@ -9,6 +8,7 @@ import { BentoCarouselServices } from "@/components/marketing/BentoCarouselServi
 import { Footer } from "@/components/marketing/Footer";
 import { Heading } from "@/components/marketing/Heading";
 import { NewsAndSocial } from "@/components/marketing/NewsAndSocial";
+import { ServiceVideoPlayer } from "@/components/marketing/ServiceVideoPlayer";
 import { Testimonials } from "@/components/marketing/Testimonials";
 import {
   Carousel,
@@ -21,25 +21,35 @@ import { JsonLd } from "@/lib/seo/jsonld";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { getApprovedTestimonials } from "@/lib/api/testimonials";
-import { getServiceBySlug, services } from "@/lib/services";
+import {
+  getServicePageBySlug,
+  getServicesPages,
+} from "@/lib/api/content";
 import {
   cn,
   freeSectionShellSpacing,
   OPERATIONS_IMAGES,
   serviceCarouselCss,
 } from "@/lib/utils";
+import {
+  getYouTubeThumbnail,
+  getYouTubeVideoId,
+  getYouTubeWatchUrl,
+} from "@/lib/youtube";
 
 interface ServiceDetailPageProps {
   params: Promise<{ locale: string; slug: string }>;
 }
 
-export function generateStaticParams() {
-  return services.map((service) => ({
+export async function generateStaticParams() {
+  const servicesPages = await getServicesPages();
+  return (servicesPages ?? []).map((service) => ({
     slug: service.slug,
   }));
 }
 
 function absoluteImageUrl(src: string): string {
+  if (!src) return SITE.domain;
   return src.startsWith("http") ? src : `${SITE.domain}${src}`;
 }
 
@@ -47,7 +57,7 @@ export async function generateMetadata({
   params,
 }: ServiceDetailPageProps): Promise<Metadata> {
   const { locale, slug } = await params;
-  const service = getServiceBySlug(slug);
+  const service = await getServicePageBySlug(slug);
 
   if (!service) {
     return buildPageMetadata({
@@ -63,10 +73,10 @@ export async function generateMetadata({
     locale,
     path: `/servicos/${service.slug}`,
     title: service.title,
-    description: service.description,
+    description: service.subtitle,
     keywords: [service.title],
     image: {
-      url: absoluteImageUrl(service.image),
+      url: absoluteImageUrl(service.backgroundImageUrl),
       alt: service.title,
     },
   });
@@ -76,21 +86,33 @@ export default async function ServiceDetailPage({
   params,
 }: ServiceDetailPageProps) {
   const { locale, slug } = await params;
-  const service = getServiceBySlug(slug);
-  if (!service) notFound();
 
-  const [t, ts, testimonials] = await Promise.all([
+  const [service, servicesPages, t, ts, testimonials] = await Promise.all([
+    getServicePageBySlug(slug),
+    getServicesPages(),
     getTranslations({ locale, namespace: "pages.servicoDetail" }),
     getTranslations({ locale, namespace: "pages.servicos" }),
     getApprovedTestimonials(),
   ]);
 
+  if (!service) notFound();
+
+  const navServices = servicesPages ?? [service];
+
+  const bentoImages =
+    service.images.length > 0
+      ? service.images.map((image) => ({
+          src: image.imgUrl,
+          alt: service.title,
+        }))
+      : OPERATIONS_IMAGES;
+
   const serviceJsonLd = {
     "@context": "https://schema.org",
     "@type": "Service",
     name: service.title,
-    description: service.description,
-    image: absoluteImageUrl(service.image),
+    description: service.subtitle,
+    image: absoluteImageUrl(service.backgroundImageUrl),
     provider: {
       "@type": "Organization",
       name: SITE.name,
@@ -102,6 +124,25 @@ export default async function ServiceDetailPage({
     },
     url: `${SITE.domain}/${locale}/servicos/${service.slug}`,
   };
+
+  const videoId = getYouTubeVideoId(service.exampleVideoUrl);
+  const videoJsonLd = videoId
+    ? {
+        "@context": "https://schema.org",
+        "@type": "VideoObject",
+        name: `${service.title} — ${t("whatHappens").replace(/\n/g, " ")}`,
+        description: service.subtitle,
+        thumbnailUrl: [getYouTubeThumbnail(videoId)],
+        contentUrl: getYouTubeWatchUrl(videoId),
+        embedUrl: `https://www.youtube-nocookie.com/embed/${videoId}`,
+        uploadDate: new Date().toISOString(),
+        publisher: {
+          "@type": "Organization",
+          name: SITE.name,
+          url: SITE.domain,
+        },
+      }
+    : null;
 
   const isActive = (candidateSlug: string) => candidateSlug === service.slug;
 
@@ -119,9 +160,16 @@ export default async function ServiceDetailPage({
         ])}
       />
       <JsonLd id={`jsonld-service-${service.slug}`} data={serviceJsonLd} />
+      {videoJsonLd ? (
+        <JsonLd id={`jsonld-video-${service.slug}`} data={videoJsonLd} />
+      ) : null}
 
-      <main className="flex flex-col items-center justify-center gap-16">
-        <Heading title={service.title} description={service.description} />
+      <main className="flex flex-col items-center mt-36 sm:mt-20">
+        <Heading
+          title={service.title}
+          description={service.subtitle}
+          backgroundSrc={service.backgroundImageUrl}
+        />
 
         <div className="relative h-auto w-fit">
           <nav
@@ -133,7 +181,7 @@ export default async function ServiceDetailPage({
           >
             <Carousel className="bg-muted rounded-full flex overflow-hidden">
               <CarouselContent className="flex gap-4 w-full rounded-full px-8">
-                {services.map((item) => (
+                {navServices.map((item) => (
                   <CarouselItem
                     key={item.slug}
                     className="basis-auto h-20 flex items-center"
@@ -175,22 +223,34 @@ export default async function ServiceDetailPage({
           </div>
           <div className={cn("flex flex-col gap-8", freeSectionShellSpacing)}>
             <h2 className="font-normal leading-tight text-muted-foreground">
-              {service.description}
+              {service.subtitle}
             </h2>
             <div className="relative flex flex-col md:flex-row h-auto gap-8">
               <div className="w-full md:w-1/2 gap-8 flex flex-col">
                 <p className="whitespace-pre-line text-xl md:text-3xl uppercase font-semibold">
                   {t("whatHappens")}
                 </p>
-                <Video className="rounded-3xl overflow-hidden h-4/5 w-auto aspect-video" />
-                <Button variant="secondary" className="w-fit ml-auto">
-                  {t("goToChannel")}
-                  <IconArrowRight className="size-4" />
+                {videoId ? (
+                  <ServiceVideoPlayer
+                    videoUrl={service.exampleVideoUrl}
+                    playLabel={t("whatHappens").replace(/\n/g, " ")}
+                    caption={service.subtitle}
+                  />
+                ) : null}
+                <Button variant="secondary" className="w-fit ml-auto" asChild>
+                  <a
+                    href={SITE.socials.youtube}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {t("goToChannel")}
+                    <IconArrowRight className="size-4" />
+                  </a>
                 </Button>
               </div>
               <div className="w-full md:w-1/2 md:flex-1">
                 <BentoCarouselServices
-                  images={OPERATIONS_IMAGES}
+                  images={bentoImages}
                   className="h-full"
                 />
               </div>

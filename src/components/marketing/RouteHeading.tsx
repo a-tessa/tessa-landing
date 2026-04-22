@@ -10,13 +10,30 @@ import { Heading } from "./Heading";
  * match their parent unless listed explicitly above.
  */
 const ROUTE_NAMESPACES = [
-  { prefix: "/servicos", namespace: "pages.servicos" },
-  { prefix: "/representantes", namespace: "pages.representantes" },
-  { prefix: "/blog", namespace: "pages.blog" },
-  { prefix: "/contato", namespace: "pages.contato" },
+  {
+    prefix: "/servicos",
+    namespace: "pages.servicos",
+    backgroundSrc: "/services-heading.webp",
+  },
+  {
+    prefix: "/representantes",
+    namespace: "pages.representantes",
+    backgroundSrc: "/representantes-heading.jpg",
+  },
+  {
+    prefix: "/blog",
+    namespace: "pages.blog",
+    backgroundSrc: "/blog-heading.jpg",
+  },
+  {
+    prefix: "/contato",
+    namespace: "pages.contato",
+    backgroundSrc: "/representantes-heading.jpg",
+  },
 ] as const;
 
-type RouteNamespace = (typeof ROUTE_NAMESPACES)[number]["namespace"];
+type RouteConfig = (typeof ROUTE_NAMESPACES)[number];
+type RouteNamespace = RouteConfig["namespace"];
 
 export function resolveHeadingNamespace(
   pathname: string,
@@ -27,25 +44,56 @@ export function resolveHeadingNamespace(
   return match?.namespace ?? null;
 }
 
+function resolveHeadingConfig(pathname: string): RouteConfig | null {
+  return (
+    ROUTE_NAMESPACES.find(
+      ({ prefix }) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+    ) ?? null
+  );
+}
+
 interface RouteHeadingProps {
   /** Optional override — skips auto-detection when provided. */
   namespace?: RouteNamespace;
+  /** Optional override for the heading background image. */
+  backgroundSrc?: string;
 }
 
 /**
  * Auto-wires `<Heading />` with the correct translation keys based on
  * the current route. Add new pages to `ROUTE_NAMESPACES` to support them.
  */
-export function RouteHeading({ namespace }: RouteHeadingProps = {}) {
+export function RouteHeading({
+  namespace,
+  backgroundSrc,
+}: RouteHeadingProps = {}) {
   const pathname = usePathname();
-  const resolved = namespace ?? resolveHeadingNamespace(pathname);
+  const routeConfig = resolveHeadingConfig(pathname);
+  const resolvedNamespace = namespace ?? routeConfig?.namespace ?? null;
 
-  if (!resolved) return null;
+  if (!resolvedNamespace) return null;
 
-  return <RouteHeadingInner namespace={resolved} />;
+  return (
+    <RouteHeadingInner
+      namespace={resolvedNamespace}
+      backgroundSrc={backgroundSrc ?? routeConfig?.backgroundSrc}
+    />
+  );
 }
 
-function RouteHeadingInner({ namespace }: { namespace: RouteNamespace }) {
+function RouteHeadingInner({
+  namespace,
+  backgroundSrc,
+}: {
+  namespace: RouteNamespace;
+  backgroundSrc?: string;
+}) {
   const t = useTranslations(namespace);
-  return <Heading title={t("title")} description={t("description")} />;
+  return (
+    <Heading
+      title={t("title")}
+      description={t("description")}
+      backgroundSrc={backgroundSrc}
+    />
+  );
 }

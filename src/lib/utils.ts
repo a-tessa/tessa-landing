@@ -144,7 +144,7 @@ export const serviceCarouselCss = /* css */ `
 .service-heading-carousel {
   left: 50%;
   position: fixed;
-  top: calc(1.5rem + 27rem + 1.5rem);
+  top: calc(1.5rem + 20rem + 1.5rem);
   transform: translateX(-50%);
   z-index: 30;
 }

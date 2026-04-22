@@ -10,8 +10,10 @@ import { Results } from "@/components/marketing/Results";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { breadcrumbJsonLd } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { fetchBlogArticles } from "@/lib/api/blog";
 import { getLandingContent } from "@/lib/api/content";
 import { getApprovedTestimonials } from "@/lib/api/testimonials";
+import { toBlogPostFromListItem } from "@/lib/blog/mappers";
 
 interface HomePageProps {
   params: Promise<{ locale: string }>;
@@ -34,10 +36,16 @@ export async function generateMetadata({
 
 export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
-  const [{ heroSection, scenerySection, clients }, testimonials] = await Promise.all([
-    getLandingContent(),
-    getApprovedTestimonials(),
-  ]);
+  const [{ heroSection, scenerySection, clients }, testimonials, latestBlogResp] =
+    await Promise.all([
+      getLandingContent(),
+      getApprovedTestimonials(),
+      fetchBlogArticles({ page: 1, perPage: 1, order: "desc" }),
+    ]);
+
+  const latestPost = latestBlogResp?.articles[0]
+    ? toBlogPostFromListItem(latestBlogResp.articles[0])
+    : null;
 
   return (
     <>
@@ -50,7 +58,7 @@ export default async function HomePage({ params }: HomePageProps) {
         <Hero heroSection={heroSection} clients={clients} />
         <Scenarios scenerySection={scenerySection} />
         <Operations />
-        <NewsAndSocial />
+        <NewsAndSocial latestPost={latestPost} />
         <Testimonials items={testimonials} className="mt-10" />
         <Results />
       </main>

@@ -5,6 +5,7 @@ import type {
   PublicContentResponse,
   PublicRepresentative,
   SceneryItem,
+  ServicesPageItem,
 } from "./types";
 
 const API_BASE_URL = process.env.API_BASE_URL ?? "";
@@ -38,6 +39,19 @@ export async function getHeroSection(): Promise<HeroTopic[] | null> {
 export async function getScenerySection(): Promise<SceneryItem[] | null> {
   const data = await getPublicContent();
   return data?.content.scenerySection ?? null;
+}
+
+export async function getServicesPages(): Promise<ServicesPageItem[] | null> {
+  const data = await getPublicContent();
+  const list = data?.content.servicesPages;
+  return Array.isArray(list) ? list : null;
+}
+
+export async function getServicePageBySlug(
+  slug: string,
+): Promise<ServicesPageItem | null> {
+  const servicesPages = await getServicesPages();
+  return servicesPages?.find((service) => service.slug === slug) ?? null;
 }
 
 export async function getRepresentatives(): Promise<PublicRepresentative[] | null> {

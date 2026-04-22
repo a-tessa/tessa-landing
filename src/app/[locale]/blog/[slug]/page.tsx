@@ -2,23 +2,70 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import DOMPurify from "isomorphic-dompurify";
 import { BackNavLink } from "@/components/marketing/BackNavLink";
 import { BlogCategoryNav } from "@/components/marketing/BlogCategoryNav";
 import { BlogFeatureCard } from "@/components/marketing/BlogFeatureCard";
 import { Footer } from "@/components/marketing/Footer";
 import { Heading } from "@/components/marketing/Heading";
 import { JsonLd } from "@/lib/seo/jsonld";
-import { getBlogPostBySlug, blogPosts } from "@/lib/blog/posts";
+import {
+  fetchBlogArticleBySlug,
+  fetchBlogArticles,
+  fetchRelatedBlogArticles,
+} from "@/lib/api/blog";
+import {
+  toBlogPostFromArticle,
+  toBlogPostFromListItem,
+} from "@/lib/blog/mappers";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
+
+export const revalidate = 60;
 
 interface BlogPostPageProps {
   params: Promise<{ locale: string; slug: string }>;
 }
 
-export function generateStaticParams(): { slug: string }[] {
-  return blogPosts.map((p) => ({ slug: p.slug }));
+const ALLOWED_TAGS = [
+  "h1",
+  "h2",
+  "h3",
+  "p",
+  "ul",
+  "ol",
+  "li",
+  "strong",
+  "em",
+  "b",
+  "i",
+  "a",
+  "blockquote",
+  "br",
+  "img",
+] as const;
+
+const ALLOWED_ATTR = [
+  "href",
+  "target",
+  "rel",
+  "src",
+  "alt",
+  "title",
+] as const;
+
+function sanitizeArticleHtml(html: string): string {
+  return DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: [...ALLOWED_TAGS],
+    ALLOWED_ATTR: [...ALLOWED_ATTR],
+  });
+}
+
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
+  const resp = await fetchBlogArticles({ page: 1, perPage: 100, order: "desc" });
+  if (!resp) return [];
+  return resp.articles.map((article) => ({ slug: article.slug }));
 }
 
 function absoluteImageUrl(src: string): string {
@@ -29,9 +76,9 @@ export async function generateMetadata({
   params,
 }: BlogPostPageProps): Promise<Metadata> {
   const { locale, slug } = await params;
-  const post = getBlogPostBySlug(slug);
+  const article = await fetchBlogArticleBySlug(slug);
 
-  if (!post) {
+  if (!article) {
     return buildPageMetadata({
       locale,
       path: `/blog/${slug}`,
@@ -40,6 +87,8 @@ export async function generateMetadata({
       noIndex: true,
     });
   }
+
+  const post = toBlogPostFromArticle(article);
 
   return buildPageMetadata({
     locale,
@@ -68,15 +117,14 @@ function formatPublishedDate(iso: string, locale: string): string {
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { locale, slug } = await params;
-  const post = getBlogPostBySlug(slug);
-  if (!post) notFound();
+  const article = await fetchBlogArticleBySlug(slug);
+  if (!article) notFound();
 
-  const relatedPosts = blogPosts
-    .filter(
-      (candidate) =>
-        candidate.category === post.category && candidate.slug !== post.slug,
-    )
-    .slice(0, 2);
+  const post = toBlogPostFromArticle(article);
+  const sanitizedContent = sanitizeArticleHtml(post.contentHtml ?? "");
+
+  const relatedDtos = await fetchRelatedBlogArticles(post.category, post.slug, 2);
+  const relatedPosts = relatedDtos.map(toBlogPostFromListItem);
 
   const t = await getTranslations({ locale, namespace: "pages.blog" });
   const bt = await getTranslations({ locale, namespace: "blog" });
@@ -120,16 +168,20 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <JsonLd id={`jsonld-blog-post-${slug}`} data={postJsonLd} />
 
       <main className="flex flex-col items-center justify-center gap-0">
-        <Heading title={t("title")} description={t("description")} />
+        <Heading
+          title={t("title")}
+          description={t("description")}
+          backgroundSrc="/blog-heading.jpg"
+        />
 
         <BlogCategoryNav activeCategory={post.category} />
 
-        <section className={cn("w-full pb-16 pt-6", freeSectionShellSpacing)}>
+        <section className={cn("w-full pb-16 pt-12", freeSectionShellSpacing)}>
           <BackNavLink
             href="/blog"
             label={bt("backToArticles")}
             navLabel={bt("articleNav")}
-            className="mb-8 mt-8"
+            className="mt-10 mb-5"
           />
 
           <article className="mx-auto">
@@ -149,11 +201,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               </div>
 
               <div>
-                <div className="mt-8 space-y-6 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  {post.body.map((paragraph) => (
-                    <p key={paragraph}>{paragraph}</p>
-                  ))}
-                </div>
+                <div
+                  className="blog-article-content mt-8 text-sm leading-relaxed text-muted-foreground sm:text-base"
+                  dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+                />
 
                 <div className="mt-10 flex items-center gap-4 border-t border-border pt-8">
                   <span
@@ -195,21 +246,21 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <ul className="mt-8 grid list-none gap-6 lg:grid-cols-2">
                 {relatedPosts.map((relatedPost) => (
                   <li key={relatedPost.slug}>
-                    <BlogFeatureCard
-                      href={`/blog/${relatedPost.slug}`}
-                      title={relatedPost.title}
-                      excerpt={relatedPost.excerpt}
-                      author={{
-                        name: relatedPost.author.name,
-                        avatar: relatedPost.imageSrc,
-                      }}
-                      publishedAt={relatedPost.publishedAt}
-                      imageSrc={relatedPost.imageSrc}
-                      imageAlt={relatedPost.imageAlt}
-                      className="sm:h-96"
-                      imageSizes="(max-width: 1024px) 100vw, 50vw"
-                    />
-                  </li>
+                  <BlogFeatureCard
+                    href={`/blog/${relatedPost.slug}`}
+                    title={relatedPost.title}
+                    excerpt={relatedPost.excerpt}
+                    author={{
+                      name: relatedPost.author.name,
+                      avatar: relatedPost.imageSrc,
+                    }}
+                    publishedAt={relatedPost.publishedAt}
+                    imageSrc={relatedPost.imageSrc}
+                    imageAlt={relatedPost.imageAlt}
+                    className="sm:h-84 "
+                    imageSizes="(max-width: 1024px) 50vw, 25vw"
+                  />
+                </li>
                 ))}
               </ul>
             </section>

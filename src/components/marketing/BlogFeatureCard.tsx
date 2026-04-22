@@ -58,7 +58,7 @@ export function BlogFeatureCard({
         sizes={imageSizes}
         className="object-cover transition-transform duration-500 group-hover:scale-105 mb-auto"
       />
-      <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-black/10" />
+      <div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/70 to-black/30" />
 
       <div className="absolute right-4 top-4 z-10 flex size-9 items-center justify-center rounded-full bg-primary">
         <BlogIcon />

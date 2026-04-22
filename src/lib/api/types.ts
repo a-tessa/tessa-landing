@@ -15,6 +15,20 @@ export interface SceneryItem {
   image: string;
 }
 
+export interface ServicesPageImage {
+  imgUrl: string;
+}
+
+export interface ServicesPageItem {
+  slug: string;
+  title: string;
+  category: string;
+  subtitle: string;
+  exampleVideoUrl: string;
+  backgroundImageUrl: string;
+  images: ServicesPageImage[];
+}
+
 export interface ClientLogo {
   id?: string;
   name: string;
@@ -37,6 +51,7 @@ export interface PublicContentResponse {
   content: {
     heroSection?: HeroTopic[];
     scenerySection?: SceneryItem[];
+    servicesPages?: ServicesPageItem[];
     clients?: ClientLogo[];
     representantsBase?: PublicRepresentative[];
     [key: string]: unknown;

@@ -2,11 +2,12 @@ import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { IconArrowNarrowRight } from "@tabler/icons-react";
 import { BlogFeatureCard } from "@/components/marketing/BlogFeatureCard";
+import type { BlogPost } from "@/lib/blog/posts";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 
-interface BlogPost {
+interface FeaturedBlogPost {
   title: string;
-  slug: string;
+  href: string;
   excerpt: string;
   author: {
     name: string;
@@ -22,9 +23,9 @@ interface InstagramPost {
   url: string;
 }
 
-const FEATURED_POST: BlogPost = {
+const FALLBACK_FEATURED_POST: FeaturedBlogPost = {
   title: "Estrutura metálica para telhado: quando faz sentido",
-  slug: "/blog/estrutura-metalica-para-telhado",
+  href: "/blog/estrutura-metalica-para-telhado",
   excerpt:
     "Estrutura metálica não é 'moda'. É decisão técnica, e ela faz muito sentido quando você precisa de previsibilidade na obra. Neste artigo, você entende em quais cenários a estrutura metálica para telhado compensa...",
   author: {
@@ -36,6 +37,21 @@ const FEATURED_POST: BlogPost = {
   imageAlt:
     "Obra com estrutura metálica para telhado sendo montada pela equipe Tessa",
 };
+
+function toFeaturedPost(post: BlogPost): FeaturedBlogPost {
+  return {
+    title: post.title,
+    href: `/blog/${post.slug}`,
+    excerpt: post.excerpt,
+    author: {
+      name: post.author.name,
+      avatar: post.imageSrc,
+    },
+    publishedAt: post.publishedAt,
+    image: post.imageSrc,
+    imageAlt: post.imageAlt,
+  };
+}
 
 const INSTAGRAM_POSTS: InstagramPost[] = [
   {
@@ -52,13 +68,19 @@ const INSTAGRAM_POSTS: InstagramPost[] = [
   },
 ];
 
-export function NewsAndSocial() {
+interface NewsAndSocialProps {
+  /** Most recent blog article. Falls back to a hardcoded post when absent. */
+  latestPost?: BlogPost | null;
+}
+
+export function NewsAndSocial({ latestPost }: NewsAndSocialProps = {}) {
   const t = useTranslations("newsAndSocial");
+  const featured = latestPost ? toFeaturedPost(latestPost) : FALLBACK_FEATURED_POST;
 
   return (
     <section
       aria-labelledby="news-title"
-      className="w-full"
+      className="w-full mt-10"
     >
       <div className={freeSectionShellSpacing}>
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
@@ -76,20 +98,20 @@ export function NewsAndSocial() {
               itemScope
               itemType="https://schema.org/BlogPosting"
             >
-              <meta itemProp="headline" content={FEATURED_POST.title} />
+              <meta itemProp="headline" content={featured.title} />
               <meta
                 itemProp="datePublished"
-                content={FEATURED_POST.publishedAt}
+                content={featured.publishedAt}
               />
-              <meta itemProp="author" content={FEATURED_POST.author.name} />
+              <meta itemProp="author" content={featured.author.name} />
               <BlogFeatureCard
-                href={FEATURED_POST.slug}
-                title={FEATURED_POST.title}
-                excerpt={FEATURED_POST.excerpt}
-                author={FEATURED_POST.author}
-                publishedAt={FEATURED_POST.publishedAt}
-                imageSrc={FEATURED_POST.image}
-                imageAlt={FEATURED_POST.imageAlt}
+                href={featured.href}
+                title={featured.title}
+                excerpt={featured.excerpt}
+                author={featured.author}
+                publishedAt={featured.publishedAt}
+                imageSrc={featured.image}
+                imageAlt={featured.imageAlt}
                 className="flex-1"
               />
             </article>

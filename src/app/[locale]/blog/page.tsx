@@ -5,15 +5,13 @@ import { BlogRepresentativesCta } from "@/components/marketing/BlogRepresentativ
 import { Footer } from "@/components/marketing/Footer";
 import { RouteHeading } from "@/components/marketing/RouteHeading";
 import { JsonLd } from "@/lib/seo/jsonld";
-import {
-  BLOG_LIST_PAGE_SIZE,
-  blogPosts,
-  filterPostsByCategory,
-  filterPostsByTitleQuery,
-  sortPostsByDate,
-} from "@/lib/blog/posts";
+import { fetchBlogArticles } from "@/lib/api/blog";
+import { toBlogPostFromListItem } from "@/lib/blog/mappers";
+import { BLOG_LIST_PAGE_SIZE } from "@/lib/blog/posts";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+
+export const revalidate = 60;
 
 interface BlogPageProps {
   params: Promise<{ locale: string }>;
@@ -77,11 +75,17 @@ export default async function BlogPage({
   const limite = parseLimite(sp.limite);
   const categoria = (sp.categoria ?? "").trim();
 
-  const byCategory = filterPostsByCategory(blogPosts, categoria);
-  const filtered = filterPostsByTitleQuery(byCategory, query);
-  const sorted = sortPostsByDate(filtered, ordem);
-  const visiblePosts = sorted.slice(0, limite);
-  const hasMore = sorted.length > limite;
+  const resp = await fetchBlogArticles({
+    page: 1,
+    perPage: limite,
+    categorySlug: categoria || undefined,
+    q: query || undefined,
+    order: ordem,
+  });
+
+  const visiblePosts = (resp?.articles ?? []).map(toBlogPostFromListItem);
+  const totalFiltered = resp?.pagination.total ?? visiblePosts.length;
+  const hasMore = totalFiltered > visiblePosts.length;
 
   const t = await getTranslations({ locale, namespace: "pages.blog" });
 
@@ -93,7 +97,7 @@ export default async function BlogPage({
       />
       <JsonLd id="jsonld-blog" data={blogJsonLd(locale)} />
 
-      <main className="flex flex-col items-center pt-20 sm:pt-10">
+      <main className="flex flex-col items-center pt-10 sm:pt-10">
         <RouteHeading />
         <BlogIndex
           query={query}
@@ -101,7 +105,7 @@ export default async function BlogPage({
           limite={limite}
           categoria={categoria}
           visiblePosts={visiblePosts}
-          totalFiltered={sorted.length}
+          totalFiltered={totalFiltered}
           hasMore={hasMore}
         />
         <BlogRepresentativesCta />

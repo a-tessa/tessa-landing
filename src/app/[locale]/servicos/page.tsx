@@ -8,6 +8,7 @@ import { Testimonials } from "@/components/marketing/Testimonials";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { breadcrumbJsonLd } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { getScenerySection } from "@/lib/api/content";
 import { getApprovedTestimonials } from "@/lib/api/testimonials";
 
 interface ServicosPageProps {
@@ -35,9 +36,10 @@ export async function generateMetadata({
 
 export default async function ServicosPage({ params }: ServicosPageProps) {
   const { locale } = await params;
-  const [t, testimonials] = await Promise.all([
+  const [t, testimonials, scenerySection] = await Promise.all([
     getTranslations({ locale, namespace: "pages.servicos" }),
     getApprovedTestimonials(),
+    getScenerySection(),
   ]);
 
   return (
@@ -49,7 +51,7 @@ export default async function ServicosPage({ params }: ServicosPageProps) {
 
       <main className="flex flex-col items-center pt-10">
         <RouteHeading />
-        <ServicosIntro locale={locale} />
+        <ServicosIntro locale={locale} scenerySection={scenerySection} />
         <Testimonials items={testimonials} className="mt-10" />
         <Results />
       </main>

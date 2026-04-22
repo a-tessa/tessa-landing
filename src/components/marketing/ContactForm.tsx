@@ -3,8 +3,18 @@
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { useState, useCallback } from "react";
-import { Phone, MapPin, Maximize2 } from "lucide-react";
+import {
+	useState,
+	useCallback,
+	useActionState,
+	useEffect,
+	useRef,
+} from "react";
+import { Phone, MapPin, Maximize2, CheckCircle2 } from "lucide-react";
+import {
+	submitContact,
+	type ContactActionState,
+} from "@/app/actions/contact";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,8 +27,18 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { BRAZILIAN_STATES } from "@/lib/representatives";
-import { services } from "@/lib/services";
 import { cn } from "@/lib/utils";
+
+interface ContactFormServiceOption {
+	slug: string;
+	title: string;
+}
+
+interface ContactFormProps {
+	services?: ContactFormServiceOption[];
+}
+
+const initialState: ContactActionState = { status: "idle" };
 
 const underlineInput =
 	"h-12 focus-visible:border-primary focus-visible:ring-0 bg-white rounded-xl shadow-none";
@@ -70,9 +90,14 @@ function formatBrazilPhoneDisplay(digits: string): string {
 	return `(${ddd}) ${sub.slice(0, 4)}-${sub.slice(4)}`;
 }
 
-export function ContactForm() {
+export function ContactForm({ services = [] }: ContactFormProps) {
 	const t = useTranslations("contact");
 	const [phoneDisplay, setPhoneDisplay] = useState("");
+	const [state, formAction, isPending] = useActionState(
+		submitContact,
+		initialState,
+	);
+	const formRef = useRef<HTMLFormElement>(null);
 
 	const handlePhoneChange = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,9 +107,12 @@ export function ContactForm() {
 		[],
 	);
 
-	function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-		e.preventDefault();
-	}
+	useEffect(() => {
+		if (state.status === "success") {
+			formRef.current?.reset();
+			setPhoneDisplay("");
+		}
+	}, [state.status]);
 
 	return (
 		<div className="flex flex-col gap-10 lg:flex-row lg:gap-16">
@@ -152,10 +180,40 @@ export function ContactForm() {
 			</aside>
 
 			<form
-				onSubmit={handleSubmit}
+				ref={formRef}
+				action={formAction}
 				className="flex flex-1 flex-col gap-8"
 				noValidate
 			>
+				{state.status === "success" && state.message ? (
+					<div
+						role="status"
+						aria-live="polite"
+						className="flex items-start gap-4 rounded-2xl border border-emerald-200/70 bg-linear-to-br from-emerald-50 to-emerald-100/40 p-5 shadow-sm"
+					>
+						<div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-emerald-600/10 text-emerald-700">
+							<CheckCircle2 className="size-5" aria-hidden />
+						</div>
+						<div className="flex flex-col gap-1">
+							<p className="text-base font-semibold text-emerald-900">
+								Contato recebido com sucesso!
+							</p>
+							<p className="text-sm leading-relaxed text-emerald-900/80">
+								{state.message}
+							</p>
+						</div>
+					</div>
+				) : null}
+
+				{state.status === "error" && state.message ? (
+					<div
+						role="alert"
+						className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+					>
+						{state.message}
+					</div>
+				) : null}
+
 				<div className="flex flex-col gap-2">
 					<Label htmlFor="contact-name" className={fieldLabel}>
 						{t("fullName")}
@@ -165,8 +223,14 @@ export function ContactForm() {
 						name="name"
 						type="text"
 						required
+						aria-invalid={Boolean(state.fieldErrors?.fullName)}
 						className={underlineInput}
 					/>
+					{state.fieldErrors?.fullName ? (
+						<p className="text-xs text-destructive">
+							{state.fieldErrors.fullName}
+						</p>
+					) : null}
 				</div>
 
 				<div className="grid gap-8 sm:grid-cols-2">
@@ -179,8 +243,14 @@ export function ContactForm() {
 							name="email"
 							type="email"
 							required
+							aria-invalid={Boolean(state.fieldErrors?.email)}
 							className={underlineInput}
 						/>
+						{state.fieldErrors?.email ? (
+							<p className="text-xs text-destructive">
+								{state.fieldErrors.email}
+							</p>
+						) : null}
 					</div>
 					<div className="flex flex-col gap-2">
 						<Label htmlFor="contact-phone" className={fieldLabel}>
@@ -198,6 +268,7 @@ export function ContactForm() {
 							placeholder={t("phonePlaceholder")}
 							className={underlineInput}
 							aria-describedby="contact-phone-hint"
+							aria-invalid={Boolean(state.fieldErrors?.phone)}
 							pattern={
 								"^\\(\\d{2}\\) 9\\d{4}-\\d{4}$|^\\(\\d{2}\\) \\d{4}-\\d{4}$"
 							}
@@ -206,6 +277,11 @@ export function ContactForm() {
 						<p id="contact-phone-hint" className="sr-only">
 							{t("phoneHint")}
 						</p>
+						{state.fieldErrors?.phone ? (
+							<p className="text-xs text-destructive">
+								{state.fieldErrors.phone}
+							</p>
+						) : null}
 					</div>
 				</div>
 
@@ -218,8 +294,14 @@ export function ContactForm() {
 						name="company"
 						type="text"
 						required
+						aria-invalid={Boolean(state.fieldErrors?.companyName)}
 						className={underlineInput}
 					/>
+					{state.fieldErrors?.companyName ? (
+						<p className="text-xs text-destructive">
+							{state.fieldErrors.companyName}
+						</p>
+					) : null}
 				</div>
 
 				<div className="grid gap-8 sm:grid-cols-2">
@@ -232,8 +314,14 @@ export function ContactForm() {
 							name="city"
 							type="text"
 							required
+							aria-invalid={Boolean(state.fieldErrors?.city)}
 							className={underlineInput}
 						/>
+						{state.fieldErrors?.city ? (
+							<p className="text-xs text-destructive">
+								{state.fieldErrors.city}
+							</p>
+						) : null}
 					</div>
 					<div className="flex flex-col gap-2">
 						<Label className={fieldLabel}>{t("state")}</Label>
@@ -241,6 +329,7 @@ export function ContactForm() {
 							<SelectTrigger
 								className={cn(underlineInput, "w-full h-12!")}
 								iconClassName="text-primary"
+								aria-invalid={Boolean(state.fieldErrors?.state)}
 							>
 								<SelectValue placeholder={t("selectState")} />
 							</SelectTrigger>
@@ -252,6 +341,11 @@ export function ContactForm() {
 								))}
 							</SelectContent>
 						</Select>
+						{state.fieldErrors?.state ? (
+							<p className="text-xs text-destructive">
+								{state.fieldErrors.state}
+							</p>
+						) : null}
 					</div>
 				</div>
 
@@ -287,8 +381,13 @@ export function ContactForm() {
 				</div>
 
 				<div className="flex justify-end">
-					<Button type="submit" variant="secondary" className="px-8">
-						{t("submit")}
+					<Button
+						type="submit"
+						variant="secondary"
+						className="px-8"
+						disabled={isPending}
+					>
+						{isPending ? "..." : t("submit")}
 					</Button>
 				</div>
 			</form>

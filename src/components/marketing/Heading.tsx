@@ -3,7 +3,10 @@ import { HeroNavbar } from "./HeroNavbar";
 interface HeadingProps {
   title: string;
   description: string;
+  backgroundSrc?: string;
 }
+
+const DEFAULT_BACKGROUND_SRC = "/services-heading.webp";
 
 const css = /* css */ `
 @keyframes marketing-heading-shell {
@@ -63,15 +66,23 @@ const css = /* css */ `
 }
 `;
 
-export function Heading({ title, description }: HeadingProps) {
+export function Heading({
+  title,
+  description,
+  backgroundSrc = DEFAULT_BACKGROUND_SRC,
+}: HeadingProps) {
   return (
     <>
       <style href="marketing-heading" precedence="component">
         {css}
       </style>
       <div className="relative z-20">
-        {/* <NavbarPage /> */}
-        <HeroNavbar description={description} title={title} activeClassName="text-primary text" backgroundSrc="/services-heading.webp" />
+        <HeroNavbar
+          description={description}
+          title={title}
+          activeClassName="text-primary text"
+          backgroundSrc={backgroundSrc}
+        />
         {/* <div className="marketing-heading-scroll fixed top-6 flex w-[calc(100%-2.5rem)] translate-x-1/2 right-1/2 flex-col rounded-3xl bg-[url('/services-heading.webp')] bg-cover bg-center bg-no-repeat bg-black/75 bg-blend-overlay saturate-30 text-white supports-[animation-timeline:scroll()]:h-20">
           <divabsolute inset-x-0 top-0 z-10
             className={`${insideCardSpacing} flex flex-1 flex-col justify-center overflow-hidden text-3xl mb-5 mt-5 sm:text-2xl md:text-3xl lg:text-6xl xl:text-7xl`}

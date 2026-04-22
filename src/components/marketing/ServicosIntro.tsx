@@ -1,13 +1,18 @@
 import { getTranslations } from "next-intl/server";
 import AppleCardsCarousel from "@/components/apple-cards-carousel";
 import { Link } from "@/i18n/navigation";
-import { freeSectionShellSpacing, homeSpacing } from "@/lib/utils";
+import type { SceneryItem } from "@/lib/api/types";
+import { cn, freeSectionShellSpacing } from "@/lib/utils";
 
 interface ServicosIntroProps {
   locale: string;
+  scenerySection?: SceneryItem[] | null;
 }
 
-export async function ServicosIntro({ locale }: ServicosIntroProps) {
+export async function ServicosIntro({
+  locale,
+  scenerySection,
+}: ServicosIntroProps) {
   const t = await getTranslations({ locale, namespace: "pages.servicos" });
 
   return (
@@ -18,7 +23,7 @@ export async function ServicosIntro({ locale }: ServicosIntroProps) {
         <div className="w-full md:w-5/12 flex-1">
           <h2
             id="scenarios-title"
-            className="text-3xl font-semibold uppercase leading-tight text-foreground sm:text-6xl text-left md:text-right"
+            className="text-3xl font-semibold uppercase leading-none text-foreground sm:text-6xl text-left md:text-right "
           >
             {t("chooseScenario")}
           </h2>
@@ -26,13 +31,13 @@ export async function ServicosIntro({ locale }: ServicosIntroProps) {
             {t("customSolutions")}
           </p>
         </div>
-        <p className="w-full md:w-5/12 flex-1 text-left md:text-left">
+        <p className="w-full md:w-5/12 flex-1 text-left md:text-left mt-1">
           {t("description")}
         </p>
       </div>
-      <AppleCardsCarousel />
+      <AppleCardsCarousel scenerySection={scenerySection} />
 
-      <div className={`mt-8 flex justify-end sm:mt-10`}>
+      <div className={cn(`mt-8 flex justify-end sm:mt-10`, freeSectionShellSpacing)}>
         <Link
           href="/servicos"
           className="inline-flex items-center gap-2 rounded-lg bg-secondary px-6 py-3 text-sm font-medium text-white transition-transform hover:-translate-y-0.5"

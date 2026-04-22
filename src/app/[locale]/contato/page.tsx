@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { ContactForm } from "@/components/marketing/ContactForm";
 import { Footer } from "@/components/marketing/Footer";
 import { RouteHeading } from "@/components/marketing/RouteHeading";
+import { getServicesPages } from "@/lib/api/content";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
@@ -54,7 +55,15 @@ function contactPointJsonLd() {
 
 export default async function ContatoPage({ params }: ContatoPageProps) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "pages.contato" });
+  const [t, servicesPages] = await Promise.all([
+    getTranslations({ locale, namespace: "pages.contato" }),
+    getServicesPages(),
+  ]);
+
+  const serviceOptions = (servicesPages ?? []).map((service) => ({
+    slug: service.slug,
+    title: service.title,
+  }));
 
   return (
     <>
@@ -70,7 +79,7 @@ export default async function ContatoPage({ params }: ContatoPageProps) {
         <RouteHeading />
 
         <section className={cn("w-full pb-20 pt-10", freeSectionShellSpacing)}>
-          <ContactForm />
+          <ContactForm services={serviceOptions} />
         </section>
       </main>
 

@@ -19,7 +19,7 @@ import { BlogCategoryNavScroller } from "@/components/marketing/BlogCategoryNavS
  */
 const CATEGORY_NAV_CSS = /* css */ `
 .blog-category-nav {
-  --nav-top-from: 20.5rem;
+  --nav-top-from: 17.5rem;
   --nav-top-to: 9rem;
 
   position: fixed;

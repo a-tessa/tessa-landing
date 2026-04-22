@@ -2,7 +2,6 @@
 
 import { Carousel, Card } from "@/components/ui/apple-cards-carousel";
 import type { SceneryItem } from "@/lib/api/types";
-import { services } from "@/lib/services";
 
 interface AppleCardsCarouselProps {
   scenerySection?: SceneryItem[] | null;
@@ -11,20 +10,11 @@ interface AppleCardsCarouselProps {
 export default function AppleCardsCarousel({
   scenerySection,
 }: AppleCardsCarouselProps) {
-  const items =
-    scenerySection && scenerySection.length > 0
-      ? scenerySection.map((item) => ({
-          slug: item.slug,
-          title: item.title,
-          image: item.image,
-        }))
-      : services.map((s) => ({
-          slug: s.slug,
-          title: s.title,
-          image: s.image,
-        }));
+  if (!scenerySection || scenerySection.length === 0) {
+    return null;
+  }
 
-  const cards = items.map((item) => (
+  const cards = scenerySection.map((item) => (
     <Card
       key={item.slug}
       card={{

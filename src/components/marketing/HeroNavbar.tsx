@@ -83,7 +83,7 @@ const css = /* css */ `
 }
 
 .hero-nav__overlay {
-  background-color: rgb(0 0 0 / 0.4);
+  background-color: rgb(0 0 0 / 0.60);
   will-change: background-color;
 }
 
@@ -103,7 +103,7 @@ const css = /* css */ `
   to { height: var(--hero-h-shrunk); }
 }
 @keyframes hero-overlay-darken {
-  to { background-color: rgb(0 0 0 / 0.6); }
+  to { background-color: rgb(0 0 0 / 0.80); }
 }
 @keyframes hero-title-shrink {
   to { transform: scale(var(--hero-title-scale)); }
@@ -179,7 +179,7 @@ export function HeroNavbar({
             sizes="100vw"
             priority
             aria-hidden
-            className="-z-20 object-cover saturate-50"
+            className="-z-20 object-cover grayscale"
           />
           <div
             className="hero-nav__overlay absolute inset-0 -z-10"
@@ -212,10 +212,10 @@ export function HeroNavbar({
               insideCardSpacing,
             )}
           >
-            <h1 className="hero-nav__title text-3xl font-bold uppercase sm:text-5xl md:text-6xl lg:text-7xl">
+            <h1 className="hero-nav__title text-32xl font-bold uppercase sm:text-5xl md:text-6xl lg:text-7xl">
               {title}
             </h1>
-            <p className="hero-nav__subtitle mt-3 max-w-2xl text-xs font-semibold uppercase sm:mt-4 sm:text-sm">
+            <p className="hero-nav__subtitle mt-3 max-w-2xl text-xxs font-semibold uppercase sm:mt-4 sm:text-xs">
               {description}
             </p>
           </div>
