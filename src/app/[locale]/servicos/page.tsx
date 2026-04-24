@@ -52,7 +52,7 @@ export default async function ServicosPage({ params }: ServicosPageProps) {
       <main className="flex flex-col items-center pt-10">
         <RouteHeading />
         <ServicosIntro locale={locale} scenerySection={scenerySection} />
-        <Testimonials items={testimonials} className="mt-10" />
+        <Testimonials items={testimonials} />
         <Results />
       </main>
 

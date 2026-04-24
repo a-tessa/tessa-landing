@@ -214,6 +214,9 @@ export function Hero({ heroSection, clients }: HeroProps) {
   }, [SLIDES.length]);
 
   const activeSlide = SLIDES[current];
+  const nextSideIndex =
+    SLIDES.length > 0 ? (current + 1) % SLIDES.length : 0;
+  const nextSideSlide = SLIDES[nextSideIndex];
 
   return (
     <LazyMotion features={domAnimation}>
@@ -326,27 +329,68 @@ export function Hero({ heroSection, clients }: HeroProps) {
 
                 <div className="hidden items-end justify-end pb-16 lg:flex lg:pb-20">
                   <div className="flex w-full max-w-76 flex-col gap-4">
-                    {SLIDES.map((slide, index) => (
-                      <button
-                        key={slide.cardLabel}
-                        type="button"
-                        onClick={() => setCurrent(index)}
-                        aria-pressed={index === current}
-                        className={cn(
-                          "min-h-64 w-76 rounded-3xl border p-6 text-left transition-all duration-300 flex flex-col justify-end",
-                          index === current
-                            ? "border-chart-5/60 bg-primary text-white shadow-xl shadow-chart-5/20"
-                            : "border-white/20 bg-transparent text-white backdrop-blur-md hover:bg-white/12",
-                        )}
-                      >
-                        <p className="whitespace-pre-line text-2xl font-semibold uppercase">
-                          {slide.cardLabel}
-                        </p>
-                      </button>
-                    ))}
+                    <div className="flex min-h-64 flex-col gap-4">
+                      {SLIDES.length === 1 ? (
+                        <button
+                          type="button"
+                          onClick={() => setCurrent(0)}
+                          aria-pressed
+                          className="flex min-h-64 w-76 flex-col justify-end rounded-3xl border border-chart-5/60 bg-primary p-6 text-left text-white shadow-xl shadow-chart-5/20 transition-all duration-300"
+                        >
+                          <p className="whitespace-pre-line text-2xl font-semibold uppercase">
+                            {SLIDES[0].cardLabel}
+                          </p>
+                        </button>
+                      ) : (
+                        <AnimatePresence mode="wait" initial={false}>
+                          <m.div
+                            key={current}
+                            className="flex flex-col gap-4"
+                            initial={{ opacity: 0, y: 18 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -14 }}
+                            transition={{ duration: 0.3, ease: "easeOut" }}
+                          >
+                            <button
+                              type="button"
+                              onClick={() => setCurrent(current)}
+                              aria-pressed
+                              className="flex min-h-64 w-76 flex-col justify-end rounded-3xl border border-chart-5/60 bg-primary p-6 text-left text-white shadow-xl shadow-chart-5/20 transition-all duration-300"
+                            >
+                              <p className="whitespace-pre-line text-2xl font-semibold uppercase">
+                                {activeSlide.cardLabel}
+                              </p>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setCurrent(nextSideIndex)}
+                              aria-pressed={false}
+                              aria-label={nextSideSlide.heading}
+                              className={cn(
+                                "flex min-h-64 w-76 flex-col justify-end rounded-3xl border p-6 text-left transition-all duration-300",
+                                "border-white/20 bg-transparent text-white backdrop-blur-md hover:bg-white/12",
+                              )}
+                            >
+                              <p className="whitespace-pre-line text-2xl font-semibold uppercase">
+                                {nextSideSlide.cardLabel}
+                              </p>
+                            </button>
+                          </m.div>
+                        </AnimatePresence>
+                      )}
+                    </div>
 
                     <div className="flex items-center justify-end gap-3">
-                      <div className="h-1 flex-1 rounded-full bg-chart-5/70" />
+                      <div className="h-1 min-w-0 flex-1 overflow-hidden rounded-full bg-white/15">
+                        <m.div
+                          className="h-full rounded-full bg-chart-5/80"
+                          initial={false}
+                          animate={{
+                            width: `${((current + 1) / SLIDES.length) * 100}%`,
+                          }}
+                          transition={{ duration: 0.35, ease: "easeOut" }}
+                        />
+                      </div>
                       <Button
                         onClick={next}
                         aria-label={t("nextHeroBanner")}

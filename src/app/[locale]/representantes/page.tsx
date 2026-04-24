@@ -118,7 +118,7 @@ export default async function RepresentantesPage({
           <RepresentativesDirectory representatives={representatives} />
         </section>
 
-        <Testimonials items={testimonials} className="mt-10" />
+        <Testimonials items={testimonials} />
       </main>
 
       <Footer />

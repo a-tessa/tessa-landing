@@ -143,7 +143,11 @@ export function Testimonials({ items, className }: TestimonialsProps = {}) {
     return (
       <section
         aria-labelledby="testimonials-title"
-        className={cn("w-full pb-10", freeSectionShellSpacing, className)}
+        className={cn(
+          "mt-10 w-full pb-10",
+          freeSectionShellSpacing,
+          className,
+        )}
       >
         <div className="mx-auto flex max-w-2xl flex-col items-center gap-6 rounded-3xl bg-card px-6 py-12 text-center shadow-sm sm:px-10 sm:py-16">
           <h2
@@ -186,7 +190,7 @@ export function Testimonials({ items, className }: TestimonialsProps = {}) {
   return (
     <section
       aria-labelledby="testimonials-title"
-      className={cn("w-full pb-10", freeSectionShellSpacing)}
+      className={cn("mt-10 w-full pb-10", freeSectionShellSpacing, className)}
       itemScope
       itemType="https://schema.org/Product"
     >
