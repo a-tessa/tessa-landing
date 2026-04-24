@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { Tooltip } from "radix-ui";
 import { cn, insideCardSpacing } from "@/lib/utils";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import {
@@ -21,6 +22,8 @@ interface HeroNavbarProps {
 }
 
 const ACTIVE_CLASS = "text-[#FF6F00]";
+
+const NAV_DESCRIPTION_MAX_CHARS = 200;
 
 const css = /* css */ `
 .hero-nav,
@@ -164,6 +167,16 @@ export function HeroNavbar({
 }: HeroNavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const { visibleDescription, isTruncated } = useMemo(() => {
+    if (description.length <= NAV_DESCRIPTION_MAX_CHARS) {
+      return { visibleDescription: description, isTruncated: false };
+    }
+    return {
+      visibleDescription: `${description.slice(0, NAV_DESCRIPTION_MAX_CHARS)}…`,
+      isTruncated: true,
+    };
+  }, [description]);
+
   return (
     <>
       <style href="hero-navbar" precedence="component">
@@ -215,9 +228,38 @@ export function HeroNavbar({
             <h1 className="hero-nav__title text-32xl font-bold uppercase sm:text-5xl md:text-6xl lg:text-7xl">
               {title}
             </h1>
-            <p className="hero-nav__subtitle mt-3 max-w-2xl text-xxs font-semibold uppercase sm:mt-4 sm:text-xs">
-              {description}
-            </p>
+            {isTruncated ? (
+              <Tooltip.Provider delayDuration={250}>
+                <Tooltip.Root>
+                  <Tooltip.Trigger asChild>
+                    <p
+                      className="hero-nav__subtitle mt-3 max-w-2xl cursor-help text-xxs font-semibold uppercase sm:mt-4 sm:text-xs outline-offset-2 focus-visible:outline-2 focus-visible:outline-white/70"
+                      tabIndex={0}
+                    >
+                      {visibleDescription}
+                    </p>
+                  </Tooltip.Trigger>
+                  <Tooltip.Portal>
+                    <Tooltip.Content
+                      side="top"
+                      sideOffset={10}
+                      className="z-50 max-h-64 max-w-sm overflow-y-auto rounded-md border border-border bg-popover px-3 py-2 text-left text-xs font-semibold tracking-wide wrap-break-word text-popover-foreground uppercase shadow-md"
+                    >
+                      {description}
+                      <Tooltip.Arrow
+                        className="fill-popover"
+                        width={12}
+                        height={6}
+                      />
+                    </Tooltip.Content>
+                  </Tooltip.Portal>
+                </Tooltip.Root>
+              </Tooltip.Provider>
+            ) : (
+              <p className="hero-nav__subtitle mt-3 max-w-2xl text-xxs font-semibold uppercase sm:mt-4 sm:text-xs">
+                {visibleDescription}
+              </p>
+            )}
           </div>
 
           <MobileDrawer
