@@ -256,11 +256,68 @@
       },
       "carport": {
         "title": "Carport",
-        "description": "Tessa galvanized steel carports: customized solutions to protect vehicles with custom-made parts, durability, and reduced industrial costs.",
-        "metaKeywords": "Carport, vehicle shelter, galvanized steel, metal structure, vehicle protection",
+        "description": "Tessa solar carports in galvanized steel: vehicle protection, shade, and clean energy generation with custom-made parts and photovoltaic panels.",
+        "metaKeywords": "Carport, solar carport, vehicle shelter, galvanized steel, photovoltaic panels, clean energy, metal structure",
         "introSection": {
           "title": "Customized Solutions for your Projects",
           "subtitle": "Custom-made parts in galvanized steel and industrial cost reduction."
+        },
+        "whatIsSection": {
+          "title": "What is a Carport?",
+          "description": "A Carport is an innovative solution for parking lots, providing protection and shade for vehicles while simultaneously generating clean energy. The structures are made of galvanized steel and allow for the installation of photovoltaic panels.",
+          "imageAlt": "3D render of a solar carport structure made of galvanized steel with photovoltaic panels for clean energy generation"
+        },
+        "videoSection": {
+          "title": "Video about the Carport",
+          "subtitle": "Click to get to know our industry and discover details about the production of our Carports.",
+          "playLabel": "Play video about the Carport"
+        },
+        "infoColumnsSection": {
+          "label": "Carport information",
+          "items": {
+            "project-types": {
+              "title": "Does it work for any type of project?",
+              "description": "Carports can be installed in commercial and residential projects. They adapt to different spaces and offer easy installation, providing a sustainable solution for parking areas."
+            },
+            "benefits": {
+              "title": "What are the benefits of a Carport?",
+              "description": "Carports offer a range of benefits. First, by replacing traditional roofing with photovoltaic panels, you embrace the clean energy generation trend. Additionally, it is a durable structure resistant to corrosion, providing shade for vehicles while generating sustainable energy."
+            },
+            "beyond-benefits": {
+              "title": "The benefits go even further!",
+              "description": "You will save on energy at the end of the month, reducing your operating costs, and you can use that energy to power your own business or even charge electric vehicles, contributing to a more sustainable future. Solar panels have a long lifespan, averaging 30 years, ensuring decades of savings and clean energy."
+            }
+          }
+        },
+        "segmentsSection": {
+          "title": "Main segments that use Carports",
+          "items": {
+            "empresas": {
+              "label": "Companies",
+              "iconAlt": "Office building icon representing companies that use Carports"
+            },
+            "supermercados": {
+              "label": "Supermarkets",
+              "iconAlt": "Shopping cart icon representing supermarkets that use Carports"
+            },
+            "shoppings": {
+              "label": "Malls",
+              "iconAlt": "Shopping bags icon representing malls that use Carports"
+            },
+            "condominios": {
+              "label": "Condominiums",
+              "iconAlt": "House icon representing condominiums that use Carports"
+            },
+            "integradores": {
+              "label": "Integrators",
+              "iconAlt": "Network connections icon representing integrators that use Carports"
+            }
+          }
+        },
+        "clampSection": {
+          "title": "Tessa Panel Mounting Clamp",
+          "description": "A practical and exclusive system where installation is done from below the structure using only two self-drilling screws. It is flexible because it does not require a fixed point on the purlin or PV panel for attachment.",
+          "imageAlt": "Patent seal for the Tessa Panel Mounting Clamp for solar carport"
         }
       },
       "estrutura-de-solo": {

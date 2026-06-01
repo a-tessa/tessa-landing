@@ -256,11 +256,68 @@
       },
       "carport": {
         "title": "Carport",
-        "description": "Carports de acero galvanizado Tessa: soluciones personalizadas para proteger vehículos con piezas a medida, durabilidad y reducción de costes industriales.",
-        "metaKeywords": "Carport, cobertizo vehicular, acero galvanizado, estructura metálica, protección de vehículos",
+        "description": "Carports solares Tessa en acero galvanizado: protección vehicular, sombra y generación de energía limpia con piezas a medida y paneles fotovoltaicos.",
+        "metaKeywords": "Carport, carport solar, cobertizo vehicular, acero galvanizado, paneles fotovoltaicos, energía limpia, estructura metálica",
         "introSection": {
           "title": "Soluciones Personalizadas para sus Proyectos",
           "subtitle": "Piezas a medida en acero galvanizado y reducción de costes industriales."
+        },
+        "whatIsSection": {
+          "title": "¿Qué es un Carport?",
+          "description": "El Carport es la solución innovadora para estacionamientos, brindando protección y sombra a los vehículos, al mismo tiempo que genera energía limpia. Las estructuras están fabricadas en acero galvanizado y permiten la instalación de paneles fotovoltaicos.",
+          "imageAlt": "Renderizado 3D de carport solar en acero galvanizado con paneles fotovoltaicos para generación de energía limpia"
+        },
+        "videoSection": {
+          "title": "Video sobre el Carport",
+          "subtitle": "Haz clic para conocer nuestra industria y descubrir detalles sobre la producción de nuestros Carports.",
+          "playLabel": "Reproducir video sobre Carport"
+        },
+        "infoColumnsSection": {
+          "label": "Información sobre Carport",
+          "items": {
+            "project-types": {
+              "title": "¿Sirve para cualquier tipo de proyecto?",
+              "description": "El Carport puede instalarse en proyectos comerciales y residenciales. Se adapta a diferentes espacios y ofrece fácil instalación, proporcionando una solución sostenible para estacionamientos."
+            },
+            "benefits": {
+              "title": "¿Cuáles son los beneficios del Carport?",
+              "description": "El Carport ofrece una serie de beneficios. En primer lugar, al sustituir cubiertas tradicionales por paneles fotovoltaicos, adopta la tendencia de generación de energía limpia. Además, es una estructura duradera y resistente a la corrosión, proporcionando sombra para los vehículos y generando energía sostenible."
+            },
+            "beyond-benefits": {
+              "title": "¡Los beneficios van más allá!",
+              "description": "Tendrá ahorro de energía al final del mes, reduciendo sus costos operativos, y podrá utilizar esa energía para alimentar su propio negocio o incluso cargar vehículos eléctricos, contribuyendo a un futuro más sostenible. Los paneles solares tienen una larga vida útil, con un promedio de 30 años, garantizando décadas de ahorro y energía limpia."
+            }
+          }
+        },
+        "segmentsSection": {
+          "title": "Principales segmentos que utilizan los Carports",
+          "items": {
+            "empresas": {
+              "label": "Empresas",
+              "iconAlt": "Icono de edificio corporativo que representa empresas que utilizan Carport"
+            },
+            "supermercados": {
+              "label": "Supermercados",
+              "iconAlt": "Icono de carrito de compras que representa supermercados que utilizan Carport"
+            },
+            "shoppings": {
+              "label": "Shoppings",
+              "iconAlt": "Icono de bolsas de compras que representa shoppings que utilizan Carport"
+            },
+            "condominios": {
+              "label": "Condominios",
+              "iconAlt": "Icono de casa que representa condominios que utilizan Carport"
+            },
+            "integradores": {
+              "label": "Integradores",
+              "iconAlt": "Icono de red de conexiones que representa integradores que utilizan Carport"
+            }
+          }
+        },
+        "clampSection": {
+          "title": "Clip de fijación del panel Tessa",
+          "description": "Un sistema práctico y exclusivo donde la instalación se realiza por debajo de la estructura utilizando solo dos tornillos autoperforantes. Es flexible, ya que no necesita un punto fijo en la correa ni en el panel FV para la fijación.",
+          "imageAlt": "Sello de patente del Clip de fijación del panel Tessa para carport solar"
         }
       },
       "estrutura-de-solo": {

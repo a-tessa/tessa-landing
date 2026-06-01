@@ -35,8 +35,9 @@ export function ServiceVideoPlayer({
 
   return (
     <figure
+      data-service-video
       className={cn(
-        "relative w-full overflow-hidden rounded-3xl bg-muted aspect-video [&>lite-youtube]:h-full [&>lite-youtube]:w-full [&>lite-youtube]:max-w-none [&>lite-youtube]:rounded-3xl",
+        "relative w-full overflow-hidden rounded-3xl bg-muted",
         className,
       )}
     >

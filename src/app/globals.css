@@ -250,4 +250,14 @@ body {
     color: var(--muted-foreground);
     font-style: italic;
   }
+
+  /* lite-youtube-embed caps width at 720px; stretch to the figure width instead */
+  [data-service-video] [data-ntpc="YouTubeEmbed"] {
+    width: 100% !important;
+  }
+
+  [data-service-video] lite-youtube {
+    max-width: none !important;
+    width: 100% !important;
+  }
 }
