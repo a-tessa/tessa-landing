@@ -13,6 +13,7 @@ import { buildPageMetadata } from "@/lib/seo/metadata";
 import { fetchBlogArticles } from "@/lib/api/blog";
 import { getLandingContent } from "@/lib/api/content";
 import { getApprovedTestimonials } from "@/lib/api/testimonials";
+import { getScenariosCarouselItems } from "@/lib/servicos/carousel";
 import { toBlogPostFromListItem } from "@/lib/blog/mappers";
 
 interface HomePageProps {
@@ -47,6 +48,11 @@ export default async function HomePage({ params }: HomePageProps) {
     ? toBlogPostFromListItem(latestBlogResp.articles[0])
     : null;
 
+  const carouselItems = await getScenariosCarouselItems(
+    locale,
+    scenerySection,
+  );
+
   return (
     <>
       <JsonLd
@@ -56,7 +62,7 @@ export default async function HomePage({ params }: HomePageProps) {
 
       <main className="flex flex-col items-center justify-center gap-10 mx-auto">
         <Hero heroSection={heroSection} clients={clients} />
-        <Scenarios scenerySection={scenerySection} />
+        <Scenarios scenerySection={carouselItems} />
         <Operations />
         <NewsAndSocial latestPost={latestPost} />
         <Testimonials items={testimonials} />

@@ -6,12 +6,12 @@ import { cn, freeSectionShellSpacing } from "@/lib/utils";
 
 interface ServicosIntroProps {
   locale: string;
-  scenerySection?: SceneryItem[] | null;
+  carouselItems: SceneryItem[];
 }
 
 export async function ServicosIntro({
   locale,
-  scenerySection,
+  carouselItems,
 }: ServicosIntroProps) {
   const t = await getTranslations({ locale, namespace: "pages.servicos" });
 
@@ -35,7 +35,7 @@ export async function ServicosIntro({
           {t("description")}
         </p>
       </div>
-      <AppleCardsCarousel scenerySection={scenerySection} />
+      <AppleCardsCarousel scenerySection={carouselItems} />
 
       <div className={cn(`mt-8 flex justify-end sm:mt-10`, freeSectionShellSpacing)}>
         <Link

@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { fetchBlogArticles } from "@/lib/api/blog";
 import { getServicesPages } from "@/lib/api/content";
+import { STATIC_SERVICE_SLUGS } from "@/lib/servicos/static-pages";
 import { SITE } from "@/lib/seo/schemas";
 import { routing } from "@/i18n/routing";
 
@@ -30,9 +31,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   );
 
   const servicesPages = (await getServicesPages()) ?? [];
-  const serviceEntries = servicesPages.flatMap((service) =>
+  const staticSlugSet = new Set<string>(STATIC_SERVICE_SLUGS);
+  const allServiceSlugs = [
+    ...STATIC_SERVICE_SLUGS,
+    ...servicesPages
+      .map((service) => service.slug)
+      .filter((slug) => !staticSlugSet.has(slug)),
+  ];
+
+  const serviceEntries = allServiceSlugs.flatMap((slug) =>
     locales.map((locale) => ({
-      url: `${SITE.domain}/${locale}/servicos/${service.slug}`,
+      url: `${SITE.domain}/${locale}/servicos/${slug}`,
       lastModified: now,
       changeFrequency: "monthly" as const,
       priority: 0.75,

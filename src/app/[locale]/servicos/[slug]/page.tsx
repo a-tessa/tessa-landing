@@ -8,15 +8,11 @@ import { BentoCarouselServices } from "@/components/marketing/BentoCarouselServi
 import { Footer } from "@/components/marketing/Footer";
 import { Heading } from "@/components/marketing/Heading";
 import { NewsAndSocial } from "@/components/marketing/NewsAndSocial";
+import { ServiceNavCarousel } from "@/components/marketing/ServiceNavCarousel";
 import { ServiceVideoPlayer } from "@/components/marketing/ServiceVideoPlayer";
+import { StaticServicePage } from "@/components/marketing/StaticServicePage";
 import { Testimonials } from "@/components/marketing/Testimonials";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
-import { Link } from "@/i18n/navigation";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
@@ -27,12 +23,12 @@ import {
   getServicesPages,
 } from "@/lib/api/content";
 import { toBlogPostFromListItem } from "@/lib/blog/mappers";
+import { getMergedServiceNavItems } from "@/lib/servicos/nav";
 import {
-  cn,
-  freeSectionShellSpacing,
-  OPERATIONS_IMAGES,
-  serviceCarouselCss,
-} from "@/lib/utils";
+  isStaticServiceSlug,
+  STATIC_SERVICE_SLUGS,
+} from "@/lib/servicos/static-pages";
+import { cn, freeSectionShellSpacing, OPERATIONS_IMAGES } from "@/lib/utils";
 import {
   getYouTubeThumbnail,
   getYouTubeVideoId,
@@ -45,9 +41,14 @@ interface ServiceDetailPageProps {
 
 export async function generateStaticParams() {
   const servicesPages = await getServicesPages();
-  return (servicesPages ?? []).map((service) => ({
-    slug: service.slug,
-  }));
+  const apiSlugs = (servicesPages ?? [])
+    .map((service) => service.slug)
+    .filter((slug) => !isStaticServiceSlug(slug));
+
+  return [
+    ...STATIC_SERVICE_SLUGS.map((slug) => ({ slug })),
+    ...apiSlugs.map((slug) => ({ slug })),
+  ];
 }
 
 function absoluteImageUrl(src: string): string {
@@ -59,6 +60,30 @@ export async function generateMetadata({
   params,
 }: ServiceDetailPageProps): Promise<Metadata> {
   const { locale, slug } = await params;
+
+  if (isStaticServiceSlug(slug)) {
+    const t = await getTranslations({
+      locale,
+      namespace: "pages.staticServices",
+    });
+    const title = t(`${slug}.title`);
+    const description = t(`${slug}.description`);
+    const metaKeywords = t.has(`${slug}.metaKeywords`)
+      ? t(`${slug}.metaKeywords`)
+          .split(",")
+          .map((keyword) => keyword.trim())
+          .filter(Boolean)
+      : [];
+
+    return buildPageMetadata({
+      locale,
+      path: `/servicos/${slug}`,
+      title,
+      description: description || SITE.description,
+      keywords: [title, ...metaKeywords],
+    });
+  }
+
   const service = await getServicePageBySlug(slug);
 
   if (!service) {
@@ -89,6 +114,10 @@ export default async function ServiceDetailPage({
 }: ServiceDetailPageProps) {
   const { locale, slug } = await params;
 
+  if (isStaticServiceSlug(slug)) {
+    return <StaticServicePage locale={locale} slug={slug} />;
+  }
+
   const [service, servicesPages, t, ts, testimonials] = await Promise.all([
     getServicePageBySlug(slug),
     getServicesPages(),
@@ -99,7 +128,7 @@ export default async function ServiceDetailPage({
 
   if (!service) notFound();
 
-  const navServices = servicesPages ?? [service];
+  const navServices = await getMergedServiceNavItems(locale, servicesPages);
 
   const categorySlug = service.category?.trim() || undefined;
   const [categoryLatestResp, fallbackLatestResp] = await Promise.all([
@@ -165,14 +194,8 @@ export default async function ServiceDetailPage({
       }
     : null;
 
-  const isActive = (candidateSlug: string) => candidateSlug === service.slug;
-
   return (
     <>
-      <style href="service-heading-carousel" precedence="component">
-        {serviceCarouselCss}
-      </style>
-
       <JsonLd
         id="jsonld-breadcrumb-servico"
         data={breadcrumbJsonLd(locale, [
@@ -192,47 +215,11 @@ export default async function ServiceDetailPage({
           backgroundSrc={service.backgroundImageUrl}
         />
 
-        <div className="relative h-auto w-fit">
-          <nav
-            aria-label={t("serviceNav")}
-            className={cn(
-              "service-heading-carousel z-50",
-              freeSectionShellSpacing,
-            )}
-          >
-            <Carousel className="bg-muted rounded-full flex overflow-hidden">
-              <CarouselContent className="flex gap-4 w-full rounded-full px-8">
-                {navServices.map((item) => (
-                  <CarouselItem
-                    key={item.slug}
-                    className="basis-auto h-20 flex items-center"
-                  >
-                    <Link
-                      href={`/servicos/${item.slug}`}
-                      aria-current={isActive(item.slug) ? "page" : undefined}
-                      className={cn(
-                        "text-xs uppercase text-foreground relative",
-                        isActive(item.slug)
-                          ? "text-primary underline-offset-8 font-bold"
-                          : "",
-                      )}
-                    >
-                      {item.title}
-                      <span
-                        className={cn(
-                          "absolute left-0 -bottom-8 h-[3px] rounded-full bg-primary transition-all duration-300",
-                          isActive(item.slug)
-                            ? "w-full opacity-100"
-                            : "w-0 opacity-0",
-                        )}
-                      />
-                    </Link>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-            </Carousel>
-          </nav>
-        </div>
+        <ServiceNavCarousel
+          locale={locale}
+          items={navServices}
+          activeSlug={service.slug}
+        />
 
         <section className="w-full">
           <div className={cn("mb-4", freeSectionShellSpacing)}>

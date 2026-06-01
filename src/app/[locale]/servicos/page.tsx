@@ -10,6 +10,7 @@ import { breadcrumbJsonLd } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { getScenerySection } from "@/lib/api/content";
 import { getApprovedTestimonials } from "@/lib/api/testimonials";
+import { getScenariosCarouselItems } from "@/lib/servicos/carousel";
 
 interface ServicosPageProps {
   params: Promise<{ locale: string }>;
@@ -42,6 +43,11 @@ export default async function ServicosPage({ params }: ServicosPageProps) {
     getScenerySection(),
   ]);
 
+  const carouselItems = await getScenariosCarouselItems(
+    locale,
+    scenerySection,
+  );
+
   return (
     <>
       <JsonLd
@@ -51,7 +57,7 @@ export default async function ServicosPage({ params }: ServicosPageProps) {
 
       <main className="flex flex-col items-center pt-10">
         <RouteHeading />
-        <ServicosIntro locale={locale} scenerySection={scenerySection} />
+        <ServicosIntro locale={locale} carouselItems={carouselItems} />
         <Testimonials items={testimonials} />
         <Results />
       </main>

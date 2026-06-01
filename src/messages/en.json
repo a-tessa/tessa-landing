@@ -169,6 +169,117 @@
       "downloadSub": "for this product",
       "downloadCta": "Download materials"
     },
+    "staticServices": {
+      "estruturas-metalicas-para-telhado": {
+        "title": "Metal Roof Structures",
+        "description": "",
+        "carouselSection": {
+          "label": "Metal roof structures gallery",
+          "items": {
+            "estrutura-01": "3D rendering of a residential building with a complex metal roof frame",
+            "estrutura-02": "3D rendering of a single-story house with a galvanized steel roof frame",
+            "estrutura-03": "3D rendering of a two-story house with a metal roof structure"
+          }
+        },
+        "videoSection": {
+          "title": "Metal Roof Structures Video",
+          "subtitle": "Click to discover our factory and learn more about how we manufacture our metal roof structures.",
+          "playLabel": "Play metal roof structures video"
+        },
+        "productsSection": {
+          "title": "Strength, Lightness and Durability",
+          "subtitle": "Revolutionize your roofing projects with Tessa metal structures, synonymous with efficiency and durability.",
+          "items": {
+            "caibro-aberto": "Open Purlin",
+            "caibro-fechado": "Closed Purlin",
+            "cantoneira": "Angle Iron",
+            "conexao-mftb-a": "MFTB-A Connection",
+            "conexao-base-sp-ar": "SP-AR Base Connection",
+            "conexao-base-sp-h": "SP-H Base Connection",
+            "conexao-sp-r": "SP-R Connection",
+            "mao-francesa": "Knee Brace",
+            "ripa-30x20": "Batten 30x20",
+            "ripa-30x30": "Batten 30x30",
+            "suporte-viga-fechada-sp-sv-40": "Closed Beam Support SP-SV 40",
+            "tabeira-frontal": "Front Fascia",
+            "tabeira-lateral": "Side Fascia",
+            "conexao-sp-e": "SP-E Connection",
+            "viga-fechada": "Closed Beam",
+            "conexao-sp-ch": "SP-CH Connection",
+            "tampa-viga-fechada-sp-tv-40": "Closed Beam Cap SP-TV 40"
+          }
+        },
+        "qualitySection": {
+          "title": "Longevity: Tessa Quality",
+          "subtitle": "Discover why Tessa is the right choice for your construction.",
+          "sealAlt": "60-year service life anticorrosion seal",
+          "featuresScrollLabel": "Tessa metal structure benefits",
+          "scrollLeft": "Scroll benefits left",
+          "scrollRight": "Scroll benefits right",
+          "stats": {
+            "installedArea": {
+              "highlight": "OVER 7 MILLION",
+              "label": "SQUARE METERS OF\nSTRUCTURES INSTALLED"
+            },
+            "installations": {
+              "highlight": "OVER 200,000",
+              "label": "INSTALLATIONS COMPLETED\nACROSS BRAZIL"
+            }
+          },
+          "features": {
+            "estruturas-ecologicas": {
+              "title": "Ecological Structures",
+              "description": "Our metal roof structures have a low environmental impact and reduce material waste."
+            },
+            "maior-economia": {
+              "title": "Greater Savings",
+              "description": "With excellent cost-benefit at every stage, Tessa structures are economical for your project."
+            },
+            "forca-leveza-resistencia": {
+              "title": "Strength, Lightness and Durability",
+              "description": "Tessa structures have a service life of up to 60 years after assembly, are lighter than wood and easier to install."
+            },
+            "maior-produtividade": {
+              "title": "Greater Productivity",
+              "description": "Productivity per installed square meter is up to 3 times higher compared to conventional wood systems."
+            },
+            "imune-ataque-cupins": {
+              "title": "Immune to Termite Attack",
+              "description": "Galvanized steel is resistant to termite attack and urban pest proliferation, reducing maintenance costs."
+            },
+            "estruturas-duraveis": {
+              "title": "Durable Structures",
+              "description": "Structures are produced in galvanized steel with durability exceeding 60 years."
+            }
+          }
+        }
+      },
+      "carport": {
+        "title": "Carport",
+        "description": "Tessa galvanized steel carports: customized solutions to protect vehicles with custom-made parts, durability, and reduced industrial costs.",
+        "metaKeywords": "Carport, vehicle shelter, galvanized steel, metal structure, vehicle protection",
+        "introSection": {
+          "title": "Customized Solutions for your Projects",
+          "subtitle": "Custom-made parts in galvanized steel and industrial cost reduction."
+        }
+      },
+      "estrutura-de-solo": {
+        "title": "Ground-Mounted Structure",
+        "description": ""
+      },
+      "estrutura-de-aviario": {
+        "title": "Aviary Structure",
+        "description": ""
+      },
+      "estruturas-para-creches": {
+        "title": "Structures for Daycare Centers",
+        "description": ""
+      },
+      "perfis-especiais": {
+        "title": "Special Profiles",
+        "description": ""
+      }
+    },
     "representantes": {
       "title": "Representatives",
       "description": "Local support, technical assistance and agility for your project.",

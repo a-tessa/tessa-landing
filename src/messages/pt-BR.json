@@ -169,6 +169,117 @@
       "downloadSub": "deste produto",
       "downloadCta": "Baixar materiais"
     },
+    "staticServices": {
+      "estruturas-metalicas-para-telhado": {
+        "title": "Estruturas Metálicas para Telhado",
+        "description": "",
+        "carouselSection": {
+          "label": "Galeria de estruturas metálicas para telhado",
+          "items": {
+            "estrutura-01": "Renderização 3D de residência com estrutura metálica complexa para telhado",
+            "estrutura-02": "Renderização 3D de casa térrea com estrutura metálica em perfil de aço galvanizado",
+            "estrutura-03": "Renderização 3D de residência de dois pavimentos com estrutura metálica para telhado"
+          }
+        },
+        "videoSection": {
+          "title": "Vídeo das Estruturas Metálicas para Telhado",
+          "subtitle": "Clique para conhecer nossa indústria e descubra detalhes sobre a produção das nossas estruturas metálicas para telhados.",
+          "playLabel": "Reproduzir vídeo das estruturas metálicas para telhado"
+        },
+        "productsSection": {
+          "title": "Força, Leveza e Resistência",
+          "subtitle": "Revolucione seus projetos de telhados com as estruturas metálicas Tessa, sinônimo de eficiência e durabilidade.",
+          "items": {
+            "caibro-aberto": "Caibro Aberto",
+            "caibro-fechado": "Caibro Fechado",
+            "cantoneira": "Cantoneira",
+            "conexao-mftb-a": "Conexão MFTB-A",
+            "conexao-base-sp-ar": "Conexão de Base SP-AR",
+            "conexao-base-sp-h": "Conexão de Base SP-H",
+            "conexao-sp-r": "Conexão SP-R",
+            "mao-francesa": "Mão Francesa",
+            "ripa-30x20": "Ripa 30x20",
+            "ripa-30x30": "Ripa 30x30",
+            "suporte-viga-fechada-sp-sv-40": "Suporte Viga Fechada SP-SV 40",
+            "tabeira-frontal": "Tabeira Frontal",
+            "tabeira-lateral": "Tabeira Lateral",
+            "conexao-sp-e": "Conexão SP-E",
+            "viga-fechada": "Viga Fechada",
+            "conexao-sp-ch": "Conexão SP-CH",
+            "tampa-viga-fechada-sp-tv-40": "Tampa Viga Fechada SP-TV 40"
+          }
+        },
+        "qualitySection": {
+          "title": "Longevidade: Qualidade Tessa",
+          "subtitle": "Descubra porque a Tessa é a escolha certa para a sua construção.",
+          "sealAlt": "Selo de 60 anos de vida útil anticorrosão",
+          "featuresScrollLabel": "Benefícios das estruturas metálicas Tessa",
+          "scrollLeft": "Rolar benefícios para a esquerda",
+          "scrollRight": "Rolar benefícios para a direita",
+          "stats": {
+            "installedArea": {
+              "highlight": "+ DE 7 MILHÕES",
+              "label": "DE M² DE ESTRUTURAS\nINSTALADAS"
+            },
+            "installations": {
+              "highlight": "+ DE 200.000",
+              "label": "INSTALAÇÕES REALIZADAS\nEM TODO O BRASIL"
+            }
+          },
+          "features": {
+            "estruturas-ecologicas": {
+              "title": "Estruturas Ecológicas",
+              "description": "Nossas estruturas metálicas para telhado têm baixo impacto ambiental e reduzem o desperdício de materiais."
+            },
+            "maior-economia": {
+              "title": "Maior Economia",
+              "description": "Com custo-benefício excelente em todas as etapas, as estruturas da Tessa são econômicas para a sua obra."
+            },
+            "forca-leveza-resistencia": {
+              "title": "Força, Leveza e Resistência",
+              "description": "As estruturas Tessa têm vida útil de até 60 anos após a montagem, são mais leves que a madeira e mais fáceis de montar."
+            },
+            "maior-produtividade": {
+              "title": "Maior Produtividade",
+              "description": "A produtividade por metro quadrado instalado é até 3 vezes maior em comparação aos sistemas convencionais de madeira."
+            },
+            "imune-ataque-cupins": {
+              "title": "Imune ao Ataque de Cupins",
+              "description": "O aço galvanizado é resistente ao ataque de cupins e à proliferação de pragas urbanas, reduzindo gastos com manutenção."
+            },
+            "estruturas-duraveis": {
+              "title": "Estruturas Duráveis",
+              "description": "As estruturas são produzidas em aço galvanizado com durabilidade superior a 60 anos."
+            }
+          }
+        }
+      },
+      "carport": {
+        "title": "Carport",
+        "description": "Carports em aço galvanizado Tessa: soluções personalizadas para proteger veículos com peças sob medida, durabilidade e redução de custos industriais.",
+        "metaKeywords": "Carport, cobertura veicular, aço galvanizado, estrutura metálica, proteção de veículos",
+        "introSection": {
+          "title": "Soluções Personalizadas para seus Projetos",
+          "subtitle": "Peças sob medida em aço galvanizado e redução de custos industriais."
+        }
+      },
+      "estrutura-de-solo": {
+        "title": "Estrutura de solo",
+        "description": ""
+      },
+      "estrutura-de-aviario": {
+        "title": "Estrutura de aviário",
+        "description": ""
+      },
+      "estruturas-para-creches": {
+        "title": "Estruturas para creches",
+        "description": ""
+      },
+      "perfis-especiais": {
+        "title": "Perfis especiais",
+        "description": ""
+      }
+    },
     "representantes": {
       "title": "Representantes",
       "description": "Atendimento próximo, suporte técnico e agilidade para o seu projeto.",

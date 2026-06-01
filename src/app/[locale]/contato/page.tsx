@@ -4,6 +4,7 @@ import { ContactForm } from "@/components/marketing/ContactForm";
 import { Footer } from "@/components/marketing/Footer";
 import { RouteHeading } from "@/components/marketing/RouteHeading";
 import { getServicesPages } from "@/lib/api/content";
+import { getMergedServiceNavItems } from "@/lib/servicos/nav";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
@@ -60,10 +61,7 @@ export default async function ContatoPage({ params }: ContatoPageProps) {
     getServicesPages(),
   ]);
 
-  const serviceOptions = (servicesPages ?? []).map((service) => ({
-    slug: service.slug,
-    title: service.title,
-  }));
+  const serviceOptions = await getMergedServiceNavItems(locale, servicesPages);
 
   return (
     <>

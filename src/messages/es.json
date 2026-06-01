@@ -169,6 +169,117 @@
       "downloadSub": "de este producto",
       "downloadCta": "Descargar materiales"
     },
+    "staticServices": {
+      "estruturas-metalicas-para-telhado": {
+        "title": "Estructuras metálicas para tejado",
+        "description": "",
+        "carouselSection": {
+          "label": "Galería de estructuras metálicas para tejado",
+          "items": {
+            "estrutura-01": "Renderizado 3D de vivienda con estructura metálica compleja para tejado",
+            "estrutura-02": "Renderizado 3D de casa de una planta con estructura metálica de acero galvanizado",
+            "estrutura-03": "Renderizado 3D de vivienda de dos plantas con estructura metálica para tejado"
+          }
+        },
+        "videoSection": {
+          "title": "Vídeo de las estructuras metálicas para tejado",
+          "subtitle": "Haga clic para conocer nuestra industria y descubra detalles sobre la producción de nuestras estructuras metálicas para tejados.",
+          "playLabel": "Reproducir vídeo de estructuras metálicas para tejado"
+        },
+        "productsSection": {
+          "title": "Fuerza, Ligereza y Resistencia",
+          "subtitle": "Revolucione sus proyectos de tejados con las estructuras metálicas Tessa, sinónimo de eficiencia y durabilidad.",
+          "items": {
+            "caibro-aberto": "Cabio Abierto",
+            "caibro-fechado": "Cabio Cerrado",
+            "cantoneira": "Cantonera",
+            "conexao-mftb-a": "Conexión MFTB-A",
+            "conexao-base-sp-ar": "Conexión de Base SP-AR",
+            "conexao-base-sp-h": "Conexión de Base SP-H",
+            "conexao-sp-r": "Conexión SP-R",
+            "mao-francesa": "Escuadra Francesa",
+            "ripa-30x20": "Listón 30x20",
+            "ripa-30x30": "Listón 30x30",
+            "suporte-viga-fechada-sp-sv-40": "Soporte Viga Cerrada SP-SV 40",
+            "tabeira-frontal": "Tablero Frontal",
+            "tabeira-lateral": "Tablero Lateral",
+            "conexao-sp-e": "Conexión SP-E",
+            "viga-fechada": "Viga Cerrada",
+            "conexao-sp-ch": "Conexión SP-CH",
+            "tampa-viga-fechada-sp-tv-40": "Tapa Viga Cerrada SP-TV 40"
+          }
+        },
+        "qualitySection": {
+          "title": "Longevidad: Calidad Tessa",
+          "subtitle": "Descubra por qué Tessa es la elección correcta para su construcción.",
+          "sealAlt": "Sello de 60 años de vida útil anticorrosión",
+          "featuresScrollLabel": "Beneficios de las estructuras metálicas Tessa",
+          "scrollLeft": "Desplazar beneficios a la izquierda",
+          "scrollRight": "Desplazar beneficios a la derecha",
+          "stats": {
+            "installedArea": {
+              "highlight": "+ DE 7 MILLONES",
+              "label": "DE M² DE ESTRUCTURAS\nINSTALADAS"
+            },
+            "installations": {
+              "highlight": "+ DE 200.000",
+              "label": "INSTALACIONES REALIZADAS\nEN TODO BRASIL"
+            }
+          },
+          "features": {
+            "estruturas-ecologicas": {
+              "title": "Estructuras Ecológicas",
+              "description": "Nuestras estructuras metálicas para tejado tienen bajo impacto ambiental y reducen el desperdicio de materiales."
+            },
+            "maior-economia": {
+              "title": "Mayor Economía",
+              "description": "Con excelente relación costo-beneficio en todas las etapas, las estructuras Tessa son económicas para su obra."
+            },
+            "forca-leveza-resistencia": {
+              "title": "Fuerza, Ligereza y Resistencia",
+              "description": "Las estructuras Tessa tienen una vida útil de hasta 60 años después del montaje, son más ligeras que la madera y más fáciles de instalar."
+            },
+            "maior-produtividade": {
+              "title": "Mayor Productividad",
+              "description": "La productividad por metro cuadrado instalado es hasta 3 veces mayor en comparación con los sistemas convencionales de madera."
+            },
+            "imune-ataque-cupins": {
+              "title": "Inmune al Ataque de Termitas",
+              "description": "El acero galvanizado es resistente al ataque de termitas y a la proliferación de plagas urbanas, reduciendo gastos de mantenimiento."
+            },
+            "estruturas-duraveis": {
+              "title": "Estructuras Duraderas",
+              "description": "Las estructuras se producen en acero galvanizado con durabilidad superior a 60 años."
+            }
+          }
+        }
+      },
+      "carport": {
+        "title": "Carport",
+        "description": "Carports de acero galvanizado Tessa: soluciones personalizadas para proteger vehículos con piezas a medida, durabilidad y reducción de costes industriales.",
+        "metaKeywords": "Carport, cobertizo vehicular, acero galvanizado, estructura metálica, protección de vehículos",
+        "introSection": {
+          "title": "Soluciones Personalizadas para sus Proyectos",
+          "subtitle": "Piezas a medida en acero galvanizado y reducción de costes industriales."
+        }
+      },
+      "estrutura-de-solo": {
+        "title": "Estructura de suelo",
+        "description": ""
+      },
+      "estrutura-de-aviario": {
+        "title": "Estructura de aviario",
+        "description": ""
+      },
+      "estruturas-para-creches": {
+        "title": "Estructuras para guarderías",
+        "description": ""
+      },
+      "perfis-especiais": {
+        "title": "Perfiles especiales",
+        "description": ""
+      }
+    },
     "representantes": {
       "title": "Representantes",
       "description": "Atención cercana, soporte técnico y agilidad para su proyecto.",
