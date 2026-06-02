@@ -9,7 +9,11 @@ import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
 import { getServicesPages } from "@/lib/api/content";
 import { getApprovedTestimonials } from "@/lib/api/testimonials";
 import { CarportSections } from "@/components/marketing/static-services/CarportSections";
+import { EstruturaDeAviarioSections } from "@/components/marketing/static-services/EstruturaDeAviarioSections";
+import { EstruturaDeSoloSections } from "@/components/marketing/static-services/EstruturaDeSoloSections";
 import { EstruturasMetalicasTelhadoSections } from "@/components/marketing/static-services/EstruturasMetalicasTelhadoSections";
+import { EstruturasParaCrechesSections } from "@/components/marketing/static-services/EstruturasParaCrechesSections";
+import { PerfisEspeciaisSections } from "@/components/marketing/static-services/PerfisEspeciaisSections";
 import { getMergedServiceNavItems } from "@/lib/servicos/nav";
 import type { StaticServiceSlug } from "@/lib/servicos/static-pages";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
@@ -26,6 +30,14 @@ function StaticServicePageSections({
       return <EstruturasMetalicasTelhadoSections locale={locale} />;
     case "carport":
       return <CarportSections locale={locale} />;
+    case "estrutura-de-solo":
+      return <EstruturaDeSoloSections locale={locale} />;
+    case "estrutura-de-aviario":
+      return <EstruturaDeAviarioSections locale={locale} />;
+    case "estruturas-para-creches":
+      return <EstruturasParaCrechesSections locale={locale} />;
+    case "perfis-especiais":
+      return <PerfisEspeciaisSections locale={locale} />;
     default:
       return null;
   }

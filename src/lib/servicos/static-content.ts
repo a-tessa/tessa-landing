@@ -17,6 +17,22 @@ export const STATIC_SERVICE_VIDEO_URLS_BY_LOCALE: Partial<
     "pt-BR": "https://www.youtube.com/watch?v=Xxs_fOB5kI0",
     es: "https://www.youtube.com/watch?v=ihdrl3pG4qg",
   },
+  "estrutura-de-solo": {
+    "pt-BR": "https://www.youtube.com/watch?v=2E75Sr-gZRs",
+    es: "https://www.youtube.com/watch?v=pSgPWNkLmjw",
+  },
+  "estrutura-de-aviario": {
+    "pt-BR": "https://www.youtube.com/watch?v=lMyPGkxlTRw",
+    es: "https://www.youtube.com/watch?v=Qaz40Yh9NWk",
+  },
+  "estruturas-para-creches": {
+    "pt-BR": "https://www.youtube.com/watch?v=flVAzZwGwqM",
+    es: "https://www.youtube.com/watch?v=703uQFgT-S0",
+  },
+  "perfis-especiais": {
+    "pt-BR": "https://www.youtube.com/watch?v=x95Uyn2uqhM",
+    es: "https://www.youtube.com/watch?v=j7AD17leYes",
+  },
 };
 
 export function getStaticServiceVideoUrl(

@@ -37,10 +37,13 @@ export function StaticServiceSegmentsSection({
           {title}
         </h2>
 
-        <ul className="flex list-none flex-wrap justify-center gap-x-6 gap-y-8 sm:gap-x-8 lg:w-8/12 lg:flex-1 lg:justify-end lg:gap-x-6 xl:gap-x-8">
+        <ul className="flex w-full list-none flex-wrap items-start justify-between gap-y-8 lg:flex-1">
           {items.map((item) => (
-            <li key={item.id} className="w-24 shrink-0 sm:w-28">
-              <figure className="m-0 flex flex-col items-center gap-3 text-center">
+            <li
+              key={item.id}
+              className="flex min-w-24 flex-1 basis-0 flex-col items-center sm:min-w-28"
+            >
+              <figure className="m-0 flex w-full flex-col items-center gap-3 text-center">
                 <Image
                   src={item.iconSrc}
                   alt={item.iconAlt}

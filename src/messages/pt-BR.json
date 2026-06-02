@@ -322,19 +322,244 @@
       },
       "estrutura-de-solo": {
         "title": "Estrutura de solo",
-        "description": ""
+        "description": "Estruturas de solo Tessa para fixação de placas fotovoltaicas: energia limpa e sustentável para projetos rurais e industriais.",
+        "metaKeywords": "Estrutura de solo, estrutura fotovoltaica, placas solares, energia limpa, energia sustentável, aço galvanizado",
+        "introSection": {
+          "title": "Soluções Ideais para seus Projetos",
+          "subtitle": "A Tessa possui as melhores soluções para cada projeto."
+        },
+        "whatIsSection": {
+          "title": "O que são as Estruturas de Solos?",
+          "description": "As estruturas são projetadas e desenvolvidas para a fixação de placas fotovoltaicas e geração de energia limpa e sustentável. Elas podem ser facilmente instaladas em ambientes rurais, adaptando-se a diferentes espaços e oferecendo uma solução sustentável para o campo.",
+          "imageAlt": "Renderização 3D de estrutura de solo Tessa para fixação de placas fotovoltaicas em ambiente rural"
+        },
+        "videoSection": {
+          "title": "Energia Renovável para o Campo",
+          "subtitle": "Estruturas projetadas para a fixação de placas fotovoltaicas. Assista ao vídeo e conheça mais.",
+          "playLabel": "Reproduzir vídeo sobre Estruturas de Solo"
+        },
+        "infoColumnsSection": {
+          "label": "Informações sobre Estruturas de Solo",
+          "items": {
+            "durability": {
+              "title": "Qual a durabilidade das estruturas?",
+              "description": "As Estruturas de Solo têm uma vida útil estimada de até 60 anos após a montagem. São produzidas em aço galvanizado, o que as torna duráveis e resistentes à corrosão."
+            },
+            "benefits": {
+              "title": "Quais são os benefícios?",
+              "description": "Elas oferecem uma série de benefícios! Em primeiro lugar, ao utilizar espaços ociosos para a instalação de painéis fotovoltaicos, você adere à tendência de geração de energia limpa. Além disso, as estruturas são duráveis e resistentes à corrosão."
+            },
+            "beyond-benefits": {
+              "title": "Os benefícios vão além!",
+              "description": "Você terá economia de energia no final do mês, reduzindo seus custos operacionais, e poderá utilizar essa energia para alimentar seu próprio negócio, contribuindo para um futuro mais sustentável. Os painéis solares possuem uma longa vida útil, com uma média de 30 anos, garantindo décadas de economia e energia limpa."
+            }
+          }
+        },
+        "segmentsSection": {
+          "title": "Principais segmentos que utilizam as Estruturas",
+          "items": {
+            "avicultura": {
+              "label": "Avicultura",
+              "iconAlt": "Ícone de galinha representando o segmento de avicultura que utiliza estruturas de solo"
+            },
+            "produtor-rural": {
+              "label": "Produtor Rural",
+              "iconAlt": "Ícone de trator representando produtores rurais que utilizam estruturas de solo"
+            },
+            "empresas": {
+              "label": "Empresas",
+              "iconAlt": "Ícone de prédio corporativo representando empresas que utilizam estruturas de solo"
+            },
+            "integradores": {
+              "label": "Integradores",
+              "iconAlt": "Ícone de rede de conexões representando integradores que utilizam estruturas de solo"
+            }
+          }
+        },
+        "clampSection": {
+          "title": "Clamp de Fixação do Painel Tessa",
+          "description": "Um sistema prático e exclusivo onde a instalação é feita por baixo da estrutura utilizando apenas dois parafusos autobrocante. É flexível, pois não necessita um ponto fixo na terça nem no painel FV para fixação.",
+          "imageAlt": "Selo de patente do Clamp de Fixação do Painel Tessa para estrutura de solo"
+        }
       },
       "estrutura-de-aviario": {
         "title": "Estrutura de aviário",
-        "description": ""
+        "description": "Estruturas metálicas para aviários Tessa em aço galvanizado: alta qualidade, durabilidade e montagem industrializada para avicultores.",
+        "metaKeywords": "Estrutura de aviário, estruturas avícolas, avicultura, aço galvanizado, galpão aviário, estrutura metálica",
+        "introSection": {
+          "title": "Tessa, Especialista em Projetos de Estruturas",
+          "subtitle": "Alta qualidade e maior durabilidade na estrutura do seu aviário."
+        },
+        "qualitySection": {
+          "title": "Alta qualidade e resistência",
+          "description": "A Tessa oferece estruturas avícolas de alta qualidade e resistência, projetados por engenheiros especializados para otimizar recursos e custos. As estruturas em aço galvanizado garantem durabilidade de mais de 60 anos e alta resistência à corrosão. Com o uso de kits de montagem, a Tessa proporciona uma solução completa e econômica, permitindo uma montagem rápida e eficiente, resultando em economia de tempo e dinheiro para os avicultores.",
+          "backgroundImageAlt": "Estrutura metálica para aviário Tessa em ambiente rural, ilustrando alta qualidade e resistência"
+        },
+        "videoSection": {
+          "title": "Conheça mais sobre as Estruturas Avícolas",
+          "subtitle": "Clique para conhecer nossa indústria e descubra detalhes sobre a produção das nossas estruturas para aviários.",
+          "playLabel": "Reproduzir vídeo sobre Estruturas Avícolas"
+        },
+        "benefitsSection": {
+          "label": "Viabilização e benefícios das estruturas avícolas Tessa",
+          "checklistLabel": "Diferenciais das estruturas avícolas Tessa",
+          "viability": {
+            "title": "Como é feita a viabilização do projeto?",
+            "description": "A viabilização do projeto é realizada através do planejamento técnico feito por engenheiros especializados. Eles estudam e propõem as melhores soluções, incorporando inovação e tecnologia em todas as etapas."
+          },
+          "benefits": {
+            "title": "Quais os benefícios da estrutura da Tessa?",
+            "description": "A estrutura para aviários da Tessa oferece uma série de benefícios para os produtores rurais do segmento avícola. Ela é fabricada com materiais de alta qualidade, como o aço galvanizado, proporcionando durabilidade e resistência.\n\nA utilização de kits de montagem pela Tessa permite um manejo eficiente e uma montagem rápida das estruturas, o que reduz significativamente os custos de instalação. Isso proporciona economia de tempo e dinheiro para os avicultores.\n\nAlém disso, a Tessa emprega um rigoroso controle de qualidade em todas as etapas do processo de fabricação. A expertise dos engenheiros especializados garante projetos de alta qualidade, oferecendo aos clientes um produto com excelente custo-benefício."
+          },
+          "checklistItems": {
+            "galvanized-steel": "Estrutura de aço galvanizado",
+            "cost-benefit": "Melhor custo-benefício",
+            "quality-control": "Rigoroso controle de qualidade",
+            "by-specialists": "Feito por especialistas"
+          }
+        }
       },
       "estruturas-para-creches": {
         "title": "Estruturas para creches",
-        "description": ""
+        "description": "Coberturas metálicas Tessa para creches e escolas: aço galvanizado, alta durabilidade, segurança e projetos personalizados para instituições de ensino.",
+        "metaKeywords": "Estruturas para creches, coberturas escolares, creches, escolas, aço galvanizado, FNDE, estrutura metálica",
+        "introSection": {
+          "title": "Coberturas Duráveis para Instituições de Ensino",
+          "subtitle": "Alta qualidade que garantem proteção e eficiência para creches e escolas."
+        },
+        "featureSection": {
+          "title": "Estruturas Metálicas Tessa",
+          "subtitle": "Tecnologia em cada projeto",
+          "description": "As estruturas para creches da Tessa oferecem proteção e segurança ideais para ambientes educacionais. Fabricadas com aço galvanizado de alta resistência, são projetadas para enfrentar qualquer condição climática e garantir uma vida útil de até 60 anos, dependendo da região de aplicação e condições de uso. Além disso, nossas coberturas são leves, fáceis de instalar e requerem pouca manutenção, reduzindo os custos.",
+          "imageAlt": "Estruturas metálicas Tessa para creches e escolas em ambiente educacional"
+        },
+        "videoSection": {
+          "title": "Conheça mais sobre as Cobertura para Creches e Escolas",
+          "subtitle": "Clique para conhecer nossos projetos realizados e ver como as estruturas Tessa oferecem proteção duradoura e eficiente para instituições de ensino.",
+          "playLabel": "Reproduzir vídeo sobre coberturas para creches e escolas"
+        },
+        "benefitsSection": {
+          "label": "Viabilização e benefícios das estruturas para creches Tessa",
+          "checklistLabel": "Diferenciais das coberturas para creches e escolas Tessa",
+          "viability": {
+            "title": "Como é feita a viabilização do projeto?",
+            "description": "Na Tessa, avaliamos as necessidades de cada creche ou escola para criar projetos personalizados que garantem segurança e durabilidade, utilizando aço galvanizado de alta resistência. Além disso, os materiais descartados durante o processo de fabricação são reciclados e retornam como matéria-prima, promovendo um ciclo produtivo sustentável e eficiente."
+          },
+          "benefits": {
+            "title": "Quais os benefícios da estrutura da Tessa?",
+            "description": "Alta Durabilidade: Estruturas feitas com aço galvanizado, que garantem uma vida útil de até 60 anos, suportando condições climáticas adversas e garantindo proteção de longo prazo.\n\nSegurança Comprovada: Nossos projetos seguem normas técnicas rigorosas, proporcionando segurança completa para ambientes educacionais.\n\nSustentabilidade: Os materiais descartados durante a produção são enviados para a coleta de recicláveis e retornam como matéria-prima, contribuindo para um ciclo produtivo mais sustentável.\n\nPersonalização: Desenvolvemos soluções sob medida, adaptando cada projeto às necessidades específicas de cada instituição de ensino."
+          },
+          "checklistItems": {
+            "galvanized-steel": "Aço galvanizado de alta resistência",
+            "safety-compliance": "Conformidade com normas de segurança",
+            "low-maintenance": "Baixa manutenção",
+            "custom-projects": "Projetos personalizados"
+          }
+        }
       },
       "perfis-especiais": {
         "title": "Perfis especiais",
-        "description": ""
+        "description": "Perfis especiais Tessa sob encomenda em aço galvanizado: conformação a frio, peças sob medida, precisão e redução de custos industriais.",
+        "metaKeywords": "Perfis especiais, perfilado especial, aço galvanizado, conformação a frio, perfiladeira, peças sob medida",
+        "introSection": {
+          "title": "Soluções Personalizadas para seus Projetos",
+          "subtitle": "Peças sob medida em aço galvanizado e redução custos industriais."
+        },
+        "whatIsSection": {
+          "title": "O que é o Perfil Especial?",
+          "description": "São peças de metal feitas sob medida em perfiladeira, em chapa de aço galvanizada, para demandas especiais, proporcionando precisão e redução de setups, diminuindo custos e desperdício de matéria-prima.",
+          "imageAlt": "Renderização de perfis especiais Tessa produzidos sob medida em perfiladeira com aço galvanizado"
+        },
+        "videoSection": {
+          "title": "Conheça os Perfis Especiais",
+          "subtitle": "Clique para conhecer nossa indústria e descubra detalhes sobre a produção das nossas Perfil Especial.",
+          "playLabel": "Reproduzir vídeo sobre Perfis Especiais"
+        },
+        "infoCardsSection": {
+          "label": "Como a Tessa projeta, produz e entrega perfis especiais",
+          "items": {
+            "design": {
+              "title": "Como é projetado?",
+              "description": "A equipe de engenheiros da Tessa realiza estudos e análises para simplificar o processo na perfiladeira e viabilizar a produção industrial, atendendo às necessidades específicas da indústria e permitindo a execução ideal dos projetos.",
+              "imageAlt": "Ilustração do processo de projeto de perfis especiais Tessa"
+            },
+            "outsource": {
+              "title": "Por que terceirizar o processo?",
+              "description": "Ao terceirizar a produção industrial do Perfilado Especial, sua empresa pode otimizar processos e obter melhores resultados, eliminando etapas com guilhotina, puncionadeira, laser e dobradeira. Além disso, descarta a aquisição de matéria-prima em chapas ou blanks, o que resulta em uma economia adicional no preço do aço.",
+              "imageAlt": "Ilustração da fabricação de perfis especiais Tessa em perfiladeira"
+            },
+            "benefits": {
+              "title": "Quais são os benefícios reais?",
+              "description": "O Perfil Especial é a escolha certa para o seu negócio! Com produção sob medida em perfiladeira, reduz custos e desperdício de matéria-prima. Elimina etapas e setups, otimizando processos e melhorando resultados. Viabiliza projetos inovadores e gera economia adicional no preço do aço.",
+              "imageAlt": "Ilustração dos benefícios dos perfis especiais Tessa"
+            }
+          }
+        },
+        "segmentsSection": {
+          "title": "Principais segmentos que utilizam os Perfis Especiais",
+          "items": {
+            "energia-solar": {
+              "label": "Energia Solar",
+              "iconAlt": "Ícone de painéis solares representando o segmento de energia solar que utiliza perfis especiais"
+            },
+            "setor-moveleiro": {
+              "label": "Setor Moveleiro",
+              "iconAlt": "Ícone de móveis representando o setor moveleiro que utiliza perfis especiais"
+            },
+            "agronegocio": {
+              "label": "Agronegócio",
+              "iconAlt": "Ícone de trator representando o agronegócio que utiliza perfis especiais"
+            }
+          }
+        },
+        "processSection": {
+          "title": "Conheça as etapas do Processo de Produção",
+          "description": "A perfilagem simplifica a produção do Perfil Especial, eliminando etapas como guilhotina, puncionadeira, laser e dobradeira. Isso traz economia na compra de matéria-prima e redução de desperdícios, tornando o processo mais eficiente e econômico.",
+          "items": {
+            "identify": {
+              "title": "Identificar a sua necessidade",
+              "description": "A equipe da Tessa trabalha em conjunto com você para entender sua necessidade e a funcionalidade do Perfilado Especial.",
+              "iconAlt": "Ícone da etapa 1: identificar a necessidade do perfil especial"
+            },
+            "study": {
+              "title": "Estudo e análise do projeto",
+              "description": "Nossos engenheiros realizam estudos detalhados para encontrar a melhor forma de produzir seu Perfilado Especial.",
+              "iconAlt": "Ícone da etapa 2: estudo e análise do projeto de perfil especial"
+            },
+            "production": {
+              "title": "Produção do Perfilado Especial",
+              "description": "Após a aprovação do projeto, o Perfilado Especial entra em produção.",
+              "iconAlt": "Ícone da etapa 3: produção do perfilado especial"
+            }
+          }
+        },
+        "comparisonSection": {
+          "title": "Perfilado Especial VS Perfil Comum",
+          "subtitle": "Descubra as vantagens do Perfilado Especial Tessa em comparação com os perfis convencionais.",
+          "benefitsHeading": "Benefícios",
+          "specialHeading": "Processo Perfiladeira",
+          "commonHeading": "Processo Comum",
+          "yesLabel": "Sim",
+          "noLabel": "Não",
+          "rows": {
+            "made-roll-former": "Feito em perfiladeira",
+            "versatility": "Versatilidade",
+            "precision": "Precisão na produção",
+            "raw-material-waste": "Desperdício de matéria-prima",
+            "fewer-setups": "Menor número de setups",
+            "batch-waiting": "Espera do lote",
+            "cost-reduction": "Redução de custo do processo",
+            "interrupted-flow": "Fluxo interrompido",
+            "continuous-process": "Processo contínuo",
+            "intermediate-stock": "Estoque intermediário",
+            "higher-capacity": "Maior capacidade produtiva",
+            "lower-investment": "Menor investimento"
+          }
+        },
+        "clientsSection": {
+          "title": "Empresas que confiam na Tessa",
+          "logoAlt": "Logo da {name}, cliente Tessa"
+        }
       }
     },
     "representantes": {

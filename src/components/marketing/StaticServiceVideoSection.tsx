@@ -30,7 +30,7 @@ export function StaticServiceVideoSection({
         <div className="w-full md:w-5/12 lg:max-w-xl">
           <h2
             id={sectionId}
-            className="text-2xl font-bold leading-tight text-foreground sm:text-3xl lg:text-4xl"
+            className="text-xl font-bold leading-tight text-foreground md:text-2xl lg:text-3xl xl:text-4xl"
           >
             {title}
           </h2>

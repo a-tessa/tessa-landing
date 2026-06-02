@@ -322,19 +322,244 @@
       },
       "estrutura-de-solo": {
         "title": "Ground-Mounted Structure",
-        "description": ""
+        "description": "Tessa ground-mounted structures for photovoltaic panel installation: clean and sustainable energy for rural and industrial projects.",
+        "metaKeywords": "Ground-mounted structure, photovoltaic structure, solar panels, clean energy, sustainable energy, galvanized steel",
+        "introSection": {
+          "title": "Ideal Solutions for your Projects",
+          "subtitle": "Tessa has the best solutions for every project."
+        },
+        "whatIsSection": {
+          "title": "What are Ground-Mounted Structures?",
+          "description": "These structures are designed and developed for mounting photovoltaic panels and generating clean, sustainable energy. They can be easily installed in rural environments, adapting to different spaces and offering a sustainable solution for the countryside.",
+          "imageAlt": "3D render of a Tessa ground-mounted structure for photovoltaic panels in a rural environment"
+        },
+        "videoSection": {
+          "title": "Renewable Energy for the Countryside",
+          "subtitle": "Structures designed for mounting photovoltaic panels. Watch the video to learn more.",
+          "playLabel": "Play video about Ground-Mounted Structures"
+        },
+        "infoColumnsSection": {
+          "label": "Ground-Mounted Structure information",
+          "items": {
+            "durability": {
+              "title": "How durable are the structures?",
+              "description": "Ground-mounted structures have an estimated lifespan of up to 60 years after installation. They are produced in galvanized steel, which makes them durable and corrosion-resistant."
+            },
+            "benefits": {
+              "title": "What are the benefits?",
+              "description": "They offer a range of benefits! First, by using idle spaces for photovoltaic panel installation, you embrace the clean energy generation trend. Additionally, the structures are durable and corrosion-resistant."
+            },
+            "beyond-benefits": {
+              "title": "The benefits go even further!",
+              "description": "You will save on energy at the end of the month, reducing your operating costs, and you can use that energy to power your own business, contributing to a more sustainable future. Solar panels have a long lifespan, averaging 30 years, ensuring decades of savings and clean energy."
+            }
+          }
+        },
+        "segmentsSection": {
+          "title": "Main segments that use Ground-Mounted Structures",
+          "items": {
+            "avicultura": {
+              "label": "Poultry Farming",
+              "iconAlt": "Chicken icon representing the poultry farming segment that uses ground-mounted structures"
+            },
+            "produtor-rural": {
+              "label": "Rural Producer",
+              "iconAlt": "Tractor icon representing rural producers that use ground-mounted structures"
+            },
+            "empresas": {
+              "label": "Companies",
+              "iconAlt": "Office building icon representing companies that use ground-mounted structures"
+            },
+            "integradores": {
+              "label": "Integrators",
+              "iconAlt": "Network connections icon representing integrators that use ground-mounted structures"
+            }
+          }
+        },
+        "clampSection": {
+          "title": "Tessa Panel Mounting Clamp",
+          "description": "A practical and exclusive system where installation is done from below the structure using only two self-drilling screws. It is flexible because it does not require a fixed point on the purlin or PV panel for attachment.",
+          "imageAlt": "Patent seal for the Tessa Panel Mounting Clamp for ground-mounted structure"
+        }
       },
       "estrutura-de-aviario": {
         "title": "Aviary Structure",
-        "description": ""
+        "description": "Tessa metal structures for aviaries in galvanized steel: high quality, durability and industrialized assembly for poultry farmers.",
+        "metaKeywords": "Aviary structure, poultry structures, poultry farming, galvanized steel, poultry barn, metal structure",
+        "introSection": {
+          "title": "Tessa, Specialist in Structure Projects",
+          "subtitle": "High quality and greater durability in your aviary structure."
+        },
+        "qualitySection": {
+          "title": "High quality and durability",
+          "description": "Tessa offers high-quality, durable poultry structures, designed by specialized engineers to optimize resources and costs. Galvanized steel structures guarantee durability of over 60 years and high corrosion resistance. With assembly kits, Tessa provides a complete and economical solution, enabling fast and efficient assembly that saves time and money for poultry farmers.",
+          "backgroundImageAlt": "Tessa metal aviary structure in a rural setting, illustrating high quality and durability"
+        },
+        "videoSection": {
+          "title": "Learn more about Poultry Structures",
+          "subtitle": "Click to get to know our industry and discover details about the production of our aviary structures.",
+          "playLabel": "Play video about poultry structures"
+        },
+        "benefitsSection": {
+          "label": "Feasibility and benefits of Tessa poultry structures",
+          "checklistLabel": "Highlights of Tessa poultry structures",
+          "viability": {
+            "title": "How is project feasibility carried out?",
+            "description": "Project feasibility is carried out through technical planning by specialized engineers. They study and propose the best solutions, incorporating innovation and technology at every stage."
+          },
+          "benefits": {
+            "title": "What are the benefits of Tessa's structure?",
+            "description": "Tessa's aviary structure offers a range of benefits for rural producers in the poultry segment. It is manufactured with high-quality materials, such as galvanized steel, providing durability and strength.\n\nThe use of assembly kits by Tessa enables efficient handling and fast structure assembly, which significantly reduces installation costs. This saves time and money for poultry farmers.\n\nIn addition, Tessa applies rigorous quality control at every stage of the manufacturing process. The expertise of specialized engineers ensures high-quality projects, offering customers a product with excellent cost-benefit."
+          },
+          "checklistItems": {
+            "galvanized-steel": "Galvanized steel structure",
+            "cost-benefit": "Best cost-benefit ratio",
+            "quality-control": "Rigorous quality control",
+            "by-specialists": "Made by specialists"
+          }
+        }
       },
       "estruturas-para-creches": {
         "title": "Structures for Daycare Centers",
-        "description": ""
+        "description": "Tessa metal covers for daycare centers and schools: galvanized steel, high durability, safety and customized projects for educational institutions.",
+        "metaKeywords": "Daycare structures, school covers, daycare centers, schools, galvanized steel, metal structure",
+        "introSection": {
+          "title": "Durable Covers for Educational Institutions",
+          "subtitle": "High quality that ensures protection and efficiency for daycare centers and schools."
+        },
+        "featureSection": {
+          "title": "Tessa Metal Structures",
+          "subtitle": "Technology in every project",
+          "description": "Tessa's structures for daycare centers offer ideal protection and safety for educational environments. Manufactured with high-strength galvanized steel, they are designed to withstand any weather condition and ensure a lifespan of up to 60 years, depending on the region of application and conditions of use. In addition, our covers are lightweight, easy to install and require little maintenance, reducing costs.",
+          "imageAlt": "Tessa metal structures for daycare centers and schools in an educational setting"
+        },
+        "videoSection": {
+          "title": "Learn more about Covers for Daycare Centers and Schools",
+          "subtitle": "Click to see our completed projects and how Tessa structures offer lasting, efficient protection for educational institutions.",
+          "playLabel": "Play video about daycare and school covers"
+        },
+        "benefitsSection": {
+          "label": "Feasibility and benefits of Tessa daycare structures",
+          "checklistLabel": "Highlights of Tessa covers for daycare centers and schools",
+          "viability": {
+            "title": "How is project feasibility carried out?",
+            "description": "At Tessa, we assess the needs of each daycare center or school to create customized projects that ensure safety and durability, using high-strength galvanized steel. In addition, materials discarded during the manufacturing process are recycled and returned as raw material, promoting a sustainable and efficient production cycle."
+          },
+          "benefits": {
+            "title": "What are the benefits of Tessa's structure?",
+            "description": "High Durability: Structures made with galvanized steel that guarantee a lifespan of up to 60 years, withstanding adverse weather conditions and ensuring long-term protection.\n\nProven Safety: Our projects follow rigorous technical standards, providing complete safety for educational environments.\n\nSustainability: Materials discarded during production are sent for recycling and return as raw material, contributing to a more sustainable production cycle.\n\nCustomization: We develop tailored solutions, adapting each project to the specific needs of each educational institution."
+          },
+          "checklistItems": {
+            "galvanized-steel": "High-strength galvanized steel",
+            "safety-compliance": "Compliance with safety standards",
+            "low-maintenance": "Low maintenance",
+            "custom-projects": "Customized projects"
+          }
+        }
       },
       "perfis-especiais": {
         "title": "Special Profiles",
-        "description": ""
+        "description": "Custom Tessa special profiles in galvanized steel: cold roll forming, made-to-order parts, precision and industrial cost reduction.",
+        "metaKeywords": "Special profiles, custom roll forming, galvanized steel, cold forming, roll former, made-to-order parts",
+        "introSection": {
+          "title": "Custom Solutions for Your Projects",
+          "subtitle": "Made-to-order parts in galvanized steel and industrial cost reduction."
+        },
+        "whatIsSection": {
+          "title": "What is the Special Profile?",
+          "description": "They are custom metal parts made on a roll former, in galvanized steel sheet, for special demands, providing precision and reduced setups, lowering costs and raw material waste.",
+          "imageAlt": "Rendering of custom Tessa special profiles produced on a roll former with galvanized steel"
+        },
+        "videoSection": {
+          "title": "Discover Tessa Special Profiles",
+          "subtitle": "Click to get to know our industry and discover details about the production of our Special Profile.",
+          "playLabel": "Play video about Special Profiles"
+        },
+        "infoCardsSection": {
+          "label": "How Tessa designs, produces and delivers special profiles",
+          "items": {
+            "design": {
+              "title": "How is it designed?",
+              "description": "Tessa's team of engineers conducts studies and analyses to simplify the roll forming process and enable industrial production, meeting industry-specific needs and allowing ideal project execution.",
+              "imageAlt": "Illustration of the Tessa special profile design process"
+            },
+            "outsource": {
+              "title": "Why outsource the process?",
+              "description": "By outsourcing Special Roll Formed production, your company can optimize processes and achieve better results, eliminating steps with shears, punch presses, laser and press brakes. It also avoids purchasing raw material in sheets or blanks, resulting in additional savings on steel costs.",
+              "imageAlt": "Illustration of Tessa special profile manufacturing on a roll former"
+            },
+            "benefits": {
+              "title": "What are the real benefits?",
+              "description": "The Special Profile is the right choice for your business! With custom roll former production, it reduces costs and raw material waste. It eliminates steps and setups, optimizing processes and improving results. It enables innovative projects and generates additional savings on steel prices.",
+              "imageAlt": "Illustration of the benefits of Tessa special profiles"
+            }
+          }
+        },
+        "segmentsSection": {
+          "title": "Main segments that use Special Profiles",
+          "items": {
+            "energia-solar": {
+              "label": "Solar Energy",
+              "iconAlt": "Solar panel icon representing the solar energy segment that uses special profiles"
+            },
+            "setor-moveleiro": {
+              "label": "Furniture Industry",
+              "iconAlt": "Furniture icon representing the furniture industry segment that uses special profiles"
+            },
+            "agronegocio": {
+              "label": "Agribusiness",
+              "iconAlt": "Tractor icon representing the agribusiness segment that uses special profiles"
+            }
+          }
+        },
+        "processSection": {
+          "title": "Discover the Production Process Steps",
+          "description": "Roll forming simplifies Special Profile production by eliminating steps such as shearing, punch pressing, laser cutting and press braking. This saves on raw material purchases and reduces waste, making the process more efficient and economical.",
+          "items": {
+            "identify": {
+              "title": "Identify your needs",
+              "description": "The Tessa team works with you to understand your needs and the functionality of the Special Roll Formed profile.",
+              "iconAlt": "Step 1 icon: identify special profile needs"
+            },
+            "study": {
+              "title": "Project study and analysis",
+              "description": "Our engineers conduct detailed studies to find the best way to produce your Special Roll Formed profile.",
+              "iconAlt": "Step 2 icon: special profile project study and analysis"
+            },
+            "production": {
+              "title": "Special Roll Formed production",
+              "description": "After project approval, the Special Roll Formed profile goes into production.",
+              "iconAlt": "Step 3 icon: special roll formed production"
+            }
+          }
+        },
+        "comparisonSection": {
+          "title": "Special Profile VS Common Profile",
+          "subtitle": "Discover the advantages of the Tessa Special Roll Formed profile compared to conventional profiles.",
+          "benefitsHeading": "Benefits",
+          "specialHeading": "Roll Former Process",
+          "commonHeading": "Common Process",
+          "yesLabel": "Yes",
+          "noLabel": "No",
+          "rows": {
+            "made-roll-former": "Made on a roll former",
+            "versatility": "Versatility",
+            "precision": "Production precision",
+            "raw-material-waste": "Raw material waste",
+            "fewer-setups": "Fewer setups",
+            "batch-waiting": "Batch waiting time",
+            "cost-reduction": "Process cost reduction",
+            "interrupted-flow": "Interrupted flow",
+            "continuous-process": "Continuous process",
+            "intermediate-stock": "Intermediate stock",
+            "higher-capacity": "Higher production capacity",
+            "lower-investment": "Lower investment"
+          }
+        },
+        "clientsSection": {
+          "title": "Companies that trust Tessa",
+          "logoAlt": "{name} logo, Tessa client"
+        }
       }
     },
     "representantes": {
