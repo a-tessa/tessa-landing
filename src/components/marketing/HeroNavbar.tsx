@@ -192,7 +192,7 @@ export function HeroNavbar({
             sizes="100vw"
             priority
             aria-hidden
-            className="-z-20 object-cover grayscale"
+            className="-z-20 object-cover"
           />
           <div
             className="hero-nav__overlay absolute inset-0 -z-10"

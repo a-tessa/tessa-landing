@@ -167,7 +167,17 @@
       "goToChannel": "Go to channel",
       "downloadTitle": "Download presentations, brochures and manuals now",
       "downloadSub": "for this product",
-      "downloadCta": "Download materials"
+      "downloadCta": "Download materials",
+      "materials": {
+        "apresentacao-estruturas-para-telhado": "Presentation — Roof Metal Structures",
+        "folder-estruturas-energia-solar": "Brochure — Solar Energy Structures",
+        "apresentacao-carport-estrutura-de-solo": "Presentation — Carport and Ground-Mounted Structure",
+        "manual-carport": "Carport Manual",
+        "manual-estrutura-de-solo": "Ground-Mounted Structure Manual",
+        "termo-garantia": "Warranty Terms",
+        "apresentacao-estruturas-de-aviario": "Presentation — Aviary Structures",
+        "apresentacao-perfil-especial": "Presentation — Special Profiles"
+      }
     },
     "staticServices": {
       "estruturas-metalicas-para-telhado": {

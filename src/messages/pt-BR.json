@@ -167,7 +167,17 @@
       "goToChannel": "Ir para o canal",
       "downloadTitle": "Baixe agora as apresentações, folders e manuais",
       "downloadSub": "deste produto",
-      "downloadCta": "Baixar materiais"
+      "downloadCta": "Baixar materiais",
+      "materials": {
+        "apresentacao-estruturas-para-telhado": "Apresentação — Estruturas para Telhado",
+        "folder-estruturas-energia-solar": "Folder — Estruturas para Energia Solar",
+        "apresentacao-carport-estrutura-de-solo": "Apresentação — Carport e Estrutura de Solo",
+        "manual-carport": "Manual do Carport",
+        "manual-estrutura-de-solo": "Manual da Estrutura de Solo",
+        "termo-garantia": "Termo de Garantia",
+        "apresentacao-estruturas-de-aviario": "Apresentação — Estruturas de Aviário",
+        "apresentacao-perfil-especial": "Apresentação — Perfil Especial"
+      }
     },
     "staticServices": {
       "estruturas-metalicas-para-telhado": {

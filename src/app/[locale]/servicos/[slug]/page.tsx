@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { IconArrowDown, IconArrowRight } from "@tabler/icons-react";
+import { IconArrowRight } from "@tabler/icons-react";
 import { getTranslations } from "next-intl/server";
 import { BackNavLink } from "@/components/marketing/BackNavLink";
 import { BentoCarouselServices } from "@/components/marketing/BentoCarouselServices";
 import { Footer } from "@/components/marketing/Footer";
 import { Heading } from "@/components/marketing/Heading";
 import { NewsAndSocial } from "@/components/marketing/NewsAndSocial";
+import { ServiceMaterialsSection } from "@/components/marketing/ServiceMaterialsSection";
 import { ServiceNavCarousel } from "@/components/marketing/ServiceNavCarousel";
 import { ServiceVideoPlayer } from "@/components/marketing/ServiceVideoPlayer";
 import { StaticServicePage } from "@/components/marketing/StaticServicePage";
@@ -269,37 +270,7 @@ export default async function ServiceDetailPage({
         <NewsAndSocial latestPost={latestPost} />
         <Testimonials items={testimonials} />
 
-        <section
-          className={cn("mb-10", freeSectionShellSpacing)}
-          aria-labelledby="servico-materiais-heading"
-        >
-          <div className="relative isolate flex min-h-36 flex-col justify-center gap-6 overflow-hidden rounded-3xl bg-secondary px-6 py-8 sm:min-h-32 sm:flex-row sm:items-center sm:justify-between sm:px-10 lg:px-14">
-            <Image
-              src="/find-representant.webp"
-              alt=""
-              fill
-              className="z-0 object-cover object-center opacity-35 saturate-50"
-              sizes="(max-width: 768px) 100vw, 85vw"
-              aria-hidden
-            />
-
-            <p
-              id="servico-materiais-heading"
-              className="relative z-10 max-w-2xl text-left text-lg font-semibold uppercase text-secondary-foreground sm:text-2xl"
-            >
-              <strong className="font-bold">{t("downloadTitle")}</strong>
-              <br />
-              <span className="font-semibold">{t("downloadSub")}</span>
-            </p>
-            <Button
-              variant="default"
-              className="relative z-10 w-full shrink-0 sm:ml-auto sm:w-fit"
-            >
-              {t("downloadCta")}
-              <IconArrowDown className="size-4" />
-            </Button>
-          </div>
-        </section>
+        <ServiceMaterialsSection locale={locale} slug={slug} />
       </main>
 
       <Footer />

@@ -18,7 +18,8 @@ const ROUTE_NAMESPACES = [
   {
     prefix: "/representantes",
     namespace: "pages.representantes",
-    backgroundSrc: "/representantes-heading.jpg",
+    /** Banner Elementor 725fee5 — path distinto evita cache do otimizador Next em troca de arquivo. */
+    backgroundSrc: "/representantes-banner.jpg",
   },
   {
     prefix: "/blog",
@@ -28,7 +29,8 @@ const ROUTE_NAMESPACES = [
   {
     prefix: "/contato",
     namespace: "pages.contato",
-    backgroundSrc: "/representantes-heading.jpg",
+    /** Banner Elementor 748b261 */
+    backgroundSrc: "/contato-banner.webp",
   },
 ] as const;
 

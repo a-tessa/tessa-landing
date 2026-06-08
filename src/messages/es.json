@@ -167,7 +167,17 @@
       "goToChannel": "Ir al canal",
       "downloadTitle": "Descargue ahora las presentaciones, folletos y manuales",
       "downloadSub": "de este producto",
-      "downloadCta": "Descargar materiales"
+      "downloadCta": "Descargar materiales",
+      "materials": {
+        "apresentacao-estruturas-para-telhado": "Presentación — Estructuras para Tejado",
+        "folder-estruturas-energia-solar": "Folleto — Estructuras para Energía Solar",
+        "apresentacao-carport-estrutura-de-solo": "Presentación — Carport y Estructura de Suelo",
+        "manual-carport": "Manual del Carport",
+        "manual-estrutura-de-solo": "Manual de Estructura de Suelo",
+        "termo-garantia": "Término de Garantía",
+        "apresentacao-estruturas-de-aviario": "Presentación — Estructuras de Aviario",
+        "apresentacao-perfil-especial": "Presentación — Perfil Especial"
+      }
     },
     "staticServices": {
       "estruturas-metalicas-para-telhado": {
