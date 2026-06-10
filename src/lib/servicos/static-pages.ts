@@ -16,8 +16,26 @@ export function isStaticServiceSlug(
   return (STATIC_SERVICE_SLUGS as readonly string[]).includes(slug);
 }
 
-/** Imagem padrão do card do carrossel até definir por slug em `STATIC_SERVICE_IMAGES`. */
+/** Imagem padrão do card do carrossel até definir por slug em `STATIC_SERVICE_CARD_IMAGES`. */
 export const STATIC_SERVICE_PLACEHOLDER_IMAGE = "/services-heading.webp";
+
+/**
+ * Imagens do carrossel de cenários (retrato / 4:3).
+ * Os headings (1920×445) são banners de hero — crop em cards verticais ficam borrados no desktop.
+ */
+export const STATIC_SERVICE_CARD_IMAGES: Partial<
+  Record<StaticServiceSlug, string>
+> = {
+  "estruturas-metalicas-para-telhado":
+    "/servicos/estruturas-metalicas/carousel/estrutura-01.png",
+  carport: "/operations-gallery/galeria_tessa_01.webp",
+  "estrutura-de-solo": "/operations-gallery/galeria_tessa_03.webp",
+  "estrutura-de-aviario": "/operations-gallery/galeria_tessa_06.webp",
+  "estruturas-para-creches":
+    "/servicos/estruturas-para-creches/estruturas-para-creches-feature.webp",
+  "perfis-especiais":
+    "/servicos/perfis-especiais/perfis-especiais-render.webp",
+};
 
 /** Banner do hero Elementor (143333f) — estruturas metálicas para telhado. */
 export const ESTRUTURAS_METALICAS_PARA_TELHADO_HEADING_SRC =
@@ -43,7 +61,7 @@ export const ESTRUTURAS_PARA_CRECHES_HEADING_SRC =
 export const PERFIS_ESPECIAIS_HEADING_SRC =
   "/servicos/perfis-especiais/perfis-especiais-heading.jpg";
 
-/** Imagens do carrossel e heading por serviço estático. */
+/** Imagens de hero (banner wide) por serviço estático. */
 export const STATIC_SERVICE_IMAGES: Partial<
   Record<StaticServiceSlug, string>
 > = {
@@ -56,6 +74,10 @@ export const STATIC_SERVICE_IMAGES: Partial<
   "perfis-especiais": PERFIS_ESPECIAIS_HEADING_SRC,
 };
 
-export function getStaticServiceCardImage(slug: StaticServiceSlug): string {
+export function getStaticServiceHeadingImage(slug: StaticServiceSlug): string {
   return STATIC_SERVICE_IMAGES[slug] ?? STATIC_SERVICE_PLACEHOLDER_IMAGE;
+}
+
+export function getStaticServiceCardImage(slug: StaticServiceSlug): string {
+  return STATIC_SERVICE_CARD_IMAGES[slug] ?? STATIC_SERVICE_PLACEHOLDER_IMAGE;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
@@ -37,6 +37,8 @@ const PARTNER_NAMES = [
   "Brandit",
   "Vintage",
 ] as const;
+
+const HERO_AUTO_ADVANCE_MS = 3000;
 
 function ScrollIndicator() {
   return (
@@ -204,6 +206,8 @@ export function Hero({ heroSection, clients }: HeroProps) {
   }, [heroSection, t]);
 
   const [current, setCurrent] = useState(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const autoAdvancePausedRef = useRef(false);
 
   const next = useCallback(() => {
     setCurrent((prev) => (prev + 1) % SLIDES.length);
@@ -211,6 +215,57 @@ export function Hero({ heroSection, clients }: HeroProps) {
 
   const prev = useCallback(() => {
     setCurrent((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
+  }, [SLIDES.length]);
+
+  useEffect(() => {
+    if (SLIDES.length <= 1) {
+      return;
+    }
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (reducedMotion.matches) {
+      return;
+    }
+
+    const carousel = carouselRef.current;
+    if (!carousel) {
+      return;
+    }
+
+    const pause = () => {
+      autoAdvancePausedRef.current = true;
+    };
+
+    const resume = () => {
+      autoAdvancePausedRef.current = false;
+    };
+
+    const handleVisibilityChange = () => {
+      autoAdvancePausedRef.current = document.hidden;
+    };
+
+    carousel.addEventListener("mouseenter", pause);
+    carousel.addEventListener("mouseleave", resume);
+    carousel.addEventListener("focusin", pause);
+    carousel.addEventListener("focusout", resume);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    const intervalId = window.setInterval(() => {
+      if (autoAdvancePausedRef.current) {
+        return;
+      }
+
+      setCurrent((prev) => (prev + 1) % SLIDES.length);
+    }, HERO_AUTO_ADVANCE_MS);
+
+    return () => {
+      window.clearInterval(intervalId);
+      carousel.removeEventListener("mouseenter", pause);
+      carousel.removeEventListener("mouseleave", resume);
+      carousel.removeEventListener("focusin", pause);
+      carousel.removeEventListener("focusout", resume);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, [SLIDES.length]);
 
   const activeSlide = SLIDES[current];
@@ -228,7 +283,10 @@ export function Hero({ heroSection, clients }: HeroProps) {
           "w-full",
         )}
       >
-        <div className="relative rounded-3xl shadow-2xl shadow-primary/20 aspect-video w-full xl:max-h-screen">
+        <div
+          ref={carouselRef}
+          className="relative rounded-3xl shadow-2xl shadow-primary/20 aspect-video w-full xl:max-h-screen"
+        >
           {SLIDES.map((slide, index) => (
             <m.div
               key={slide.bgAlt}

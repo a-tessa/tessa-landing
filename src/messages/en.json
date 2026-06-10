@@ -37,6 +37,28 @@
     "subtitle": "Custom solutions for construction, energy and production.",
     "viewAll": "See all services"
   },
+  "industry": {
+    "titlePrefix": "Tessa Engenharia:",
+    "title": "Metal Structures and Profiles Industry",
+    "description": "Discover our manufacturing facility, production process, and product line for the solar energy, poultry, shopping mall, condominium, and construction sectors.",
+    "videoPlayLabel": "Watch the Tessa industry video",
+    "videoCaption": "Tessa Engenharia institutional video showcasing metal structures and profiles manufacturing.",
+    "pillarsHeading": "Tessa industry differentiators",
+    "pillars": {
+      "0": {
+        "title": "Durable Structures",
+        "description": "Maximum precision with fewer setups and lower production costs."
+      },
+      "1": {
+        "title": "Roll Forming Process",
+        "description": "Made from galvanized steel with a service life exceeding 60 years."
+      },
+      "2": {
+        "title": "Custom Projects",
+        "description": "Technically built structures planned by specialist engineers."
+      }
+    }
+  },
   "operations": {
     "title": "Our\noperations,\nin practice",
     "subtitle": "See how engineering takes shape through real images.",
@@ -48,7 +70,16 @@
     "expandImage": "Expand image",
     "collapseImage": "Collapse image",
     "closeImage": "Close image",
-    "imageDescription": "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
+    "captions": {
+      "galeria_tessa_01": "Tessa-designed and manufactured carport structure, ideal for vehicle coverage with solar energy integration.",
+      "galeria_tessa_02": "Close-up of galvanized steel structures with the precise finish and dimensions of the Tessa product line.",
+      "galeria_tessa_03": "Mounting system and structure for photovoltaic power plants, engineered to fit each project's requirements.",
+      "galeria_tessa_04": "Roof-mounted steel structures: profiles and connections designed for safe installation on rooftops.",
+      "galeria_tessa_05": "Roof steel structure assembly in an industrial setting, built for durability and dimensional accuracy.",
+      "galeria_tessa_06": "Tessa steel poultry house, sized for ventilation, load capacity, and flock expansion.",
+      "galeria_tessa_07": "Tessa PV module mounting clamp, engineered for reliable anchoring on different roof tile types.",
+      "galeria_tessa_08": "A view of Tessa's production capacity: quality steel structures rolling off the manufacturing line."
+    }
   },
   "results": {
     "title": "Results\nthat count",

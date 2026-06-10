@@ -21,6 +21,7 @@ interface BentoImage {
   src: string;
   alt: string;
   span?: string;
+  captionKey?: string;
 }
 
 interface BentoSlide {
@@ -30,6 +31,16 @@ interface BentoSlide {
 interface BentoCarouselProps {
   slides: BentoSlide[];
   className?: string;
+}
+
+type OperationsTranslator = ReturnType<typeof useTranslations<"operations">>;
+
+function getImageCaption(t: OperationsTranslator, image: BentoImage): string {
+  if (image.captionKey) {
+    return t(`captions.${image.captionKey}` as Parameters<OperationsTranslator>[0]);
+  }
+
+  return image.alt;
 }
 
 export function BentoCarousel({ slides, className }: BentoCarouselProps) {
@@ -178,7 +189,7 @@ function MobileCarousel({ slides }: { slides: BentoSlide[] }) {
               </div>
               <div className="max-h-[40vh] overflow-y-auto bg-primary px-5 py-4">
                 <p className="wrap-break-word text-sm leading-relaxed text-white/90">
-                  {t("imageDescription")}
+                  {getImageCaption(t, openImage)}
                 </p>
               </div>
             </>
@@ -331,7 +342,7 @@ function DesktopBento({ slides }: { slides: BentoSlide[] }) {
                           </div>
                           <div className="max-h-[35%] shrink-0 overflow-y-auto bg-neutral-400 px-5 py-4">
                             <p className="wrap-break-word text-sm leading-relaxed text-white/90 lg:text-base">
-                              {t("imageDescription")}
+                              {getImageCaption(t, expanded.image)}
                             </p>
                           </div>
                         </motion.div>

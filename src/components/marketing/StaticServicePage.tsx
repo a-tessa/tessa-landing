@@ -17,7 +17,7 @@ import { EstruturasParaCrechesSections } from "@/components/marketing/static-ser
 import { PerfisEspeciaisSections } from "@/components/marketing/static-services/PerfisEspeciaisSections";
 import { getMergedServiceNavItems } from "@/lib/servicos/nav";
 import {
-  getStaticServiceCardImage,
+  getStaticServiceHeadingImage,
   type StaticServiceSlug,
 } from "@/lib/servicos/static-pages";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
@@ -97,7 +97,7 @@ export async function StaticServicePage({ locale, slug }: StaticServicePageProps
         <Heading
           title={title}
           description={description}
-          backgroundSrc={getStaticServiceCardImage(slug)}
+          backgroundSrc={getStaticServiceHeadingImage(slug)}
         />
 
         <section className="w-full">

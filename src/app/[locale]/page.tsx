@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { Hero } from "@/components/marketing/Hero";
 import { Footer } from "@/components/marketing/Footer";
 import { Scenarios } from "@/components/marketing/Scenarios";
+import { IndustrySection } from "@/components/marketing/IndustrySection";
 import { Operations } from "@/components/marketing/Operations";
 import { NewsAndSocial } from "@/components/marketing/NewsAndSocial";
 import { Testimonials } from "@/components/marketing/Testimonials";
@@ -62,6 +63,7 @@ export default async function HomePage({ params }: HomePageProps) {
 
       <main className="flex flex-col items-center justify-center gap-10 mx-auto">
         <Hero heroSection={heroSection} clients={clients} />
+        <IndustrySection />
         <Scenarios scenerySection={carouselItems} />
         <Operations />
         <NewsAndSocial latestPost={latestPost} />

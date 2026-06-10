@@ -9,6 +9,8 @@ interface ServiceVideoPlayerProps {
   playLabel: string;
   /** Visible caption rendered for sighted users (figcaption). Hidden if omitted. */
   caption?: string;
+  /** YouTube embed start offset in seconds (maps to `start` param). */
+  startSeconds?: number;
   className?: string;
 }
 
@@ -28,10 +30,16 @@ export function ServiceVideoPlayer({
   videoUrl,
   playLabel,
   caption,
+  startSeconds,
   className,
 }: ServiceVideoPlayerProps) {
   const videoId = getYouTubeVideoId(videoUrl);
   if (!videoId) return null;
+
+  const params =
+    startSeconds !== undefined && startSeconds > 0
+      ? `rel=0&modestbranding=1&start=${startSeconds}`
+      : "rel=0&modestbranding=1";
 
   return (
     <figure
@@ -44,7 +52,7 @@ export function ServiceVideoPlayer({
       <YouTubeEmbed
         videoid={videoId}
         playlabel={playLabel}
-        params="rel=0&modestbranding=1"
+        params={params}
       />
       {caption ? (
         <figcaption className="sr-only">{caption}</figcaption>

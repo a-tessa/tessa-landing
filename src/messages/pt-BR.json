@@ -37,6 +37,28 @@
     "subtitle": "Soluções sob medida para obra, energia e produção.",
     "viewAll": "Conhecer todos os serviços"
   },
+  "industry": {
+    "titlePrefix": "Tessa Engenharia:",
+    "title": "Indústria de Estruturas Metálicas e Perfis",
+    "description": "Conheça nossa indústria, processo de produção e linha de produtos para os setores de energia solar, avicultura, shoppings, condomínios e construção civil.",
+    "videoPlayLabel": "Assistir vídeo sobre a indústria Tessa",
+    "videoCaption": "Vídeo institucional da Tessa Engenharia apresentando a indústria de estruturas metálicas e perfis.",
+    "pillarsHeading": "Diferenciais da indústria Tessa",
+    "pillars": {
+      "0": {
+        "title": "Estruturas Duráveis",
+        "description": "Máxima precisão, com o menor número de setups e redução de custo."
+      },
+      "1": {
+        "title": "Processo em Perfiladeira",
+        "description": "Feitas em aço galvanizado com durabilidade superior a 60 anos."
+      },
+      "2": {
+        "title": "Projetos Personalizados",
+        "description": "Estruturas construídas de forma técnica, planejadas por especialistas."
+      }
+    }
+  },
   "operations": {
     "title": "Nossas\noperações,\nna prática",
     "subtitle": "Acompanhe imagens que mostram como a engenharia ganha forma.",
@@ -48,7 +70,16 @@
     "expandImage": "Expandir imagem",
     "collapseImage": "Recolher imagem",
     "closeImage": "Fechar imagem",
-    "imageDescription": "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
+    "captions": {
+      "galeria_tessa_01": "Estrutura carport projetada e fabricada pela Tessa, ideal para cobertura de veículos com integração de energia solar.",
+      "galeria_tessa_02": "Detalhe de estruturas metálicas galvanizadas com acabamento e dimensional rigorosos da linha Tessa.",
+      "galeria_tessa_03": "Sistema de fixação e estrutura para usinas de energia fotovoltaica, com engenharia sob medida para cada projeto.",
+      "galeria_tessa_04": "Estruturas metálicas para telhado: perfis e conexões desenvolvidos para instalação segura em coberturas.",
+      "galeria_tessa_05": "Montagem de estrutura metálica para telhado em ambiente industrial, com foco em durabilidade e precisão dimensional.",
+      "galeria_tessa_06": "Galpão avícola em estrutura metálica Tessa, dimensionado para ventilação, carga e expansão do plantel.",
+      "galeria_tessa_07": "Clamp de fixação Tessa para módulos fotovoltaicos, desenvolvido para ancoragem confiável em diferentes tipos de telha.",
+      "galeria_tessa_08": "Visão da capacidade produtiva Tessa: estruturas metálicas de qualidade saindo da linha de fabricação."
+    }
   },
   "results": {
     "title": "Resultados\nque contam",

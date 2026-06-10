@@ -20,7 +20,10 @@ type Card = {
   href: string;
   src: string;
   title: string;
+  priority?: boolean;
 };
+
+const SCENARIO_CARD_IMAGE_SIZES = "(min-width: 768px) 400px, 224px";
 
 export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -153,8 +156,21 @@ export const Card = ({
         layoutId={layout ? `card-${card.title}` : undefined}
         className="group relative z-10 flex h-80 w-56 flex-col items-start justify-start overflow-hidden rounded-3xl bg-gray-100 md:h-160 md:w-100 dark:bg-neutral-900"
       >
+        <BlurImage
+          src={card.src}
+          alt={card.title}
+          fill
+          sizes={SCENARIO_CARD_IMAGE_SIZES}
+          quality={90}
+          priority={card.priority}
+          className="absolute inset-0 z-10 object-cover"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-15 bg-black/35"
+        />
         <div className="pointer-events-none absolute inset-0 z-20 bg-primary/75 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-30 h-full bg-linear-to-b from-black/50 via-transparent to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-30 h-full bg-linear-to-b from-black/40 via-transparent to-transparent" />
         <div className="relative z-40 p-8">
           <motion.p
             layoutId={layout ? `title-${card.title}` : undefined}
@@ -163,12 +179,6 @@ export const Card = ({
             {card.title}
           </motion.p>
         </div>
-        <BlurImage
-          src={card.src}
-          alt={card.title}
-          fill
-          className="absolute inset-0 z-10 object-cover"
-        />
       </motion.article>
     </Link>
   );
@@ -180,6 +190,7 @@ export const BlurImage = ({
   src,
   className,
   alt,
+  priority,
   ...rest
 }: ImageProps) => {
   const [isLoading, setLoading] = useState(true);
@@ -194,11 +205,9 @@ export const BlurImage = ({
       src={src as string}
       width={width}
       height={height}
-      loading="lazy"
+      loading={priority ? undefined : "lazy"}
       decoding="async"
-      blurDataURL={typeof src === "string" ? src : undefined}
       alt={alt ? alt : "Background of a beautiful view"}
-      
       {...rest}
     />
   );

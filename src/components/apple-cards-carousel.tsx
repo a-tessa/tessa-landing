@@ -14,13 +14,14 @@ export default function AppleCardsCarousel({
     return null;
   }
 
-  const cards = scenerySection.map((item) => (
+  const cards = scenerySection.map((item, index) => (
     <Card
       key={item.slug}
       card={{
         href: `/servicos/${item.slug}`,
         src: item.image,
         title: item.title,
+        priority: index < 2,
       }}
     />
   ));
