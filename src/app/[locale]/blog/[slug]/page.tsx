@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import DOMPurify from "isomorphic-dompurify";
 import { BackNavLink } from "@/components/marketing/BackNavLink";
 import { BlogCategoryNav } from "@/components/marketing/BlogCategoryNav";
 import { BlogFeatureCard } from "@/components/marketing/BlogFeatureCard";
@@ -18,6 +17,7 @@ import {
   toBlogPostFromArticle,
   toBlogPostFromListItem,
 } from "@/lib/blog/mappers";
+import { sanitizeArticleHtml } from "@/lib/blog/sanitize-article-html";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
@@ -26,40 +26,6 @@ export const revalidate = 60;
 
 interface BlogPostPageProps {
   params: Promise<{ locale: string; slug: string }>;
-}
-
-const ALLOWED_TAGS = [
-  "h1",
-  "h2",
-  "h3",
-  "p",
-  "ul",
-  "ol",
-  "li",
-  "strong",
-  "em",
-  "b",
-  "i",
-  "a",
-  "blockquote",
-  "br",
-  "img",
-] as const;
-
-const ALLOWED_ATTR = [
-  "href",
-  "target",
-  "rel",
-  "src",
-  "alt",
-  "title",
-] as const;
-
-function sanitizeArticleHtml(html: string): string {
-  return DOMPurify.sanitize(html, {
-    ALLOWED_TAGS: [...ALLOWED_TAGS],
-    ALLOWED_ATTR: [...ALLOWED_ATTR],
-  });
 }
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
