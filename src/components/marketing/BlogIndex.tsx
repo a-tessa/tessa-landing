@@ -3,7 +3,6 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import {
 	BLOG_CATEGORIES,
-	BLOG_LIST_PAGE_SIZE,
 	buildBlogListHref,
 	type BlogPost,
 } from "@/lib/blog/posts";
@@ -21,7 +20,7 @@ function formatPublishedDate(iso: string): string {
 interface BlogIndexProps {
   query: string;
   ordem: "asc" | "desc";
-  limite: number;
+  pagina: number;
   categoria: string;
   visiblePosts: BlogPost[];
   totalFiltered: number;
@@ -36,7 +35,7 @@ function getCategoryLabel(slug: string): string | undefined {
 export function BlogIndex({
   query,
   ordem,
-  limite,
+  pagina,
   categoria,
   visiblePosts,
   totalFiltered,
@@ -44,7 +43,7 @@ export function BlogIndex({
   className,
 }: BlogIndexProps) {
   const t = useTranslations("blog");
-  const nextLimite = limite + BLOG_LIST_PAGE_SIZE;
+  const nextPagina = pagina + 1;
 
   return (
     <>
@@ -163,10 +162,10 @@ export function BlogIndex({
               href={buildBlogListHref({
                 q: query,
                 ordem,
-                limite: nextLimite,
+                pagina: nextPagina,
                 categoria,
               })}
-              className="text-sm font-bold uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground"
+              className="inline-flex min-h-11 items-center rounded-full border border-border bg-card px-6 text-sm font-bold uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:border-primary/30 hover:text-foreground"
             >
               {t("loadMore")}
             </Link>

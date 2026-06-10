@@ -18,7 +18,7 @@ interface BlogPageProps {
   searchParams: Promise<{
     q?: string;
     ordem?: string;
-    limite?: string;
+    pagina?: string;
     categoria?: string;
   }>;
 }
@@ -43,10 +43,10 @@ export async function generateMetadata({
   });
 }
 
-function parseLimite(raw: string | undefined): number {
+function parsePagina(raw: string | undefined): number {
   const n = Number.parseInt(raw ?? "", 10);
-  if (Number.isNaN(n) || n < BLOG_LIST_PAGE_SIZE) return BLOG_LIST_PAGE_SIZE;
-  return Math.min(n, 200);
+  if (Number.isNaN(n) || n < 1) return 1;
+  return Math.min(n, 50);
 }
 
 function blogJsonLd(locale: string) {
@@ -72,12 +72,12 @@ export default async function BlogPage({
   const sp = await searchParams;
   const query = (sp.q ?? "").trim();
   const ordem = sp.ordem === "asc" ? "asc" : "desc";
-  const limite = parseLimite(sp.limite);
+  const pagina = parsePagina(sp.pagina);
   const categoria = (sp.categoria ?? "").trim();
 
   const resp = await fetchBlogArticles({
     page: 1,
-    perPage: limite,
+    perPage: pagina * BLOG_LIST_PAGE_SIZE,
     categorySlug: categoria || undefined,
     q: query || undefined,
     order: ordem,
@@ -103,7 +103,7 @@ export default async function BlogPage({
         <BlogIndex
           query={query}
           ordem={ordem}
-          limite={limite}
+          pagina={pagina}
           categoria={categoria}
           visiblePosts={visiblePosts}
           totalFiltered={totalFiltered}
