@@ -251,6 +251,21 @@ body {
     font-style: italic;
   }
 
+  .blog-article-content [data-youtube-video] {
+    position: relative;
+    width: 100%;
+    max-width: 720px;
+    margin: 1.25rem auto;
+    aspect-ratio: 16 / 9;
+  }
+
+  .blog-article-content [data-youtube-video] iframe {
+    width: 100%;
+    height: 100%;
+    border-radius: 1rem;
+    border: 1px solid var(--border);
+  }
+
   /* lite-youtube-embed caps width at 720px; stretch to the figure width instead */
   [data-service-video] [data-ntpc="YouTubeEmbed"] {
     width: 100% !important;
