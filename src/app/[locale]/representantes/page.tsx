@@ -78,7 +78,7 @@ export default async function RepresentantesPage({
       namespace: "pages.representantes",
     }),
     getApprovedTestimonials(),
-    getRepresentatives(),
+    getRepresentatives(locale),
   ]);
   const representatives = mapApiRepresentatives(apiRepresentatives);
 

@@ -58,7 +58,7 @@ export default async function ContatoPage({ params }: ContatoPageProps) {
   const { locale } = await params;
   const [t, servicesPages] = await Promise.all([
     getTranslations({ locale, namespace: "pages.contato" }),
-    getServicesPages(),
+    getServicesPages(locale),
   ]);
 
   const serviceOptions = await getMergedServiceNavItems(locale, servicesPages);

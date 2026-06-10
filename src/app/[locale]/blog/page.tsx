@@ -81,6 +81,7 @@ export default async function BlogPage({
     categorySlug: categoria || undefined,
     q: query || undefined,
     order: ordem,
+    locale,
   });
 
   const visiblePosts = (resp?.articles ?? []).map(toBlogPostFromListItem);

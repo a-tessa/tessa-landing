@@ -40,7 +40,7 @@ export default async function ServicosPage({ params }: ServicosPageProps) {
   const [t, testimonials, scenerySection] = await Promise.all([
     getTranslations({ locale, namespace: "pages.servicos" }),
     getApprovedTestimonials(),
-    getScenerySection(),
+    getScenerySection(locale),
   ]);
 
   const carouselItems = await getScenariosCarouselItems(

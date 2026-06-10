@@ -58,7 +58,7 @@ export async function StaticServicePage({ locale, slug }: StaticServicePageProps
     getTranslations({ locale, namespace: "pages.servicos" }),
     getTranslations({ locale, namespace: "pages.staticServices" }),
     getApprovedTestimonials(),
-    getServicesPages(),
+    getServicesPages(locale),
   ]);
 
   const title = tPage(`${slug}.title`);

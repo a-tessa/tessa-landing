@@ -44,4 +44,5 @@ export interface FetchBlogArticlesParams {
   categorySlug?: string;
   q?: string;
   order?: "asc" | "desc";
+  locale?: string;
 }

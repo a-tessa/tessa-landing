@@ -76,7 +76,7 @@ export async function generateMetadata({
   params,
 }: BlogPostPageProps): Promise<Metadata> {
   const { locale, slug } = await params;
-  const article = await fetchBlogArticleBySlug(slug);
+  const article = await fetchBlogArticleBySlug(slug, locale);
 
   if (!article) {
     return buildPageMetadata({
@@ -117,13 +117,18 @@ function formatPublishedDate(iso: string, locale: string): string {
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { locale, slug } = await params;
-  const article = await fetchBlogArticleBySlug(slug);
+  const article = await fetchBlogArticleBySlug(slug, locale);
   if (!article) notFound();
 
   const post = toBlogPostFromArticle(article);
   const sanitizedContent = sanitizeArticleHtml(post.contentHtml ?? "");
 
-  const relatedDtos = await fetchRelatedBlogArticles(post.category, post.slug, 2);
+  const relatedDtos = await fetchRelatedBlogArticles(
+    post.category,
+    post.slug,
+    2,
+    locale,
+  );
   const relatedPosts = relatedDtos.map(toBlogPostFromListItem);
 
   const t = await getTranslations({ locale, namespace: "pages.blog" });

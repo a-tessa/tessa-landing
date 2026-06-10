@@ -85,7 +85,7 @@ export async function generateMetadata({
     });
   }
 
-  const service = await getServicePageBySlug(slug);
+  const service = await getServicePageBySlug(slug, locale);
 
   if (!service) {
     return buildPageMetadata({
@@ -120,8 +120,8 @@ export default async function ServiceDetailPage({
   }
 
   const [service, servicesPages, t, ts, testimonials] = await Promise.all([
-    getServicePageBySlug(slug),
-    getServicesPages(),
+    getServicePageBySlug(slug, locale),
+    getServicesPages(locale),
     getTranslations({ locale, namespace: "pages.servicoDetail" }),
     getTranslations({ locale, namespace: "pages.servicos" }),
     getApprovedTestimonials(),
@@ -139,9 +139,10 @@ export default async function ServiceDetailPage({
           perPage: 1,
           order: "desc",
           categorySlug,
+          locale,
         })
       : Promise.resolve(null),
-    fetchBlogArticles({ page: 1, perPage: 1, order: "desc" }),
+    fetchBlogArticles({ page: 1, perPage: 1, order: "desc", locale }),
   ]);
 
   const latestArticleDto =

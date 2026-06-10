@@ -39,9 +39,9 @@ export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
   const [{ heroSection, scenerySection, clients }, testimonials, latestBlogResp] =
     await Promise.all([
-      getLandingContent(),
+      getLandingContent(locale),
       getApprovedTestimonials(),
-      fetchBlogArticles({ page: 1, perPage: 1, order: "desc" }),
+      fetchBlogArticles({ page: 1, perPage: 1, order: "desc", locale }),
     ]);
 
   const latestPost = latestBlogResp?.articles[0]

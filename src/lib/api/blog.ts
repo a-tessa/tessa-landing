@@ -1,3 +1,4 @@
+import { localeCacheKey, toApiLocale } from "./locale";
 import type {
   BlogArticleDto,
   BlogArticleListItemDto,
@@ -19,6 +20,9 @@ function buildBlogListUrl(params: FetchBlogArticlesParams): string {
   if (params.q) search.set("q", params.q);
   if (params.order) search.set("order", params.order);
 
+  const apiLocale = toApiLocale(params.locale);
+  if (apiLocale) search.set("locale", apiLocale);
+
   return `${API_BASE_URL}/api/blog?${search.toString()}`;
 }
 
@@ -29,7 +33,10 @@ export async function fetchBlogArticles(
 
   try {
     const res = await fetch(buildBlogListUrl(params), {
-      next: { revalidate: REVALIDATE_SECONDS, tags: ["landing-blog"] },
+      next: {
+        revalidate: REVALIDATE_SECONDS,
+        tags: ["landing-blog", `landing-blog:${localeCacheKey(params.locale)}`],
+      },
       signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     });
 
@@ -43,16 +50,24 @@ export async function fetchBlogArticles(
 
 export async function fetchBlogArticleBySlug(
   slug: string,
+  locale?: string,
 ): Promise<BlogArticleDto | null> {
   if (!API_BASE_URL) return null;
 
-  const url = `${API_BASE_URL}/api/blog/${encodeURIComponent(slug)}`;
+  const apiLocale = toApiLocale(locale);
+  const url = `${API_BASE_URL}/api/blog/${encodeURIComponent(slug)}${
+    apiLocale ? `?locale=${apiLocale}` : ""
+  }`;
 
   try {
     const res = await fetch(url, {
       next: {
         revalidate: REVALIDATE_SECONDS,
-        tags: ["landing-blog", `landing-blog:${slug}`],
+        tags: [
+          "landing-blog",
+          `landing-blog:${slug}`,
+          `landing-blog:${slug}:${localeCacheKey(locale)}`,
+        ],
       },
       signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     });
@@ -70,12 +85,14 @@ export async function fetchRelatedBlogArticles(
   categorySlug: string,
   excludeSlug: string,
   limit = 2,
+  locale?: string,
 ): Promise<BlogArticleListItemDto[]> {
   const resp = await fetchBlogArticles({
     page: 1,
     perPage: limit + 1,
     categorySlug,
     order: "desc",
+    locale,
   });
 
   if (!resp) return [];
