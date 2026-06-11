@@ -99,6 +99,122 @@ function AvatarImage({
   );
 }
 
+function TestimonialQuoteBubble({
+  text,
+  className,
+}: {
+  text: string;
+  className?: string;
+}) {
+  return (
+    <div className={cn("relative w-full max-w-3xl", className)}>
+      <blockquote
+        className="relative rounded-3xl bg-card px-8 py-10 text-center shadow-sm ring-1 ring-foreground/10 sm:px-12 sm:py-14"
+        itemProp="reviewBody"
+      >
+        <span
+          aria-hidden
+          className="pointer-events-none absolute left-6 top-4 font-serif text-6xl leading-none text-primary/15 sm:left-8 sm:text-7xl"
+        >
+          &ldquo;
+        </span>
+        <p className="relative text-xl font-medium leading-relaxed text-foreground sm:text-2xl lg:text-3xl">
+          {text}
+        </p>
+      </blockquote>
+      <div
+        aria-hidden
+        className="absolute -bottom-3 left-1/2 size-6 -translate-x-1/2 rotate-45 bg-card ring-1 ring-foreground/10"
+      />
+    </div>
+  );
+}
+
+function TestimonialNextPreviewCard({
+  testimonial,
+  onSelect,
+  ariaLabel,
+}: {
+  testimonial: Testimonial;
+  onSelect: () => void;
+  ariaLabel: string;
+}) {
+  if (testimonial.reviewImage) {
+    return (
+      <button
+        type="button"
+        onClick={onSelect}
+        className="group relative h-44 w-full cursor-pointer overflow-hidden rounded-2xl text-left lg:h-48"
+        aria-label={ariaLabel}
+      >
+        <AvatarImage
+          src={testimonial.reviewImage}
+          alt={testimonial.name}
+          sizes="200px"
+          className="transition-transform duration-500 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 z-10 p-4">
+          <p className="text-sm font-bold text-white">{testimonial.name}</p>
+          {testimonial.company ? (
+            <p className="text-[10px] font-bold uppercase tracking-wider text-white/70">
+              {testimonial.company}
+            </p>
+          ) : null}
+          <div className="mt-1 flex items-center gap-1.5">
+            <span className="text-sm font-bold text-white">
+              {testimonial.rating.toFixed(1)}
+            </span>
+            <div className="flex items-center gap-0.5">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <IconStarFilled
+                  key={`next-star-${i}`}
+                  className={cn(
+                    "size-3",
+                    i < testimonial.rating ? "text-primary" : "text-white/30",
+                  )}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </button>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      className="flex h-44 w-full cursor-pointer flex-col justify-between rounded-2xl bg-card p-4 text-left shadow-sm transition-shadow hover:shadow-md lg:h-48"
+      aria-label={ariaLabel}
+    >
+      <p className="line-clamp-4 text-sm leading-relaxed text-muted-foreground">
+        &ldquo;{testimonial.text}&rdquo;
+      </p>
+      <div className="flex items-center gap-3">
+        <div className="relative size-10 shrink-0 overflow-hidden rounded-full">
+          <AvatarImage
+            src={testimonial.profileImage}
+            alt={testimonial.name}
+            sizes="40px"
+          />
+        </div>
+        <div className="min-w-0">
+          <p className="truncate text-sm font-semibold text-foreground">
+            {testimonial.name}
+          </p>
+          {testimonial.company ? (
+            <p className="truncate text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              {testimonial.company}
+            </p>
+          ) : null}
+        </div>
+      </div>
+    </button>
+  );
+}
+
 interface TestimonialsProps {
   items?: PublicTestimonial[] | null;
   className?: string;
@@ -184,8 +300,7 @@ export function Testimonials({ items, className }: TestimonialsProps = {}) {
   const active = resolvedTestimonials[safeCurrent];
   const prevT = resolvedTestimonials[prevIdx];
   const nextT = resolvedTestimonials[nextIdx];
-  const activeVisualImage = active.reviewImage ?? active.profileImage;
-  const nextVisualImage = nextT.reviewImage ?? nextT.profileImage;
+  const activeHasReviewImage = Boolean(active.reviewImage);
 
   return (
     <section
@@ -251,7 +366,7 @@ export function Testimonials({ items, className }: TestimonialsProps = {}) {
             >
               <div className="relative size-10 shrink-0 overflow-hidden rounded-full">
                 <AvatarImage
-                  src={prevT.profileImage ?? prevT.reviewImage}
+                  src={prevT.profileImage}
                   alt={prevT.name}
                   sizes="40px"
                 />
@@ -286,34 +401,53 @@ export function Testimonials({ items, className }: TestimonialsProps = {}) {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: direction > 0 ? -80 : 80 }}
               transition={{ duration: 0.4, ease: "easeInOut" }}
-              className="flex w-full flex-col items-center gap-6 sm:flex-row sm:items-start sm:gap-8"
+              className={cn(
+                "flex w-full flex-col gap-6",
+                activeHasReviewImage
+                  ? "items-center sm:flex-row sm:items-start sm:gap-8"
+                  : "items-center",
+              )}
             >
-              {/* Visual — prefer review photo, fallback to profile */}
-              <div className="relative aspect-3/4 w-48 shrink-0 overflow-hidden rounded-2xl sm:w-56 lg:w-64">
-                <AvatarImage
-                  src={activeVisualImage}
-                  alt={active.name}
-                  sizes="(max-width: 640px) 192px, (max-width: 1024px) 224px, 256px"
-                  priority
-                />
-              </div>
+              {activeHasReviewImage ? (
+                <div className="relative aspect-3/4 w-48 shrink-0 overflow-hidden rounded-2xl sm:w-56 lg:w-64">
+                  <AvatarImage
+                    src={active.reviewImage}
+                    alt={active.name}
+                    sizes="(max-width: 640px) 192px, (max-width: 1024px) 224px, 256px"
+                    priority
+                  />
+                </div>
+              ) : null}
 
               {/* Text + info */}
               <div
-                className="flex flex-1 flex-col justify-center"
+                className={cn(
+                  "flex flex-1 flex-col justify-center",
+                  !activeHasReviewImage && "w-full max-w-3xl items-center text-center",
+                )}
                 itemProp="review"
                 itemScope
                 itemType="https://schema.org/Review"
               >
-                <blockquote
-                  className="text-sm leading-relaxed text-muted-foreground sm:text-base"
-                  itemProp="reviewBody"
-                >
-                  {active.text}
-                </blockquote>
+                {activeHasReviewImage ? (
+                  <blockquote
+                    className="text-sm leading-relaxed text-muted-foreground sm:text-base"
+                    itemProp="reviewBody"
+                  >
+                    {active.text}
+                  </blockquote>
+                ) : (
+                  <TestimonialQuoteBubble
+                    text={active.text}
+                    className="mb-2"
+                  />
+                )}
 
                 <div
-                  className="mt-6 flex items-center gap-3"
+                  className={cn(
+                    "mt-6 flex items-center gap-3",
+                    !activeHasReviewImage && "justify-center",
+                  )}
                   itemProp="author"
                   itemScope
                   itemType="https://schema.org/Person"
@@ -343,7 +477,10 @@ export function Testimonials({ items, className }: TestimonialsProps = {}) {
                 </div>
 
                 <div
-                  className="mt-3 flex items-center gap-2"
+                  className={cn(
+                    "mt-3 flex items-center gap-2",
+                    !activeHasReviewImage && "justify-center",
+                  )}
                   itemProp="reviewRating"
                   itemScope
                   itemType="https://schema.org/Rating"
@@ -367,44 +504,11 @@ export function Testimonials({ items, className }: TestimonialsProps = {}) {
         <div className="flex flex-col items-end gap-6">
           {/* Next card (small with photo) */}
           {length > 1 ? (
-            <button
-              type="button"
-              onClick={() => goTo(nextIdx)}
-              className="group relative h-44 w-full cursor-pointer overflow-hidden rounded-2xl text-left lg:h-48"
-              aria-label={t("viewTestimonial", { name: nextT.name })}
-            >
-              <AvatarImage
-                src={nextVisualImage}
-                alt={nextT.name}
-                sizes="200px"
-                className="transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 z-10 p-4">
-                <p className="text-sm font-bold text-white">{nextT.name}</p>
-                {nextT.company ? (
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-white/70">
-                    {nextT.company}
-                  </p>
-                ) : null}
-                <div className="mt-1 flex items-center gap-1.5">
-                  <span className="text-sm font-bold text-white">
-                    {nextT.rating.toFixed(1)}
-                  </span>
-                  <div className="flex items-center gap-0.5">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <IconStarFilled
-                        key={`next-star-${i}`}
-                        className={cn(
-                          "size-3",
-                          i < nextT.rating ? "text-primary" : "text-white/30",
-                        )}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </button>
+            <TestimonialNextPreviewCard
+              testimonial={nextT}
+              onSelect={() => goTo(nextIdx)}
+              ariaLabel={t("viewTestimonial", { name: nextT.name })}
+            />
           ) : null}
 
           {/* Next arrow */}
