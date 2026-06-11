@@ -1,7 +1,39 @@
+/**
+ * Resolves the canonical base URL for the site.
+ *
+ * Order of precedence:
+ * 1. `NEXT_PUBLIC_SITE_URL` — explicit override (set once the custom domain is live).
+ * 2. `VERCEL_PROJECT_PRODUCTION_URL` — stable production host (the custom domain once
+ *    assigned on Vercel, otherwise the project's `*.vercel.app` host).
+ * 3. `VERCEL_URL` — per-deployment host (preview builds).
+ * 4. localhost — local development.
+ *
+ * Keeping this dynamic ensures `canonical`/`hreflang` always match the host actually
+ * serving the page, instead of pointing at a domain that isn't live yet.
+ */
+function resolveSiteUrl(): string {
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL;
+  if (explicit) {
+    return explicit.replace(/\/+$/, "");
+  }
+
+  const productionUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  if (productionUrl) {
+    return `https://${productionUrl}`;
+  }
+
+  const deploymentUrl = process.env.VERCEL_URL;
+  if (deploymentUrl) {
+    return `https://${deploymentUrl}`;
+  }
+
+  return "http://localhost:3000";
+}
+
 export const SITE = {
   name: "Tessa Tecnologia e Desenvolvimento LTDA",
   shortName: "Tessa",
-  domain: "https://www.tessa.com.br",
+  domain: resolveSiteUrl(),
   tagline: "Estruturas metálicas e perfis sob medida",
   description:
     "Aço galvanizado. Engenharia aplicada. Produção industrial. Entrega para o seu projeto sair do papel com previsibilidade.",
