@@ -8,7 +8,6 @@ import { cn, insideCardSpacing } from "@/lib/utils";
 const MENU_KEYS = [
   { href: "/a-tessa", key: "about" },
   { href: "/servicos", key: "services" },
-  { href: "/estruturas", key: "structures" },
   { href: "/representantes", key: "representatives" },
   { href: "/blog", key: "blog" },
   { href: "/contato", key: "contact" },

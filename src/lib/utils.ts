@@ -74,7 +74,7 @@ export const serviceCarouselCss = /* css */ `
   position: fixed;
   top: calc(1.5rem + 20rem + 1.5rem);
   transform: translateX(-50%);
-  z-index: 30;
+  z-index: 50;
 }
 
 @supports (animation-timeline: scroll()) {
