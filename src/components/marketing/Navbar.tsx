@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   cn,
   homeSpacing,
@@ -22,11 +22,13 @@ const ACTIVE_CLASS = "text-[#FF6F00]";
 export function Navbar() {
   const { scrollProgress, expanded } = useScrollProgress(SCROLL_THRESHOLD);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
 
   const blurPx = 8 + scrollProgress * 4;
 
   return (
     <header
+      ref={headerRef}
       className={cn(
         "fixed inset-x-0 top-0 z-50 w-full md:top-6 max-w-[2000px] mx-auto transition-[max-width,width] duration-500",
         sectionCardShellSpacing,
@@ -78,6 +80,7 @@ export function Navbar() {
         open={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
         activeClassName={ACTIVE_CLASS}
+        portalAnchorRef={headerRef}
         containerClassName="left-0 right-0"
         innerClassName={cn("flex flex-col gap-1 py-4", homeSpacing)}
       />

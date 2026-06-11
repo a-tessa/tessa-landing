@@ -76,26 +76,12 @@ export function Heading({
       <style href="marketing-heading" precedence="component">
         {css}
       </style>
-      <div className="relative z-20">
-        <HeroNavbar
-          description={description}
-          title={title}
-          activeClassName="text-primary text"
-          backgroundSrc={backgroundSrc}
-        />
-        {/* <div className="marketing-heading-scroll fixed top-6 flex w-[calc(100%-2.5rem)] translate-x-1/2 right-1/2 flex-col rounded-3xl bg-[url('/services-heading.webp')] bg-cover bg-center bg-no-repeat bg-black/75 bg-blend-overlay saturate-30 text-white supports-[animation-timeline:scroll()]:h-20">
-          <divabsolute inset-x-0 top-0 z-10
-            className={`${insideCardSpacing} flex flex-1 flex-col justify-center overflow-hidden text-3xl mb-5 mt-5 sm:text-2xl md:text-3xl lg:text-6xl xl:text-7xl`}
-          >
-            <h1 className="font-bold uppercase text-white h-fit whitespace-break-spaces mt-8">
-              {title}
-            </h1>
-            <h2 className="mt-4 w-80 lg:w-full max-w-2xl text-xs font-semibold uppercase sm:text-sm">
-              {description}
-            </h2>
-          </div>
-        </div> */}
-      </div>
+      <HeroNavbar
+        description={description}
+        title={title}
+        activeClassName="text-primary text"
+        backgroundSrc={backgroundSrc}
+      />
     </>
   );
 }

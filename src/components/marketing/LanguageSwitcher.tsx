@@ -1,10 +1,16 @@
 "use client";
 
-import { useRef, useState, useCallback } from "react";
+import {
+  useRef,
+  useState,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+} from "react";
+import { createPortal } from "react-dom";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
-import { useOutsideClick } from "@/hooks/use-outside-click";
 import { cn } from "@/lib/utils";
 
 const LOCALES: { code: Locale; flag: React.ReactNode; short: string }[] = [
@@ -63,15 +69,79 @@ interface LanguageSwitcherProps {
   className?: string;
 }
 
+interface DropdownPosition {
+  top: number;
+  right: number;
+}
+
+function useLanguageDropdownPosition(
+  triggerRef: React.RefObject<HTMLButtonElement | null>,
+  open: boolean,
+): DropdownPosition | null {
+  const [position, setPosition] = useState<DropdownPosition | null>(null);
+
+  const updatePosition = useCallback(() => {
+    const trigger = triggerRef.current;
+    if (!trigger) return;
+
+    const rect = trigger.getBoundingClientRect();
+    setPosition({
+      top: rect.bottom + 8,
+      right: window.innerWidth - rect.right,
+    });
+  }, [triggerRef]);
+
+  useLayoutEffect(() => {
+    if (!open) {
+      setPosition(null);
+      return;
+    }
+    updatePosition();
+  }, [open, updatePosition]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    window.addEventListener("scroll", updatePosition, true);
+    window.addEventListener("resize", updatePosition);
+
+    return () => {
+      window.removeEventListener("scroll", updatePosition, true);
+      window.removeEventListener("resize", updatePosition);
+    };
+  }, [open, updatePosition]);
+
+  return position;
+}
+
 export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
   const locale = useLocale();
   const t = useTranslations("nav");
   const router = useRouter();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const dropdownRef = useRef<HTMLUListElement>(null);
+  const dropdownPosition = useLanguageDropdownPosition(triggerRef, open);
 
-  useOutsideClick(ref, useCallback(() => setOpen(false), []));
+  useEffect(() => {
+    const listener = (event: MouseEvent | TouchEvent) => {
+      const target = event.target;
+      if (!(target instanceof Node)) return;
+      if (containerRef.current?.contains(target)) return;
+      if (dropdownRef.current?.contains(target)) return;
+      setOpen(false);
+    };
+
+    document.addEventListener("mousedown", listener);
+    document.addEventListener("touchstart", listener);
+
+    return () => {
+      document.removeEventListener("mousedown", listener);
+      document.removeEventListener("touchstart", listener);
+    };
+  }, []);
 
   const current = LOCALES.find((l) => l.code === locale) ?? LOCALES[0];
 
@@ -80,9 +150,52 @@ export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
     router.replace(pathname, { locale: code });
   }
 
+  const dropdown =
+    open && dropdownPosition
+      ? createPortal(
+          <ul
+            ref={dropdownRef}
+            role="listbox"
+            aria-label={t("selectLanguage")}
+            style={{
+              position: "fixed",
+              top: dropdownPosition.top,
+              right: dropdownPosition.right,
+              zIndex: 60,
+            }}
+            className="min-w-36 overflow-hidden rounded-lg border border-white/10 bg-[oklch(0.25_0.01_250)] py-1 shadow-xl backdrop-blur-md"
+          >
+            {LOCALES.map(({ code, flag, short }) => {
+              const isActive = code === locale;
+              return (
+                <li key={code}>
+                  <button
+                    type="button"
+                    role="option"
+                    aria-selected={isActive}
+                    onClick={() => handleSelect(code)}
+                    className={cn(
+                      "flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm transition-colors",
+                      isActive
+                        ? "bg-white/10 text-white"
+                        : "text-white/70 hover:bg-white/5 hover:text-white",
+                    )}
+                  >
+                    {flag}
+                    <span className="font-medium">{short}</span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>,
+          document.body,
+        )
+      : null;
+
   return (
-    <div ref={ref} className={cn("relative", className)}>
+    <div ref={containerRef} className={cn("relative", className)}>
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="flex h-8 items-center gap-1.5 rounded px-1 transition-opacity hover:opacity-80"
@@ -96,36 +209,7 @@ export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
         </span>
       </button>
 
-      {open && (
-        <ul
-          role="listbox"
-          aria-label={t("selectLanguage")}
-          className="absolute right-0 top-full z-50 mt-2 min-w-36 overflow-hidden rounded-lg border border-white/10 bg-[oklch(0.25_0.01_250)] py-1 shadow-xl backdrop-blur-md"
-        >
-          {LOCALES.map(({ code, flag, short }) => {
-            const isActive = code === locale;
-            return (
-              <li key={code}>
-                <button
-                  type="button"
-                  role="option"
-                  aria-selected={isActive}
-                  onClick={() => handleSelect(code)}
-                  className={cn(
-                    "flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm transition-colors",
-                    isActive
-                      ? "bg-white/10 text-white"
-                      : "text-white/70 hover:bg-white/5 hover:text-white",
-                  )}
-                >
-                  {flag}
-                  <span className="font-medium">{short}</span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      )}
+      {dropdown}
     </div>
   );
 }

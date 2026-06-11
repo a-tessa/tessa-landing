@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import {
@@ -14,9 +14,11 @@ const ACTIVE_CLASS = "text-primary";
 
 export function NavbarPage() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navRef = useRef<HTMLElement>(null);
 
   return (
     <nav
+      ref={navRef}
       className={cn(
         "fixed z-50 mt-7 flex h-18 w-screen shrink-0 items-center justify-between [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]",
         freeSectionShellSpacing,
@@ -38,7 +40,8 @@ export function NavbarPage() {
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
         activeClassName={ACTIVE_CLASS}
-        containerClassName="inset-x-0 top-full z-10 px-4 py-4"
+        portalAnchorRef={navRef}
+        containerClassName="px-4 py-4"
         linkClassName="block"
       />
     </nav>

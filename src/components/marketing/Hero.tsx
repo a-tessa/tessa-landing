@@ -264,12 +264,10 @@ export function Hero({ heroSection, clients }: HeroProps) {
           "w-full",
         )}
       >
-        <div
-          className="relative rounded-3xl shadow-2xl shadow-primary/20 aspect-video w-full xl:max-h-screen"
-        >
+        <div className="relative aspect-square w-full shrink-0 overflow-hidden rounded-3xl shadow-2xl shadow-primary/20 xl:max-h-screen md:aspect-video">
           {SLIDES.map((slide, index) => (
             <m.div
-              key={slide.bgAlt}
+              key={`${slide.bgImage}-${index}`}
               className="absolute inset-0"
               initial={false}
               animate={{ opacity: index === current ? 1 : 0 }}
@@ -281,16 +279,16 @@ export function Hero({ heroSection, clients }: HeroProps) {
                 alt={slide.bgAlt}
                 fill
                 priority={index === 0}
-                className="object-cover w-full h-full rounded-3xl"
+                className="h-full w-full rounded-3xl object-cover object-center"
                 sizes="(max-width: 768px) 100vw, 97vw"
               />
             </m.div>
           ))}
 
-          <div className="absolute rounded-3xl inset-0 z-1 bg-linear-to-r from-black/65 via-black/35 to-black/10" />
-          <div className="absolute rounded-3xl inset-0 z-1 bg-linear-to-t from-black/60 via-transparent to-transparent" />
+          <div className="absolute inset-0 z-1 rounded-3xl bg-linear-to-r from-black/65 via-black/35 to-black/10" />
+          <div className="absolute inset-0 z-1 rounded-3xl bg-linear-to-t from-black/60 via-transparent to-transparent" />
 
-          <div className="relative z-10 flex h-full flex-col">
+          <div className="absolute inset-0 z-10 flex flex-col overflow-hidden">
             <div
               className={cn(
                 "flex flex-1 sm:items-end pt-10 sm:pt-24",

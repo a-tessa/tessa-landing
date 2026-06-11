@@ -1,11 +1,71 @@
 "use client";
 
 import Image from "next/image";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
+import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
 import { Menu, X } from "lucide-react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { NAV_KEYS, isActivePath } from "./shared";
+
+interface PortalDrawerStyle {
+  top: number;
+  left: number;
+  width: number;
+}
+
+function usePortalDrawerPosition(
+  anchorRef: RefObject<HTMLElement | null>,
+  boundsRef: RefObject<HTMLElement | null> | undefined,
+  open: boolean,
+): PortalDrawerStyle | null {
+  const [position, setPosition] = useState<PortalDrawerStyle | null>(null);
+
+  const updatePosition = useCallback(() => {
+    const anchor = anchorRef.current;
+    if (!anchor) return;
+
+    const bounds = boundsRef?.current ?? anchor;
+    const anchorRect = anchor.getBoundingClientRect();
+    const boundsRect = bounds.getBoundingClientRect();
+
+    setPosition({
+      top: anchorRect.bottom,
+      left: boundsRect.left,
+      width: boundsRect.width,
+    });
+  }, [anchorRef, boundsRef]);
+
+  useLayoutEffect(() => {
+    if (!open) {
+      setPosition(null);
+      return;
+    }
+    updatePosition();
+  }, [open, updatePosition]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    window.addEventListener("scroll", updatePosition, true);
+    window.addEventListener("resize", updatePosition);
+
+    return () => {
+      window.removeEventListener("scroll", updatePosition, true);
+      window.removeEventListener("resize", updatePosition);
+    };
+  }, [open, updatePosition]);
+
+  return position;
+}
 
 interface NavLogoProps {
   /**
@@ -118,6 +178,10 @@ interface MobileDrawerProps {
   open: boolean;
   onClose: () => void;
   activeClassName: string;
+  /** Anchor below which the portaled drawer is placed. */
+  portalAnchorRef: RefObject<HTMLElement | null>;
+  /** Optional bounds for drawer width/horizontal alignment. Defaults to anchor. */
+  portalBoundsRef?: RefObject<HTMLElement | null>;
   /** Position + spacing classes for the drawer container. */
   containerClassName?: string;
   /** Optional wrapper around the link list. Omit to render links directly. */
@@ -130,14 +194,22 @@ export function MobileDrawer({
   open,
   onClose,
   activeClassName,
+  portalAnchorRef,
+  portalBoundsRef,
   containerClassName,
   innerClassName,
   linkClassName,
 }: MobileDrawerProps) {
   const pathname = usePathname();
   const t = useTranslations("nav");
+  const drawerRef = useRef<HTMLDivElement>(null);
+  const position = usePortalDrawerPosition(
+    portalAnchorRef,
+    portalBoundsRef,
+    open,
+  );
 
-  if (!open) return null;
+  if (!open || !position) return null;
 
   const links = NAV_KEYS.map(({ href, key }) => (
     <Link
@@ -154,10 +226,18 @@ export function MobileDrawer({
     </Link>
   ));
 
-  return (
+  const drawer = (
     <div
+      ref={drawerRef}
+      style={{
+        position: "fixed",
+        top: position.top,
+        left: position.left,
+        width: position.width,
+        zIndex: 60,
+      }}
       className={cn(
-        "absolute border-b border-white/10 bg-[#37474F] sm:hidden",
+        "border-b border-white/10 bg-[#37474F] sm:hidden",
         containerClassName,
       )}
       role="dialog"
@@ -166,4 +246,6 @@ export function MobileDrawer({
       {innerClassName ? <div className={innerClassName}>{links}</div> : links}
     </div>
   );
+
+  return createPortal(drawer, document.body);
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Tooltip } from "radix-ui";
 import { cn, insideCardSpacing } from "@/lib/utils";
 import { LanguageSwitcher } from "./LanguageSwitcher";
@@ -79,9 +79,15 @@ const css = /* css */ `
 }
 
 .hero-nav__shell {
-  contain: layout paint;
+  contain: layout;
   will-change: height, background-color;
   height: var(--hero-h);
+  border-radius: 1.5rem;
+  overflow: visible;
+}
+
+.hero-nav__background {
+  contain: paint;
   border-radius: 1.5rem;
 }
 
@@ -166,6 +172,8 @@ export function HeroNavbar({
   activeClassName = ACTIVE_CLASS,
 }: HeroNavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const shellRef = useRef<HTMLDivElement>(null);
+  const navRowRef = useRef<HTMLDivElement>(null);
 
   const { visibleDescription, isTruncated } = useMemo(() => {
     if (description.length <= NAV_DESCRIPTION_MAX_CHARS) {
@@ -184,22 +192,27 @@ export function HeroNavbar({
       </style>
 
       <header className="hero-nav">
-        <div className="hero-nav__shell relative w-full overflow-hidden text-white">
-          <Image
-            src={backgroundSrc}
-            alt=""
-            fill
-            sizes="100vw"
-            priority
-            aria-hidden
-            className="-z-20 object-cover"
-          />
-          <div
-            className="hero-nav__overlay absolute inset-0 -z-10"
-            aria-hidden
-          />
+        <div ref={shellRef} className="hero-nav__shell relative w-full text-white">
+          <div className="hero-nav__background pointer-events-none absolute inset-0 overflow-hidden">
+            <Image
+              src={backgroundSrc}
+              alt=""
+              fill
+              sizes="100vw"
+              priority
+              aria-hidden
+              className="-z-20 object-cover"
+            />
+            <div
+              className="hero-nav__overlay absolute inset-0 -z-10"
+              aria-hidden
+            />
+          </div>
 
-          <div className="absolute inset-x-0 top-0 z-10">
+          <div
+            ref={navRowRef}
+            className="absolute inset-x-0 top-0 z-20 overflow-visible"
+          >
             <div
               className={cn(
                 "mx-auto flex h-22 w-full items-center justify-between [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]",
@@ -266,7 +279,9 @@ export function HeroNavbar({
             open={menuOpen}
             onClose={() => setMenuOpen(false)}
             activeClassName={activeClassName}
-            containerClassName="inset-x-0 top-22 z-20 px-4 py-4"
+            portalAnchorRef={navRowRef}
+            portalBoundsRef={shellRef}
+            containerClassName="px-4 py-4"
             linkClassName="block"
           />
         </div>
