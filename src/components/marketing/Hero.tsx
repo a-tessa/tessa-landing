@@ -40,6 +40,8 @@ const PARTNER_NAMES = [
 
 const HERO_AUTO_ADVANCE_MS = 3000;
 
+const HERO_TEXT_CLAMP_CLASS = "line-clamp-2";
+
 function ScrollIndicator() {
   return (
     <div className="flex flex-col items-center gap-1">
@@ -91,7 +93,7 @@ function LogoItem({ client }: { client: ClientLogo }) {
       sizes="(max-width: 640px) 96px, 140px"
       loading="lazy"
       decoding="async"
-      className="h-10 w-auto object-contain sm:h-12"
+      className="h-[26px] w-auto object-contain sm:h-12"
     />
   );
 
@@ -288,15 +290,15 @@ export function Hero({ heroSection, clients }: HeroProps) {
           <div className="absolute inset-0 z-1 rounded-3xl bg-linear-to-r from-black/65 via-black/35 to-black/10" />
           <div className="absolute inset-0 z-1 rounded-3xl bg-linear-to-t from-black/60 via-transparent to-transparent" />
 
-          <div className="absolute inset-0 z-10 flex flex-col overflow-hidden">
+          <div className="absolute inset-0 z-10 grid grid-rows-[minmax(0,1fr)_auto_auto] overflow-hidden">
             <div
               className={cn(
-                "flex flex-1 sm:items-end pt-10 sm:pt-24",
+                "flex min-h-0 flex-col justify-start pt-10 sm:justify-end sm:pt-24",
                 insideCardSpacing,
               )}
             >
-              <div className="w-full gap-10 flex flex-col lg:flex-row justify-between">
-                <div className="pb-16 lg:pb-20 my-auto">
+              <div className="w-full gap-10 flex flex-col lg:flex-row justify-between max-h-full">
+                <div className="min-h-54 pb-4 sm:min-h-0 lg:pb-0">
                   <h1
                     id="hero-title"
                     className="max-w-2xl text-4xl font-bold uppercase text-white sm:text-5xl lg:text-6xl"
@@ -304,7 +306,7 @@ export function Hero({ heroSection, clients }: HeroProps) {
                     <AnimatePresence mode="wait" initial={false}>
                       <m.span
                         key={activeSlide.heading}
-                        className="block whitespace-pre-line"
+                        className={cn("block", HERO_TEXT_CLAMP_CLASS)}
                         initial={{ opacity: 0, y: 16 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
@@ -318,7 +320,10 @@ export function Hero({ heroSection, clients }: HeroProps) {
                   <AnimatePresence mode="wait" initial={false}>
                     <m.p
                       key={activeSlide.description}
-                      className="mt-5 max-w-xl whitespace-pre-line text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/70 sm:text-xs"
+                      className={cn(
+                        "mt-5 max-w-xl text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/70 sm:text-xs",
+                        HERO_TEXT_CLAMP_CLASS,
+                      )}
                       initial={{ opacity: 0, y: 16 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
@@ -363,17 +368,17 @@ export function Hero({ heroSection, clients }: HeroProps) {
                   </div>
                 </div>
 
-                <div className="hidden items-end justify-end pb-16 lg:flex lg:pb-20">
-                  <div className="flex w-full max-w-76 flex-col gap-4">
-                    <div className="flex min-h-64 flex-col gap-4">
+                <div className="hidden items-end justify-end pb-16 lg:flex md:-mb-14 lg:pb-0">
+                  <div className="flex w-full max-w-76 flex-col gap-4 xxl:max-w-80">
+                    <div className="flex flex-col gap-4 lg:min-h-25 xl:min-h-25 xxl:min-h-30">
                       {SLIDES.length === 1 ? (
                         <button
                           type="button"
                           onClick={() => setCurrent(0)}
                           aria-pressed
-                          className="flex min-h-64 w-76 flex-col justify-end rounded-3xl border border-chart-5/60 bg-primary p-6 text-left text-white shadow-xl shadow-chart-5/20 transition-all duration-300"
+                          className="flex flex-col justify-end rounded-3xl border border-chart-5/60 bg-primary p-6 text-left text-white shadow-xl shadow-chart-5/20 transition-all duration-300 lg:size-44 xl:size-52 xxl:size-60"
                         >
-                          <p className="whitespace-pre-line text-2xl font-semibold uppercase">
+                          <p className="whitespace-pre-line text-2xl font-semibold uppercase xxl:text-3xl">
                             {SLIDES[0].cardLabel}
                           </p>
                         </button>
@@ -391,9 +396,9 @@ export function Hero({ heroSection, clients }: HeroProps) {
                               type="button"
                               onClick={() => setCurrent(current)}
                               aria-pressed
-                              className="flex min-h-64 w-76 flex-col justify-end rounded-3xl border border-chart-5/60 bg-primary p-6 text-left text-white shadow-xl shadow-chart-5/20 transition-all duration-300"
+                              className="flex flex-col justify-end rounded-3xl border border-chart-5/60 bg-primary p-6 text-left text-white shadow-xl shadow-chart-5/20 transition-all duration-300 lg:size-44 xl:size-52 xxl:size-60"
                             >
-                              <p className="whitespace-pre-line text-2xl font-semibold uppercase">
+                              <p className="whitespace-pre-line text-2xl font-semibold uppercase xxl:text-3xl">
                                 {activeSlide.cardLabel}
                               </p>
                             </button>
@@ -403,11 +408,11 @@ export function Hero({ heroSection, clients }: HeroProps) {
                               aria-pressed={false}
                               aria-label={nextSideSlide.heading}
                               className={cn(
-                                "flex min-h-64 w-76 flex-col justify-end rounded-3xl border p-6 text-left transition-all duration-300",
+                                "flex flex-col justify-end rounded-3xl border p-6 text-left transition-all duration-300 lg:size-44 xl:size-52 xxl:size-60",
                                 "border-white/20 bg-transparent text-white backdrop-blur-md hover:bg-white/12",
                               )}
                             >
-                              <p className="whitespace-pre-line text-2xl font-semibold uppercase">
+                              <p className="whitespace-pre-line text-2xl font-semibold uppercase xxl:text-3xl">
                                 {nextSideSlide.cardLabel}
                               </p>
                             </button>
@@ -440,7 +445,7 @@ export function Hero({ heroSection, clients }: HeroProps) {
               </div>
             </div>
 
-            <div className="flex items-center justify-between px-5 pb-4 sm:px-8 lg:px-14">
+            <div className="flex max-sm:-translate-y-1 items-center justify-between px-5 sm:translate-y-0 sm:px-8 lg:px-14">
               <div className="flex items-center gap-3 text-white/70">
                 <ScrollIndicator />
               </div>
@@ -463,7 +468,7 @@ export function Hero({ heroSection, clients }: HeroProps) {
               </div>
             </div>
 
-            <div className="pb-14 text-center">
+            <div className="pb-10 text-center sm:pb-14">
               <p className="text-xs font-bold uppercase tracking-[0.22em] text-white sm:text-sm">
                 {t("trustedCompanies")}
               </p>
@@ -479,8 +484,8 @@ export function Hero({ heroSection, clients }: HeroProps) {
             <ChevronLeft size={20} />
           </button>
         </div>
-        <div className="relative z-10 h-fit -mt-10">
-          <div className="rounded-full bg-card py-6 shadow-2xl shadow-primary/10 sm:py-10 overflow-hidden">
+        <div className="relative z-10 h-fit -mt-8 sm:-mt-10">
+          <div className="overflow-hidden rounded-full bg-card py-[17px] shadow-2xl shadow-primary/10 sm:py-10">
             <LogoStrip clients={clients} />
           </div>
         </div>

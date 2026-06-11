@@ -44,6 +44,7 @@
 }
 
 @theme inline {
+  --breakpoint-xxl: 93.75rem;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --text-xxs: 0.65rem;
