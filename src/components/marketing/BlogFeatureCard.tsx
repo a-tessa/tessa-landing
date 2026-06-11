@@ -1,11 +1,13 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { BlogAuthorAvatar } from "@/components/marketing/BlogAuthorAvatar";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 interface BlogFeatureCardAuthor {
   name: string;
   avatar?: string;
+  initials?: string;
 }
 
 interface BlogFeatureCardProps {
@@ -40,7 +42,6 @@ export function BlogFeatureCard({
   imageSizes = "(max-width: 1024px) 100vw, 45vw",
 }: BlogFeatureCardProps) {
   const t = useTranslations("blog");
-  const authorAvatar = author.avatar ?? imageSrc;
   const formattedDate = formatDate(publishedAt);
 
   return (
@@ -71,14 +72,12 @@ export function BlogFeatureCard({
 
         <div className="flex flex-col items-center gap-3">
           <div className="flex items-center gap-3 w-full">
-            <div className="relative size-12 shrink-0 overflow-hidden rounded-full">
-              <Image
-                src={authorAvatar}
-                alt={author.name}
-                fill
-                className="object-cover"
-              />
-            </div>
+            <BlogAuthorAvatar
+              name={author.name}
+              initials={author.initials ?? author.name.slice(0, 2).toUpperCase()}
+              avatarUrl={author.avatar}
+              className="size-12"
+            />
             <div>
               <p className="text-sm font-semibold text-white">{author.name}</p>
               <time dateTime={publishedAt} className="text-xs text-secondary">

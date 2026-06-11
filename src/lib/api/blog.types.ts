@@ -3,6 +3,7 @@ export type BlogArticleStatus = "draft" | "published";
 export interface BlogArticleAuthorDto {
   id: string;
   name: string;
+  avatarUrl: string | null;
 }
 
 export interface BlogArticleListItemDto {

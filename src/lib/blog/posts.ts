@@ -17,7 +17,7 @@ export interface BlogPost {
 	body: string[];
 	contentHtml?: string;
 	publishedAt: string;
-	author: { name: string; initials: string };
+	author: { name: string; initials: string; avatarUrl?: string | null };
 	imageSrc: string;
 	imageAlt: string;
 	category: BlogCategorySlug;

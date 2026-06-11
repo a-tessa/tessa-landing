@@ -11,7 +11,8 @@ interface FeaturedBlogPost {
   excerpt: string;
   author: {
     name: string;
-    avatar: string;
+    avatar?: string;
+    initials?: string;
   };
   publishedAt: string;
   image: string;
@@ -45,7 +46,8 @@ function toFeaturedPost(post: BlogPost): FeaturedBlogPost {
     excerpt: post.excerpt,
     author: {
       name: post.author.name,
-      avatar: post.imageSrc,
+      avatar: post.author.avatarUrl ?? undefined,
+      initials: post.author.initials,
     },
     publishedAt: post.publishedAt,
     image: post.imageSrc,

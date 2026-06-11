@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { BackNavLink } from "@/components/marketing/BackNavLink";
 import { BlogCategoryNav } from "@/components/marketing/BlogCategoryNav";
+import { BlogAuthorAvatar } from "@/components/marketing/BlogAuthorAvatar";
 import { BlogFeatureCard } from "@/components/marketing/BlogFeatureCard";
 import { Footer } from "@/components/marketing/Footer";
 import { Heading } from "@/components/marketing/Heading";
@@ -178,12 +179,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 />
 
                 <div className="mt-10 flex items-center gap-4 border-t border-border pt-8">
-                  <span
-                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/15 text-sm font-bold text-primary"
-                    aria-hidden
-                  >
-                    {post.author.initials}
-                  </span>
+                  <BlogAuthorAvatar
+                    name={post.author.name}
+                    initials={post.author.initials}
+                    avatarUrl={post.author.avatarUrl}
+                    className="h-12 w-12 text-sm"
+                  />
                   <div>
                     <p className="text-sm font-bold uppercase tracking-wide text-card-foreground">
                       {post.author.name}
@@ -223,7 +224,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     excerpt={relatedPost.excerpt}
                     author={{
                       name: relatedPost.author.name,
-                      avatar: relatedPost.imageSrc,
+                      avatar: relatedPost.author.avatarUrl ?? undefined,
+                      initials: relatedPost.author.initials,
                     }}
                     publishedAt={relatedPost.publishedAt}
                     imageSrc={relatedPost.imageSrc}

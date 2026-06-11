@@ -6,6 +6,7 @@ import {
 	buildBlogListHref,
 	type BlogPost,
 } from "@/lib/blog/posts";
+import { BlogAuthorAvatar } from "@/components/marketing/BlogAuthorAvatar";
 import { BlogCategoryNav } from "@/components/marketing/BlogCategoryNav";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 
@@ -120,12 +121,12 @@ export function BlogIndex({
                   </Link>
                   <div className="flex flex-1 flex-col p-5">
                     <div className="flex items-center gap-2">
-                      <span
-                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/15 text-xs font-bold text-primary"
-                        aria-hidden
-                      >
-                        {post.author.initials}
-                      </span>
+                      <BlogAuthorAvatar
+                        name={post.author.name}
+                        initials={post.author.initials}
+                        avatarUrl={post.author.avatarUrl}
+                        className="h-9 w-9"
+                      />
                       <div className="min-w-0">
                         <p className="truncate text-[0.65rem] font-semibold uppercase tracking-wide text-muted-foreground">
                           {post.author.name}

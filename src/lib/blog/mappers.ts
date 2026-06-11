@@ -71,6 +71,7 @@ export function toBlogPostFromListItem(dto: BlogArticleListItemDto): BlogPost {
     author: {
       name: dto.author.name,
       initials: buildInitials(dto.author.name),
+      avatarUrl: dto.author.avatarUrl,
     },
     imageSrc: toImageSrc(dto),
     imageAlt: toImageAlt(dto),
