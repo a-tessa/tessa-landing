@@ -51,6 +51,7 @@ export function Navbar() {
               expanded
                 ? "border-white/10 backdrop-blur-xl backdrop-contrast-50 md:px-10"
                 : "border-transparent",
+              mobileMenuOpen && "rounded-b-none",
             )}
             style={{
               ...(expanded && {
@@ -82,9 +83,10 @@ export function Navbar() {
         open={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
         activeClassName={ACTIVE_CLASS}
-        portalAnchorRef={headerRef}
+        portalAnchorRef={navRef}
         portalBoundsRef={navRef}
-        containerClassName="left-0 right-0"
+        offsetTop={0}
+        containerClassName="left-0 right-0 overflow-hidden rounded-b-3xl border-x border-white/10"
         innerClassName={cn("flex flex-col gap-1 py-4", homeSpacing)}
       />
     </header>

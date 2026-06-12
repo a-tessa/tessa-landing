@@ -184,6 +184,8 @@ interface MobileDrawerProps {
   portalBoundsRef?: RefObject<HTMLElement | null>;
   /** Position + spacing classes for the drawer container. */
   containerClassName?: string;
+  /** Vertical gap (px) between the anchor's bottom and the drawer. */
+  offsetTop?: number;
   /** Optional wrapper around the link list. Omit to render links directly. */
   innerClassName?: string;
   /** Extra classes applied to each link (e.g. `block` for stacked layout). */
@@ -197,6 +199,7 @@ export function MobileDrawer({
   portalAnchorRef,
   portalBoundsRef,
   containerClassName,
+  offsetTop = -10,
   innerClassName,
   linkClassName,
 }: MobileDrawerProps) {
@@ -231,7 +234,7 @@ export function MobileDrawer({
       ref={drawerRef}
       style={{
         position: "fixed",
-        top: position.top,
+        top: position.top + offsetTop,
         left: position.left,
         width: position.width,
         zIndex: 60,

@@ -1,10 +1,8 @@
-import { getTranslations } from "next-intl/server";
+"use client";
+
+import { useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
 import type { ServiceNavItem } from "@/lib/servicos/nav";
 import { cn, freeSectionShellSpacing, serviceCarouselCss } from "@/lib/utils";
 
@@ -14,21 +12,34 @@ interface ServiceNavCarouselProps {
   activeSlug: string;
 }
 
-export async function ServiceNavCarousel({
-  locale,
+export function ServiceNavCarousel({
   items,
   activeSlug,
 }: ServiceNavCarouselProps) {
-  const t = await getTranslations({
-    locale,
-    namespace: "pages.servicoDetail",
-  });
+  const t = useTranslations("pages.servicoDetail");
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const activeItemRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const scroller = scrollerRef.current;
+    const activeItem = activeItemRef.current;
+    if (!scroller || !activeItem) return;
+
+    const scrollerRect = scroller.getBoundingClientRect();
+    const itemRect = activeItem.getBoundingClientRect();
+    const itemCenterWithinScroller =
+      scroller.scrollLeft +
+      (itemRect.left - scrollerRect.left) +
+      itemRect.width / 2;
+    const target = itemCenterWithinScroller - scroller.clientWidth / 2;
+    const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+
+    scroller.scrollLeft = Math.max(0, Math.min(target, maxScroll));
+  }, [activeSlug, items]);
 
   if (items.length === 0) return null;
 
   const isActive = (candidateSlug: string) => candidateSlug === activeSlug;
-
-  const activeIndex = items.findIndex((item) => item.slug === activeSlug);
 
   return (
     <>
@@ -40,24 +51,22 @@ export async function ServiceNavCarousel({
           aria-label={t("serviceNav")}
           className={cn("service-heading-carousel z-50", freeSectionShellSpacing)}
         >
-          <Carousel
-            className="flex overflow-hidden rounded-full bg-muted"
-            opts={{
-              align: "center",
-              startIndex: activeIndex >= 0 ? activeIndex : 0,
-            }}
-          >
-            <CarouselContent className="flex w-full gap-4 rounded-full px-8">
+          <div className="relative flex overflow-hidden rounded-full bg-muted">
+            <div
+              ref={scrollerRef}
+              className="flex w-full items-center gap-4 overflow-x-auto rounded-full px-8 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            >
               {items.map((item) => (
-                <CarouselItem
+                <div
                   key={item.slug}
-                  className="flex h-20 basis-auto items-center"
+                  ref={isActive(item.slug) ? activeItemRef : undefined}
+                  className="flex h-20 shrink-0 items-center"
                 >
                   <Link
                     href={`/servicos/${item.slug}`}
                     aria-current={isActive(item.slug) ? "page" : undefined}
                     className={cn(
-                      "relative text-xs uppercase text-foreground",
+                      "relative whitespace-nowrap text-xs uppercase text-foreground",
                       isActive(item.slug)
                         ? "font-bold text-primary underline-offset-8"
                         : "",
@@ -73,10 +82,10 @@ export async function ServiceNavCarousel({
                       )}
                     />
                   </Link>
-                </CarouselItem>
+                </div>
               ))}
-            </CarouselContent>
-          </Carousel>
+            </div>
+          </div>
         </nav>
       </div>
     </>

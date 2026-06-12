@@ -281,7 +281,7 @@ export function HeroNavbar({
             activeClassName={activeClassName}
             portalAnchorRef={navRowRef}
             portalBoundsRef={shellRef}
-            containerClassName="px-4 py-4"
+            containerClassName="px-4 py-4 rounded-b-3xl"
             linkClassName="block"
           />
         </div>
