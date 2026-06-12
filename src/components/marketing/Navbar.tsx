@@ -23,6 +23,7 @@ export function Navbar() {
   const { scrollProgress, expanded } = useScrollProgress(SCROLL_THRESHOLD);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
+  const navRef = useRef<HTMLElement>(null);
 
   const blurPx = 8 + scrollProgress * 4;
 
@@ -41,11 +42,12 @@ export function Navbar() {
             "mx-auto flex max-w-[1439px] justify-center transition-[max-width] duration-500",
             expanded && "md:max-w-[calc(1439px+80px)]",
           )}
-          style={{ paddingTop: `${12 * (1 - scrollProgress)}px` }}
+          style={{ paddingTop: "12px" }}
         >
           <nav
+            ref={navRef}
             className={cn(
-              "flex h-18 w-full items-center justify-between rounded-lg border bg-neutral-800 px-7 text-base font-medium transition-[background-color,padding,backdrop-filter,border-color] duration-500 md:bg-transparent md:px-0",
+              "flex h-18 w-full items-center justify-between rounded-3xl border bg-neutral-800 px-7 text-base font-medium transition-[background-color,padding,backdrop-filter,border-color] duration-500 md:bg-transparent md:px-0",
               expanded
                 ? "border-white/10 backdrop-blur-xl backdrop-contrast-50 md:px-10"
                 : "border-transparent",
@@ -81,6 +83,7 @@ export function Navbar() {
         onClose={() => setMobileMenuOpen(false)}
         activeClassName={ACTIVE_CLASS}
         portalAnchorRef={headerRef}
+        portalBoundsRef={navRef}
         containerClassName="left-0 right-0"
         innerClassName={cn("flex flex-col gap-1 py-4", homeSpacing)}
       />
