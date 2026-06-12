@@ -28,6 +28,8 @@ export async function ServiceNavCarousel({
 
   const isActive = (candidateSlug: string) => candidateSlug === activeSlug;
 
+  const activeIndex = items.findIndex((item) => item.slug === activeSlug);
+
   return (
     <>
       <style href="service-heading-carousel" precedence="component">
@@ -38,7 +40,13 @@ export async function ServiceNavCarousel({
           aria-label={t("serviceNav")}
           className={cn("service-heading-carousel z-50", freeSectionShellSpacing)}
         >
-          <Carousel className="flex overflow-hidden rounded-full bg-muted">
+          <Carousel
+            className="flex overflow-hidden rounded-full bg-muted"
+            opts={{
+              align: "center",
+              startIndex: activeIndex >= 0 ? activeIndex : 0,
+            }}
+          >
             <CarouselContent className="flex w-full gap-4 rounded-full px-8">
               {items.map((item) => (
                 <CarouselItem
