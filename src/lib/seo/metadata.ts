@@ -17,7 +17,7 @@ export interface BuildPageMetadataInput {
   keywords?: readonly string[];
   /** Open Graph type — defaults to `"website"`. */
   type?: OpenGraphType;
-  /** Optional OG/Twitter image. Defaults to the app-level `/opengraph-image`. */
+  /** Optional OG/Twitter image. Defaults to the generated `/opengraph-image` (1200×630 PNG). */
   image?: {
     url: string;
     alt?: string;
@@ -30,6 +30,15 @@ export interface BuildPageMetadataInput {
   modifiedAt?: string;
   /** Forces search-engine opt-out when `true`. */
   noIndex?: boolean;
+  /**
+   * Appends the site short name to the document `<title>` via `title.absolute`.
+   *
+   * Needed for routes that live in the same segment as the layout defining the
+   * title template (e.g. the locale home), where the `%s | Tessa` template is
+   * not applied automatically. Open Graph / Twitter titles stay unbranded to
+   * match the rest of the site.
+   */
+  appendSiteName?: boolean;
 }
 
 /**
@@ -51,7 +60,12 @@ export function buildPageMetadata(input: BuildPageMetadataInput): Metadata {
     publishedAt,
     modifiedAt,
     noIndex = false,
+    appendSiteName = false,
   } = input;
+
+  const documentTitle = appendSiteName
+    ? { absolute: `${title} | ${SITE.shortName}` }
+    : title;
 
   const normalizedPath = path === "/" ? "" : path;
   const canonical = `/${locale}${normalizedPath}`;
@@ -75,10 +89,17 @@ export function buildPageMetadata(input: BuildPageMetadataInput): Metadata {
           ...(image.height ? { height: image.height } : {}),
         },
       ]
-    : undefined;
+    : [
+        {
+          url: `${SITE.domain}/opengraph-image`,
+          alt: SITE.name,
+          width: 1200,
+          height: 630,
+        },
+      ];
 
   return {
-    title,
+    title: documentTitle,
     description,
     keywords: mergedKeywords,
     alternates: {
@@ -92,7 +113,7 @@ export function buildPageMetadata(input: BuildPageMetadataInput): Metadata {
       title,
       description,
       siteName: SITE.name,
-      ...(images ? { images } : {}),
+      images,
       ...(publishedAt ? { publishedTime: publishedAt } : {}),
       ...(modifiedAt ? { modifiedTime: modifiedAt } : {}),
     },
@@ -100,7 +121,7 @@ export function buildPageMetadata(input: BuildPageMetadataInput): Metadata {
       card: "summary_large_image",
       title,
       description,
-      ...(images ? { images } : {}),
+      images,
     },
     robots: noIndex
       ? { index: false, follow: false }

@@ -129,7 +129,7 @@ export default async function LocaleLayout({
         )}
       >
         <JsonLd id="jsonld-organization" data={organizationJsonLd()} />
-        <JsonLd id="jsonld-website" data={websiteJsonLd()} />
+        <JsonLd id="jsonld-website" data={websiteJsonLd(locale)} />
         <NextIntlClientProvider messages={messages}>
           <ScrollToTop />
           <NavbarConditional />

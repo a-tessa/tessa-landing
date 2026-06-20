@@ -84,9 +84,9 @@ function MobileCarousel({ slides }: { slides: BentoSlide[] }) {
     <div className="relative md:hidden overflow-hidden rounded-3xl bg-primary bg-[url('/operations-section-bg.webp')] bg-cover bg-center bg-no-repeat">
       <div className={cn("flex flex-col", insideCardSpacing)}>
         <div className="pb-6 pt-10">
-          <h3 className="whitespace-pre-line font-barlow text-3xl font-bold uppercase leading-tight text-white">
+          <p className="whitespace-pre-line font-barlow text-3xl font-bold uppercase leading-tight text-white">
             {t("title")}
-          </h3>
+          </p>
           <p className="mt-4 max-w-[220px] text-xs font-medium uppercase tracking-[0.14em] text-white/70">
             {t("subtitle")}
           </p>
@@ -254,9 +254,9 @@ function DesktopBento({ slides }: { slides: BentoSlide[] }) {
       >
         <div className="relative flex shrink-0 flex-col justify-center pb-12 pt-10 lg:w-[300px] lg:pb-14">
           <div className="relative z-10">
-            <h3 className="whitespace-pre-line font-barlow text-3xl font-bold uppercase leading-tight text-white lg:text-4xl">
+            <p className="whitespace-pre-line font-barlow text-3xl font-bold uppercase leading-tight text-white lg:text-4xl">
               {t("title")}
-            </h3>
+            </p>
             <p className="mt-4 max-w-[220px] text-xs font-medium uppercase tracking-[0.14em] text-white/70">
               {t("subtitle")}
             </p>

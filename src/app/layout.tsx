@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { SITE } from "@/lib/seo/schemas";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.tessa.com.br"),
+  metadataBase: new URL(SITE.domain),
 };
 
 type Props = {

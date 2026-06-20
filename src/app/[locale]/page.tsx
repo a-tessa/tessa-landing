@@ -33,11 +33,13 @@ export async function generateMetadata({
     title: t("homeTitle"),
     description: t("homeDescription"),
     keywords: ["Energia solar para empresas", "Perfis sob medida"],
+    appendSiteName: true,
   });
 }
 
 export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
+  const tMeta = await getTranslations({ locale, namespace: "metadata" });
   const [{ heroSection, scenerySection, clients }, testimonials, latestBlogResp] =
     await Promise.all([
       getLandingContent(locale),
@@ -62,6 +64,7 @@ export default async function HomePage({ params }: HomePageProps) {
       />
 
       <main className="flex flex-col items-center justify-center gap-10 mx-auto">
+        <h1 className="sr-only">{tMeta("homeTitle")}</h1>
         <Hero heroSection={heroSection} clients={clients} />
         <IndustrySection />
         <Scenarios scenerySection={carouselItems} />

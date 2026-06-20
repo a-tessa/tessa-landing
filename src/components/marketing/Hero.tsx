@@ -299,7 +299,7 @@ export function Hero({ heroSection, clients }: HeroProps) {
             >
               <div className="w-full gap-10 flex flex-col lg:flex-row justify-between max-h-full">
                 <div className="min-h-54 pb-4 sm:min-h-0 lg:pb-0">
-                  <h1
+                  <h2
                     id="hero-title"
                     className="max-w-2xl text-4xl font-bold uppercase text-white sm:text-5xl lg:text-6xl"
                   >
@@ -315,7 +315,7 @@ export function Hero({ heroSection, clients }: HeroProps) {
                         {activeSlide.heading}
                       </m.span>
                     </AnimatePresence>
-                  </h1>
+                  </h2>
 
                   <AnimatePresence mode="wait" initial={false}>
                     <m.p

@@ -1,3 +1,5 @@
+import { routing } from "@/i18n/routing";
+
 /**
  * Resolves the canonical base URL for the site.
  *
@@ -81,16 +83,16 @@ export function organizationJsonLd() {
   };
 }
 
-export function websiteJsonLd() {
+export function websiteJsonLd(locale: string = routing.defaultLocale) {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: SITE.name,
-    url: SITE.domain,
-    inLanguage: ["pt-BR", "en", "es"],
+    url: `${SITE.domain}/${locale}`,
+    inLanguage: [...routing.locales],
     potentialAction: {
       "@type": "SearchAction",
-      target: `${SITE.domain}/blog?q={search_term_string}`,
+      target: `${SITE.domain}/${locale}/blog?q={search_term_string}`,
       "query-input": "required name=search_term_string",
     },
   };

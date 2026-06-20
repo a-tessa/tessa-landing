@@ -131,10 +131,8 @@ export function NewsAndSocial({ latestPost }: NewsAndSocialProps = {}) {
 
           {/* Social media column */}
           <div className="flex flex-col">
-            <h2 className="font-barlow text-3xl font-bold uppercase leading-tight text-foreground sm:text-4xl">
-              Social
-              <br />
-              media
+            <h2 className="whitespace-pre-line font-barlow text-3xl font-bold uppercase leading-tight text-foreground sm:text-4xl">
+              {t("socialTitle")}
             </h2>
 
             <div className="mt-8 grid flex-1 grid-cols-2 gap-x-4 gap-y-4 grid-rows-[auto_auto]">
