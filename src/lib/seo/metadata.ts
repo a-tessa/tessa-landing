@@ -17,7 +17,7 @@ export interface BuildPageMetadataInput {
   keywords?: readonly string[];
   /** Open Graph type — defaults to `"website"`. */
   type?: OpenGraphType;
-  /** Optional OG/Twitter image. Defaults to the generated `/opengraph-image` (1200×630 PNG). */
+  /** Optional OG/Twitter image. Defaults to the static `/og-image.png` (1200×630). */
   image?: {
     url: string;
     alt?: string;
@@ -91,7 +91,7 @@ export function buildPageMetadata(input: BuildPageMetadataInput): Metadata {
       ]
     : [
         {
-          url: `${SITE.domain}/opengraph-image`,
+          url: `${SITE.domain}/og-image.png`,
           alt: SITE.name,
           width: 1200,
           height: 630,
