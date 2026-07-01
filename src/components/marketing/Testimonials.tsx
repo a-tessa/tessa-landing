@@ -45,6 +45,7 @@ function Stars({ rating }: { rating: number }) {
   return (
     <div
       className="flex items-center gap-0.5"
+      role="img"
       aria-label={t("starsLabel", { rating })}
     >
       {Array.from({ length: 5 }).map((_, i) => (
@@ -165,7 +166,7 @@ function TestimonialNextPreviewCard({
             <span className="text-sm font-bold text-white">
               {testimonial.rating.toFixed(1)}
             </span>
-            <div className="flex items-center gap-0.5">
+            <div className="flex items-center gap-0.5" aria-hidden>
               {Array.from({ length: 5 }).map((_, i) => (
                 <IconStarFilled
                   key={`next-star-${i}`}
