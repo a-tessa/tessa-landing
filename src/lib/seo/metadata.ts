@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { routing } from "@/i18n/routing";
+import { TESSA_SHORT_LOGO } from "@/lib/brand/og-image-layout";
 import { isSearchIndexingEnabled, SITE } from "./schemas";
 
 export type OpenGraphType = "website" | "article" | "profile" | "book";
@@ -17,7 +18,7 @@ export interface BuildPageMetadataInput {
   keywords?: readonly string[];
   /** Open Graph type — defaults to `"website"`. */
   type?: OpenGraphType;
-  /** Optional OG/Twitter image. Defaults to the static `/og-image.png` (1200×630). */
+  /** Optional OG/Twitter image. Defaults to `/tessa-short-logo.png`. */
   image?: {
     url: string;
     alt?: string;
@@ -97,10 +98,10 @@ export function buildPageMetadata(input: BuildPageMetadataInput): Metadata {
       ]
     : [
         {
-          url: `${SITE.domain}/og-image.png`,
+          url: `${SITE.domain}${TESSA_SHORT_LOGO.path}`,
           alt: SITE.name,
-          width: 1200,
-          height: 630,
+          width: TESSA_SHORT_LOGO.width,
+          height: TESSA_SHORT_LOGO.height,
         },
       ];
 
