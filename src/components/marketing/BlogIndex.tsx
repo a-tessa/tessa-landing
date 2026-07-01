@@ -1,17 +1,18 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import {
-	BLOG_CATEGORIES,
-	buildBlogListHref,
-	type BlogPost,
-} from "@/lib/blog/posts";
+import type { BlogCategory } from "@/lib/api/types";
+import { buildBlogListHref, type BlogPost } from "@/lib/blog/posts";
 import { BlogAuthorAvatar } from "@/components/marketing/BlogAuthorAvatar";
 import { BlogCategoryNav } from "@/components/marketing/BlogCategoryNav";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 
-function formatPublishedDate(iso: string): string {
-  return new Intl.DateTimeFormat("pt-BR", {
+function toIntlLocale(locale: string): string {
+  return locale === "pt-BR" ? "pt-BR" : locale === "es" ? "es-ES" : "en-US";
+}
+
+function formatPublishedDate(iso: string, locale: string): string {
+  return new Intl.DateTimeFormat(toIntlLocale(locale), {
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -23,14 +24,19 @@ interface BlogIndexProps {
   ordem: "asc" | "desc";
   pagina: number;
   categoria: string;
+  categories: BlogCategory[];
   visiblePosts: BlogPost[];
   totalFiltered: number;
   hasMore: boolean;
+  locale: string;
   className?: string;
 }
 
-function getCategoryLabel(slug: string): string | undefined {
-	return BLOG_CATEGORIES.find((c) => c.slug === slug)?.label;
+function getCategoryLabel(
+  slug: string,
+  categories: BlogCategory[],
+): string | undefined {
+  return categories.find((category) => category.slug === slug)?.name;
 }
 
 export function BlogIndex({
@@ -38,9 +44,11 @@ export function BlogIndex({
   ordem,
   pagina,
   categoria,
+  categories,
   visiblePosts,
   totalFiltered,
   hasMore,
+  locale,
   className,
 }: BlogIndexProps) {
   const t = useTranslations("blog");
@@ -50,6 +58,7 @@ export function BlogIndex({
     <>
       <BlogCategoryNav
         activeCategory={categoria}
+        categories={categories}
         query={query}
         ordem={ordem}
         showSearch
@@ -68,7 +77,7 @@ export function BlogIndex({
           >
             {query.trim()
               ? t("results", { count: totalFiltered })
-              : getCategoryLabel(categoria) ?? t("latestArticles")}
+              : getCategoryLabel(categoria, categories) ?? t("latestArticles")}
           </h2>
         </div>
 
@@ -135,7 +144,7 @@ export function BlogIndex({
                           dateTime={post.publishedAt}
                           className="text-[0.6rem] uppercase tracking-wide text-muted-foreground/90"
                         >
-                          {formatPublishedDate(post.publishedAt)}
+                          {formatPublishedDate(post.publishedAt, locale)}
                         </time>
                       </div>
                     </div>

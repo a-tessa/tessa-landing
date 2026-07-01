@@ -1,7 +1,8 @@
 import { useTranslations } from "next-intl";
 import { Search } from "lucide-react";
 import { Link } from "@/i18n/navigation";
-import { BLOG_CATEGORIES, buildBlogListHref } from "@/lib/blog/posts";
+import type { BlogCategory } from "@/lib/api/types";
+import { buildBlogListHref } from "@/lib/blog/posts";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 import { BlogCategoryNavScroller } from "@/components/marketing/BlogCategoryNavScroller";
 
@@ -114,7 +115,7 @@ function SearchForm({
   return (
     <form
       method="get"
-      action="/blog"
+      action=""
       role="search"
       className={cn("flex shrink-0 items-center", className)}
     >
@@ -149,6 +150,7 @@ function SearchForm({
 
 interface BlogCategoryNavProps {
   activeCategory: string;
+  categories: BlogCategory[];
   query?: string;
   ordem?: "asc" | "desc";
   showSearch?: boolean;
@@ -156,6 +158,7 @@ interface BlogCategoryNavProps {
 
 export function BlogCategoryNav({
   activeCategory,
+  categories,
   query = "",
   ordem = "desc",
   showSearch = false,
@@ -180,7 +183,7 @@ export function BlogCategoryNav({
               label={t("latestArticles")}
               isActive={!activeCategory}
             />
-            {BLOG_CATEGORIES.map((cat) => (
+            {categories.map((cat) => (
               <CategoryTab
                 key={cat.slug}
                 href={buildBlogListHref({
@@ -188,7 +191,7 @@ export function BlogCategoryNav({
                   ordem,
                   categoria: cat.slug,
                 })}
-                label={cat.label}
+                label={cat.name}
                 isActive={activeCategory === cat.slug}
               />
             ))}

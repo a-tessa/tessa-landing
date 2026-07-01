@@ -1,14 +1,5 @@
 export const BLOG_LIST_PAGE_SIZE = 10;
 
-export const BLOG_CATEGORIES = [
-	{ slug: "servicos", label: "Serviços" },
-	{ slug: "projetos-e-planejamento", label: "Projetos e Planejamento" },
-	{ slug: "materiais-e-solucoes", label: "Materiais e Soluções" },
-	{ slug: "manutencao-e-durabilidade", label: "Manutenção e Durabilidade" },
-] as const;
-
-export type BlogCategorySlug = (typeof BLOG_CATEGORIES)[number]["slug"];
-
 export interface BlogPost {
 	slug: string;
 	title: string;
@@ -20,7 +11,7 @@ export interface BlogPost {
 	author: { name: string; initials: string; avatarUrl?: string | null };
 	imageSrc: string;
 	imageAlt: string;
-	category: BlogCategorySlug;
+	category: string;
 }
 
 export function buildBlogListHref(parts: {

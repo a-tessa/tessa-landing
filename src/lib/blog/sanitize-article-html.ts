@@ -1,7 +1,6 @@
 import sanitizeHtml from "sanitize-html";
 
 const ALLOWED_TAGS = [
-  "h1",
   "h2",
   "h3",
   "p",
@@ -48,6 +47,9 @@ export function sanitizeArticleHtml(html: string): string {
     allowedSchemesByTag: {
       img: ["http", "https"],
       iframe: ["https"],
+    },
+    transformTags: {
+      h1: "h2",
     },
     allowedIframeHostnames: ALLOWED_IFRAME_HOSTNAMES,
     allowIframeRelativeUrls: false,

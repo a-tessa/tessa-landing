@@ -6,18 +6,19 @@ import { SITE } from "@/lib/seo/schemas";
 import { cn, insideCardSpacing } from "@/lib/utils";
 
 const MENU_KEYS = [
-  { href: "/a-tessa", key: "about" },
+  { href: "/", key: "about" },
   { href: "/servicos", key: "services" },
   { href: "/representantes", key: "representatives" },
   { href: "/blog", key: "blog" },
   { href: "/contato", key: "contact" },
 ] as const;
 
-const LEGAL_KEYS = [
-  { href: "/termos-de-uso", key: "terms" },
-  { href: "/politica-de-privacidade", key: "privacy" },
-  { href: "/trabalhe-conosco", key: "careers" },
-] as const;
+type LegalLink = {
+  href: string;
+  key: "terms" | "privacy" | "careers";
+};
+
+const LEGAL_KEYS: readonly LegalLink[] = [];
 
 const SOCIAL_LINKS = [
   { href: SITE.socials.linkedin, key: "linkedin", icon: Linkedin },
@@ -198,29 +199,31 @@ export function Footer() {
               </p>
 
               <div className="lg:w-1/2 w-full flex flex-wrap justify-center xl:justify-between items-center gap-3">
-                <nav
-                  className="flex flex-wrap items-center justify-between gap-x-2 gap-y-2 mx-auto lg:mx-0"
-                  aria-label={t("legalLabel")}
-                >
-                  {LEGAL_KEYS.map(({ href, key }, index) => (
-                    <span key={href} className="inline-flex items-center gap-2">
-                      {index > 0 && (
-                        <span
-                          className="text-[0.65rem] text-primary"
-                          aria-hidden
+                {LEGAL_KEYS.length > 0 ? (
+                  <nav
+                    className="flex flex-wrap items-center justify-between gap-x-2 gap-y-2 mx-auto lg:mx-0"
+                    aria-label={t("legalLabel")}
+                  >
+                    {LEGAL_KEYS.map(({ href, key }, index) => (
+                      <span key={href} className="inline-flex items-center gap-2">
+                        {index > 0 && (
+                          <span
+                            className="text-[0.65rem] text-primary"
+                            aria-hidden
+                          >
+                            •
+                          </span>
+                        )}
+                        <Link
+                          href={href}
+                          className="font-barlow text-xxs xl:text-xs font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:text-primary sm:text-xs"
                         >
-                          •
-                        </span>
-                      )}
-                      <Link
-                        href={href}
-                        className="font-barlow text-xxs xl:text-xs font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:text-primary sm:text-xs"
-                      >
-                        {t(`legal.${key}`)}
-                      </Link>
-                    </span>
-                  ))}
-                </nav>
+                          {t(`legal.${key}`)}
+                        </Link>
+                      </span>
+                    ))}
+                  </nav>
+                ) : null}
 
                 <div className="flex items-center justify-center gap-3 md:justify-end mx-auto">
                   {SOCIAL_LINKS.map(({ href, key, icon: Icon }) => (

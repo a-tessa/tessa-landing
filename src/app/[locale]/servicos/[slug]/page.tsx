@@ -30,6 +30,7 @@ import {
   STATIC_SERVICE_SLUGS,
 } from "@/lib/servicos/static-pages";
 import { cn, freeSectionShellSpacing, OPERATIONS_IMAGES } from "@/lib/utils";
+import { routing } from "@/i18n/routing";
 import {
   getYouTubeThumbnail,
   getYouTubeVideoId,
@@ -57,6 +58,35 @@ function absoluteImageUrl(src: string): string {
   return src.startsWith("http") ? src : `${SITE.domain}${src}`;
 }
 
+async function getServiceAlternateLanguages(
+  slug: string,
+  currentLocale: string,
+  currentService: Awaited<ReturnType<typeof getServicePageBySlug>>,
+): Promise<Record<string, string>> {
+  const entries = await Promise.all(
+    routing.locales.map(async (locale) => {
+      const service =
+        locale === currentLocale
+          ? currentService
+          : await getServicePageBySlug(slug, locale);
+
+      return service
+        ? ([locale, `/${locale}/servicos/${service.slug}`] as const)
+        : null;
+    }),
+  );
+  const languages: Record<string, string> = {};
+  for (const entry of entries) {
+    if (entry) languages[entry[0]] = entry[1];
+  }
+
+  if (languages[routing.defaultLocale]) {
+    languages["x-default"] = languages[routing.defaultLocale];
+  }
+
+  return languages;
+}
+
 export async function generateMetadata({
   params,
 }: ServiceDetailPageProps): Promise<Metadata> {
@@ -71,9 +101,9 @@ export async function generateMetadata({
     const description = t(`${slug}.description`);
     const metaKeywords = t.has(`${slug}.metaKeywords`)
       ? t(`${slug}.metaKeywords`)
-          .split(",")
-          .map((keyword) => keyword.trim())
-          .filter(Boolean)
+        .split(",")
+        .map((keyword) => keyword.trim())
+        .filter(Boolean)
       : [];
 
     return buildPageMetadata({
@@ -97,6 +127,12 @@ export async function generateMetadata({
     });
   }
 
+  const alternateLanguages = await getServiceAlternateLanguages(
+    slug,
+    locale,
+    service,
+  );
+
   return buildPageMetadata({
     locale,
     path: `/servicos/${service.slug}`,
@@ -107,6 +143,7 @@ export async function generateMetadata({
       url: absoluteImageUrl(service.backgroundImageUrl),
       alt: service.title,
     },
+    alternateLanguages,
   });
 }
 
@@ -135,12 +172,12 @@ export default async function ServiceDetailPage({
   const [categoryLatestResp, fallbackLatestResp] = await Promise.all([
     categorySlug
       ? fetchBlogArticles({
-          page: 1,
-          perPage: 1,
-          order: "desc",
-          categorySlug,
-          locale,
-        })
+        page: 1,
+        perPage: 1,
+        order: "desc",
+        categorySlug,
+        locale,
+      })
       : Promise.resolve(null),
     fetchBlogArticles({ page: 1, perPage: 1, order: "desc", locale }),
   ]);
@@ -154,9 +191,9 @@ export default async function ServiceDetailPage({
   const bentoImages =
     service.images.length > 0
       ? service.images.map((image) => ({
-          src: image.imgUrl,
-          alt: service.title,
-        }))
+        src: image.imgUrl,
+        alt: service.title,
+      }))
       : OPERATIONS_IMAGES;
 
   const serviceJsonLd = {
@@ -180,20 +217,19 @@ export default async function ServiceDetailPage({
   const videoId = getYouTubeVideoId(service.exampleVideoUrl);
   const videoJsonLd = videoId
     ? {
-        "@context": "https://schema.org",
-        "@type": "VideoObject",
-        name: `${service.title} — ${t("whatHappens").replace(/\n/g, " ")}`,
-        description: service.subtitle,
-        thumbnailUrl: [getYouTubeThumbnail(videoId)],
-        contentUrl: getYouTubeWatchUrl(videoId),
-        embedUrl: `https://www.youtube-nocookie.com/embed/${videoId}`,
-        uploadDate: new Date().toISOString(),
-        publisher: {
-          "@type": "Organization",
-          name: SITE.name,
-          url: SITE.domain,
-        },
-      }
+      "@context": "https://schema.org",
+      "@type": "VideoObject",
+      name: `${service.title} — ${t("whatHappens").replace(/\n/g, " ")}`,
+      description: service.subtitle,
+      thumbnailUrl: [getYouTubeThumbnail(videoId)],
+      contentUrl: getYouTubeWatchUrl(videoId),
+      embedUrl: `https://www.youtube-nocookie.com/embed/${videoId}`,
+      publisher: {
+        "@type": "Organization",
+        name: SITE.name,
+        url: SITE.domain,
+      },
+    }
     : null;
 
   return (

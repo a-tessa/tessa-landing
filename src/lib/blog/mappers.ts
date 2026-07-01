@@ -2,7 +2,7 @@ import type {
   BlogArticleDto,
   BlogArticleListItemDto,
 } from "@/lib/api/blog.types";
-import type { BlogCategorySlug, BlogPost } from "@/lib/blog/posts";
+import type { BlogPost } from "@/lib/blog/posts";
 
 const FALLBACK_IMAGE_SRC =
   "/choose-scenary-section/estruturas-metalicas-para-telhado.webp";
@@ -75,7 +75,7 @@ export function toBlogPostFromListItem(dto: BlogArticleListItemDto): BlogPost {
     },
     imageSrc: toImageSrc(dto),
     imageAlt: toImageAlt(dto),
-    category: dto.categorySlug as BlogCategorySlug,
+    category: dto.categorySlug,
   };
 }
 

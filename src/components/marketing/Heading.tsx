@@ -3,6 +3,7 @@ import { HeroNavbar } from "./HeroNavbar";
 interface HeadingProps {
   title: string;
   description: string;
+  titleAs?: "h1" | "p";
   backgroundSrc?: string;
 }
 
@@ -69,6 +70,7 @@ const css = /* css */ `
 export function Heading({
   title,
   description,
+  titleAs,
   backgroundSrc = DEFAULT_BACKGROUND_SRC,
 }: HeadingProps) {
   return (
@@ -79,6 +81,7 @@ export function Heading({
       <HeroNavbar
         description={description}
         title={title}
+        titleAs={titleAs}
         activeClassName="text-primary text"
         backgroundSrc={backgroundSrc}
       />

@@ -47,6 +47,11 @@ export interface PublicRepresentative {
   email: string;
 }
 
+export interface BlogCategory {
+  name: string;
+  slug: string;
+}
+
 export interface PublicContentResponse {
   content: {
     heroSection?: HeroTopic[];
@@ -54,6 +59,7 @@ export interface PublicContentResponse {
     servicesPages?: ServicesPageItem[];
     clients?: ClientLogo[];
     representantsBase?: PublicRepresentative[];
+    categories?: BlogCategory[];
     [key: string]: unknown;
   };
   publishedAt: string | null;

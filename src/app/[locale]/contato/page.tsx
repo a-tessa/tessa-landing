@@ -33,12 +33,12 @@ export async function generateMetadata({
   });
 }
 
-function contactPointJsonLd() {
+function contactPointJsonLd(locale: string) {
   return {
     "@context": "https://schema.org",
     "@type": "ContactPage",
     name: SITE.name,
-    url: `${SITE.domain}/contato`,
+    url: `${SITE.domain}/${locale}/contato`,
     mainEntity: {
       "@type": "Organization",
       name: SITE.name,
@@ -71,7 +71,7 @@ export default async function ContatoPage({ params }: ContatoPageProps) {
           { name: t("title"), path: "/contato" },
         ])}
       />
-      <JsonLd id="jsonld-contact" data={contactPointJsonLd()} />
+      <JsonLd id="jsonld-contact" data={contactPointJsonLd(locale)} />
 
       <main className="flex flex-col items-center pt-10">
         <RouteHeading />

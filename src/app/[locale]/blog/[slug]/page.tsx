@@ -14,6 +14,7 @@ import {
   fetchBlogArticles,
   fetchRelatedBlogArticles,
 } from "@/lib/api/blog";
+import { getBlogCategories } from "@/lib/api/content";
 import {
   toBlogPostFromArticle,
   toBlogPostFromListItem,
@@ -22,6 +23,7 @@ import { sanitizeArticleHtml } from "@/lib/blog/sanitize-article-html";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
+import { routing } from "@/i18n/routing";
 
 export const revalidate = 60;
 
@@ -37,6 +39,35 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
 
 function absoluteImageUrl(src: string): string {
   return src.startsWith("http") ? src : `${SITE.domain}${src}`;
+}
+
+async function getBlogAlternateLanguages(
+  slug: string,
+  currentLocale: string,
+  currentArticle: Awaited<ReturnType<typeof fetchBlogArticleBySlug>>,
+): Promise<Record<string, string>> {
+  const entries = await Promise.all(
+    routing.locales.map(async (locale) => {
+      const article =
+        locale === currentLocale
+          ? currentArticle
+          : await fetchBlogArticleBySlug(slug, locale);
+
+      return article
+        ? ([locale, `/${locale}/blog/${article.slug}`] as const)
+        : null;
+    }),
+  );
+  const languages: Record<string, string> = {};
+  for (const entry of entries) {
+    if (entry) languages[entry[0]] = entry[1];
+  }
+
+  if (languages[routing.defaultLocale]) {
+    languages["x-default"] = languages[routing.defaultLocale];
+  }
+
+  return languages;
 }
 
 export async function generateMetadata({
@@ -56,6 +87,11 @@ export async function generateMetadata({
   }
 
   const post = toBlogPostFromArticle(article);
+  const alternateLanguages = await getBlogAlternateLanguages(
+    slug,
+    locale,
+    article,
+  );
 
   return buildPageMetadata({
     locale,
@@ -69,6 +105,7 @@ export async function generateMetadata({
       alt: post.imageAlt,
     },
     keywords: [post.category, post.title],
+    alternateLanguages,
   });
 }
 
@@ -90,12 +127,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const post = toBlogPostFromArticle(article);
   const sanitizedContent = sanitizeArticleHtml(post.contentHtml ?? "");
 
-  const relatedDtos = await fetchRelatedBlogArticles(
-    post.category,
-    post.slug,
-    2,
-    locale,
-  );
+  const [relatedDtos, categories] = await Promise.all([
+    fetchRelatedBlogArticles(post.category, post.slug, 2, locale),
+    getBlogCategories(locale),
+  ]);
   const relatedPosts = relatedDtos.map(toBlogPostFromListItem);
 
   const t = await getTranslations({ locale, namespace: "pages.blog" });
@@ -144,9 +179,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           title={t("title")}
           description={t("description")}
           backgroundSrc="/blog-heading.jpg"
+          titleAs="p"
         />
 
-        <BlogCategoryNav activeCategory={post.category} />
+        <BlogCategoryNav
+          activeCategory={post.category}
+          categories={categories}
+        />
 
         <section className={cn("w-full pb-16 pt-12", freeSectionShellSpacing)}>
           <BackNavLink

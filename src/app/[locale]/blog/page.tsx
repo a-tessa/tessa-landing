@@ -6,6 +6,7 @@ import { Footer } from "@/components/marketing/Footer";
 import { RouteHeading } from "@/components/marketing/RouteHeading";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { fetchBlogArticles } from "@/lib/api/blog";
+import { getBlogCategories } from "@/lib/api/content";
 import { toBlogPostFromListItem } from "@/lib/blog/mappers";
 import { BLOG_LIST_PAGE_SIZE } from "@/lib/blog/posts";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
@@ -25,9 +26,17 @@ interface BlogPageProps {
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: BlogPageProps): Promise<Metadata> {
   const { locale } = await params;
+  const sp = await searchParams;
   const t = await getTranslations({ locale, namespace: "pages.blog" });
+  const hasListParams = Boolean(
+    sp.q?.trim() ||
+      sp.categoria?.trim() ||
+      sp.ordem?.trim() ||
+      sp.pagina?.trim(),
+  );
 
   return buildPageMetadata({
     locale,
@@ -40,6 +49,7 @@ export async function generateMetadata({
       "Estruturas metálicas",
       "Energia solar",
     ],
+    noIndex: hasListParams,
   });
 }
 
@@ -75,14 +85,17 @@ export default async function BlogPage({
   const pagina = parsePagina(sp.pagina);
   const categoria = (sp.categoria ?? "").trim();
 
-  const resp = await fetchBlogArticles({
-    page: 1,
-    perPage: pagina * BLOG_LIST_PAGE_SIZE,
-    categorySlug: categoria || undefined,
-    q: query || undefined,
-    order: ordem,
-    locale,
-  });
+  const [resp, categories] = await Promise.all([
+    fetchBlogArticles({
+      page: 1,
+      perPage: pagina * BLOG_LIST_PAGE_SIZE,
+      categorySlug: categoria || undefined,
+      q: query || undefined,
+      order: ordem,
+      locale,
+    }),
+    getBlogCategories(locale),
+  ]);
 
   const visiblePosts = (resp?.articles ?? []).map(toBlogPostFromListItem);
   const totalFiltered = resp?.pagination.total ?? visiblePosts.length;
@@ -105,9 +118,11 @@ export default async function BlogPage({
           ordem={ordem}
           pagina={pagina}
           categoria={categoria}
+          categories={categories}
           visiblePosts={visiblePosts}
           totalFiltered={totalFiltered}
           hasMore={hasMore}
+          locale={locale}
         />
         <BlogRepresentativesCta />
       </main>

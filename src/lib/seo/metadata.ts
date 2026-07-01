@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { routing } from "@/i18n/routing";
-import { SITE } from "./schemas";
+import { isSearchIndexingEnabled, SITE } from "./schemas";
 
 export type OpenGraphType = "website" | "article" | "profile" | "book";
 
@@ -30,6 +30,8 @@ export interface BuildPageMetadataInput {
   modifiedAt?: string;
   /** Forces search-engine opt-out when `true`. */
   noIndex?: boolean;
+  /** Optional override for `hreflang` alternates when not every locale has this path. */
+  alternateLanguages?: Record<string, string>;
   /**
    * Appends the site short name to the document `<title>` via `title.absolute`.
    *
@@ -60,6 +62,7 @@ export function buildPageMetadata(input: BuildPageMetadataInput): Metadata {
     publishedAt,
     modifiedAt,
     noIndex = false,
+    alternateLanguages,
     appendSiteName = false,
   } = input;
 
@@ -70,11 +73,14 @@ export function buildPageMetadata(input: BuildPageMetadataInput): Metadata {
   const normalizedPath = path === "/" ? "" : path;
   const canonical = `/${locale}${normalizedPath}`;
   const absoluteUrl = `${SITE.domain}${canonical}`;
+  const shouldIndex = !noIndex && isSearchIndexingEnabled();
 
-  const languages = Object.fromEntries([
-    ...routing.locales.map((l) => [l, `/${l}${normalizedPath}`] as const),
-    ["x-default", `/${routing.defaultLocale}${normalizedPath}`] as const,
-  ]);
+  const languages =
+    alternateLanguages ??
+    Object.fromEntries([
+      ...routing.locales.map((l) => [l, `/${l}${normalizedPath}`] as const),
+      ["x-default", `/${routing.defaultLocale}${normalizedPath}`] as const,
+    ]);
 
   const mergedKeywords = keywords
     ? Array.from(new Set<string>([...SITE.keywords, ...keywords]))
@@ -104,7 +110,7 @@ export function buildPageMetadata(input: BuildPageMetadataInput): Metadata {
     keywords: mergedKeywords,
     alternates: {
       canonical,
-      languages,
+      ...(shouldIndex ? { languages } : {}),
     },
     openGraph: {
       type,
@@ -123,7 +129,7 @@ export function buildPageMetadata(input: BuildPageMetadataInput): Metadata {
       description,
       images,
     },
-    robots: noIndex
+    robots: !shouldIndex
       ? { index: false, follow: false }
       : {
           index: true,

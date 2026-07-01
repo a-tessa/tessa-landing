@@ -58,7 +58,6 @@ export async function CarportSections({ locale }: CarportSectionsProps) {
         thumbnailUrl: [getYouTubeThumbnail(videoId)],
         contentUrl: getYouTubeWatchUrl(videoId),
         embedUrl: `https://www.youtube-nocookie.com/embed/${videoId}`,
-        uploadDate: new Date().toISOString(),
         publisher: {
           "@type": "Organization",
           name: SITE.name,

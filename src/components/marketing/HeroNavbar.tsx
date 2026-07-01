@@ -15,6 +15,7 @@ import {
 interface HeroNavbarProps {
   title: string;
   description: string;
+  titleAs?: "h1" | "p";
   /** Background image (decorative). Defaults to `/services-heading.webp`. */
   backgroundSrc?: string;
   /** Override the active link color. Defaults to brand orange. */
@@ -168,6 +169,7 @@ const css = /* css */ `
 export function HeroNavbar({
   title,
   description,
+  titleAs = "h1",
   backgroundSrc = "/services-heading.webp",
   activeClassName = ACTIVE_CLASS,
 }: HeroNavbarProps) {
@@ -184,6 +186,7 @@ export function HeroNavbar({
       isTruncated: true,
     };
   }, [description]);
+  const TitleTag = titleAs;
 
   return (
     <>
@@ -238,9 +241,9 @@ export function HeroNavbar({
               insideCardSpacing,
             )}
           >
-            <h1 className="hero-nav__title text-32xl font-bold uppercase sm:text-5xl md:text-6xl lg:text-7xl">
+            <TitleTag className="hero-nav__title text-32xl font-bold uppercase sm:text-5xl md:text-6xl lg:text-7xl">
               {title}
-            </h1>
+            </TitleTag>
             {isTruncated ? (
               <Tooltip.Provider delayDuration={250}>
                 <Tooltip.Root>

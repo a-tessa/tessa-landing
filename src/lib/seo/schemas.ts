@@ -32,6 +32,17 @@ function resolveSiteUrl(): string {
   return "http://localhost:3000";
 }
 
+export function isSearchIndexingEnabled(): boolean {
+  const vercelEnv = process.env.VERCEL_ENV;
+  const domain = resolveSiteUrl();
+
+  if (vercelEnv === "preview" || vercelEnv === "development") {
+    return false;
+  }
+
+  return !/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(domain);
+}
+
 export const SITE = {
   name: "Tessa Tecnologia e Desenvolvimento LTDA",
   shortName: "Tessa",

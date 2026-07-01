@@ -1,5 +1,6 @@
 import { localeCacheKey, toApiLocale } from "./locale";
 import type {
+  BlogCategory,
   ClientLogo,
   HeroTopic,
   PublicClientsResponse,
@@ -60,6 +61,25 @@ export async function getServicesPages(
   const data = await getPublicContent(locale);
   const list = data?.content.servicesPages;
   return Array.isArray(list) ? list : null;
+}
+
+export async function getBlogCategories(
+  locale?: string,
+): Promise<BlogCategory[]> {
+  const data = await getPublicContent(locale);
+  const list = data?.content.categories;
+  return Array.isArray(list) ? list : [];
+}
+
+export async function getServicesPagesWithMeta(
+  locale?: string,
+): Promise<{ pages: ServicesPageItem[]; updatedAt: string | null }> {
+  const data = await getPublicContent(locale);
+  const list = data?.content.servicesPages;
+  return {
+    pages: Array.isArray(list) ? list : [],
+    updatedAt: data?.updatedAt ?? null,
+  };
 }
 
 export async function getServicePageBySlug(

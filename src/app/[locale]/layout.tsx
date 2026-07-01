@@ -5,7 +5,12 @@ import { setRequestLocale } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import "../globals.css";
-import { organizationJsonLd, SITE, websiteJsonLd } from "@/lib/seo/schemas";
+import {
+  isSearchIndexingEnabled,
+  organizationJsonLd,
+  SITE,
+  websiteJsonLd,
+} from "@/lib/seo/schemas";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { routing } from "@/i18n/routing";
 import type { Locale } from "@/i18n/routing";
@@ -46,6 +51,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
+  const shouldIndex = isSearchIndexingEnabled();
 
   const languages = Object.fromEntries([
     ...routing.locales.map((l) => [l, `/${l}`] as const),
@@ -67,7 +73,7 @@ export async function generateMetadata({
     keywords: [...SITE.keywords],
     alternates: {
       canonical: `/${locale}`,
-      languages,
+      ...(shouldIndex ? { languages } : {}),
     },
     openGraph: {
       type: "website",
@@ -83,11 +89,11 @@ export async function generateMetadata({
       description: SITE.description,
     },
     robots: {
-      index: true,
-      follow: true,
+      index: shouldIndex,
+      follow: shouldIndex,
       googleBot: {
-        index: true,
-        follow: true,
+        index: shouldIndex,
+        follow: shouldIndex,
         "max-image-preview": "large",
         "max-snippet": -1,
         "max-video-preview": -1,
