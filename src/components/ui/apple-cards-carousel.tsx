@@ -158,7 +158,7 @@ export const Card = ({
       >
         <BlurImage
           src={card.src}
-          alt={card.title}
+          alt=""
           fill
           sizes={SCENARIO_CARD_IMAGE_SIZES}
           quality={90}
@@ -207,7 +207,7 @@ export const BlurImage = ({
       height={height}
       loading={priority ? undefined : "lazy"}
       decoding="async"
-      alt={alt ? alt : "Background of a beautiful view"}
+      alt={alt ?? "Background of a beautiful view"}
       {...rest}
     />
   );
