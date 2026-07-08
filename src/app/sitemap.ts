@@ -4,7 +4,7 @@ import type { BlogArticleListItemDto } from "@/lib/api/blog.types";
 import { getServicesPagesWithMeta } from "@/lib/api/content";
 import { STATIC_SERVICE_SLUGS } from "@/lib/servicos/static-pages";
 import { isSearchIndexingEnabled, SITE } from "@/lib/seo/schemas";
-import { routing } from "@/i18n/routing";
+import { localePath, routing } from "@/i18n/routing";
 
 const STATIC_PATHS = [
   "/",
@@ -39,12 +39,8 @@ async function mapWithConcurrency<T, R>(
   return results;
 }
 
-function localizedPath(locale: string, path: string): string {
-  return `/${locale}${path === "/" ? "" : path}`;
-}
-
 function absoluteUrl(locale: string, path: string): string {
-  return `${SITE.domain}${localizedPath(locale, path)}`;
+  return `${SITE.domain}${localePath(locale, path)}`;
 }
 
 function buildLanguages(

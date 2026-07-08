@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { routing } from "@/i18n/routing";
+import { localePath, routing } from "@/i18n/routing";
 import { TESSA_SHORT_LOGO } from "@/lib/brand/og-image-layout";
 import { isSearchIndexingEnabled, SITE } from "./schemas";
 
@@ -71,16 +71,15 @@ export function buildPageMetadata(input: BuildPageMetadataInput): Metadata {
     ? { absolute: `${title} | ${SITE.shortName}` }
     : title;
 
-  const normalizedPath = path === "/" ? "" : path;
-  const canonical = `/${locale}${normalizedPath}`;
+  const canonical = localePath(locale, path);
   const absoluteUrl = `${SITE.domain}${canonical}`;
   const shouldIndex = !noIndex && isSearchIndexingEnabled();
 
   const languages =
     alternateLanguages ??
     Object.fromEntries([
-      ...routing.locales.map((l) => [l, `/${l}${normalizedPath}`] as const),
-      ["x-default", `/${routing.defaultLocale}${normalizedPath}`] as const,
+      ...routing.locales.map((l) => [l, localePath(l, path)] as const),
+      ["x-default", localePath(routing.defaultLocale, path)] as const,
     ]);
 
   const mergedKeywords = keywords

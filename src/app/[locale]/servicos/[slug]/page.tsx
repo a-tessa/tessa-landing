@@ -30,7 +30,7 @@ import {
   STATIC_SERVICE_SLUGS,
 } from "@/lib/servicos/static-pages";
 import { cn, freeSectionShellSpacing, OPERATIONS_IMAGES } from "@/lib/utils";
-import { routing } from "@/i18n/routing";
+import { localePath, routing } from "@/i18n/routing";
 import {
   getYouTubeThumbnail,
   getYouTubeVideoId,
@@ -71,7 +71,7 @@ async function getServiceAlternateLanguages(
           : await getServicePageBySlug(slug, locale);
 
       return service
-        ? ([locale, `/${locale}/servicos/${service.slug}`] as const)
+        ? ([locale, localePath(locale, `/servicos/${service.slug}`)] as const)
         : null;
     }),
   );
@@ -211,7 +211,7 @@ export default async function ServiceDetailPage({
       "@type": "Country",
       name: "Brasil",
     },
-    url: `${SITE.domain}/${locale}/servicos/${service.slug}`,
+    url: `${SITE.domain}${localePath(locale, `/servicos/${service.slug}`)}`,
   };
 
   const videoId = getYouTubeVideoId(service.exampleVideoUrl);

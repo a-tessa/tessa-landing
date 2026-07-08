@@ -21,6 +21,7 @@ import {
   type StaticServiceSlug,
 } from "@/lib/servicos/static-pages";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
+import { localePath } from "@/i18n/routing";
 
 function StaticServicePageSections({
   locale,
@@ -79,7 +80,7 @@ export async function StaticServicePage({ locale, slug }: StaticServicePageProps
       "@type": "Country",
       name: "Brasil",
     },
-    url: `${SITE.domain}/${locale}/servicos/${slug}`,
+    url: `${SITE.domain}${localePath(locale, `/servicos/${slug}`)}`,
   };
 
   return (

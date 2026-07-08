@@ -8,6 +8,7 @@ import { getMergedServiceNavItems } from "@/lib/servicos/nav";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { localePath } from "@/i18n/routing";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 
 interface ContatoPageProps {
@@ -38,7 +39,7 @@ function contactPointJsonLd(locale: string) {
     "@context": "https://schema.org",
     "@type": "ContactPage",
     name: SITE.name,
-    url: `${SITE.domain}/${locale}/contato`,
+    url: `${SITE.domain}${localePath(locale, "/contato")}`,
     mainEntity: {
       "@type": "Organization",
       name: SITE.name,

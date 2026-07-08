@@ -11,6 +11,7 @@ import { toBlogPostFromListItem } from "@/lib/blog/mappers";
 import { BLOG_LIST_PAGE_SIZE } from "@/lib/blog/posts";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { localePath } from "@/i18n/routing";
 
 export const revalidate = 60;
 
@@ -64,7 +65,7 @@ function blogJsonLd(locale: string) {
     "@context": "https://schema.org",
     "@type": "Blog",
     name: `${SITE.shortName} — Blog`,
-    url: `${SITE.domain}/${locale}/blog`,
+    url: `${SITE.domain}${localePath(locale, "/blog")}`,
     inLanguage: locale,
     publisher: {
       "@type": "Organization",

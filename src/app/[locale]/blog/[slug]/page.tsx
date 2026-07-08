@@ -23,7 +23,7 @@ import { sanitizeArticleHtml } from "@/lib/blog/sanitize-article-html";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
-import { routing } from "@/i18n/routing";
+import { localePath, routing } from "@/i18n/routing";
 
 export const revalidate = 60;
 
@@ -54,7 +54,7 @@ async function getBlogAlternateLanguages(
           : await fetchBlogArticleBySlug(slug, locale);
 
       return article
-        ? ([locale, `/${locale}/blog/${article.slug}`] as const)
+        ? ([locale, localePath(locale, `/blog/${article.slug}`)] as const)
         : null;
     }),
   );
@@ -158,7 +158,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `${SITE.domain}/${locale}/blog/${slug}`,
+      "@id": `${SITE.domain}${localePath(locale, `/blog/${slug}`)}`,
     },
     image: absoluteImageUrl(post.imageSrc),
   };

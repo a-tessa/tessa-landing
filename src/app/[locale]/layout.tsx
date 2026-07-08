@@ -12,7 +12,7 @@ import {
   websiteJsonLd,
 } from "@/lib/seo/schemas";
 import { JsonLd } from "@/lib/seo/jsonld";
-import { routing } from "@/i18n/routing";
+import { localePath, routing } from "@/i18n/routing";
 import type { Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { NavbarConditional } from "@/components/marketing/NavbarConditional";
@@ -57,8 +57,8 @@ export async function generateMetadata({
   const shouldIndex = isSearchIndexingEnabled();
 
   const languages = Object.fromEntries([
-    ...routing.locales.map((l) => [l, `/${l}`] as const),
-    ["x-default", `/${routing.defaultLocale}`] as const,
+    ...routing.locales.map((l) => [l, localePath(l)] as const),
+    ["x-default", localePath(routing.defaultLocale)] as const,
   ]);
 
   return {
@@ -75,13 +75,13 @@ export async function generateMetadata({
     category: "business",
     keywords: [...SITE.keywords],
     alternates: {
-      canonical: `/${locale}`,
+      canonical: localePath(locale),
       ...(shouldIndex ? { languages } : {}),
     },
     openGraph: {
       type: "website",
       locale,
-      url: `${SITE.domain}/${locale}`,
+      url: `${SITE.domain}${localePath(locale)}`,
       title: `${SITE.shortName} — ${SITE.tagline}`,
       description: SITE.description,
       siteName: SITE.name,

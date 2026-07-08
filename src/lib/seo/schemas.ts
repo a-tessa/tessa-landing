@@ -1,4 +1,4 @@
-import { routing } from "@/i18n/routing";
+import { localePath, routing } from "@/i18n/routing";
 
 /**
  * Resolves the canonical base URL for the site.
@@ -99,11 +99,11 @@ export function websiteJsonLd(locale: string = routing.defaultLocale) {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: SITE.name,
-    url: `${SITE.domain}/${locale}`,
+    url: `${SITE.domain}${localePath(locale)}`,
     inLanguage: [...routing.locales],
     potentialAction: {
       "@type": "SearchAction",
-      target: `${SITE.domain}/${locale}/blog?q={search_term_string}`,
+      target: `${SITE.domain}${localePath(locale, "/blog")}?q={search_term_string}`,
       "query-input": "required name=search_term_string",
     },
   };
@@ -131,7 +131,7 @@ export function breadcrumbJsonLd(
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: `${SITE.domain}/${locale}${item.path === "/" ? "" : item.path}`,
+      item: `${SITE.domain}${localePath(locale, item.path)}`,
     })),
   };
 }
