@@ -93,7 +93,7 @@ const css = /* css */ `
 }
 
 .hero-nav__overlay {
-  background-color: rgb(0 0 0 / 0.60);
+  background-color: rgb(0 0 0 / 0.35);
   will-change: background-color;
 }
 
@@ -113,7 +113,7 @@ const css = /* css */ `
   to { height: var(--hero-h-shrunk); }
 }
 @keyframes hero-overlay-darken {
-  to { background-color: rgb(0 0 0 / 0.80); }
+  to { background-color: rgb(0 0 0 / 0.50); }
 }
 @keyframes hero-title-shrink {
   to { transform: scale(var(--hero-title-scale)); }

@@ -16,7 +16,10 @@ import { routing } from "@/i18n/routing";
 import type { Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { NavbarConditional } from "@/components/marketing/NavbarConditional";
+import { NavServicesProvider } from "@/components/marketing/nav/services-context";
 import { ScrollToTop } from "@/components/scroll-to-top";
+import { getServicesPages } from "@/lib/api/content";
+import { getMergedServiceNavItems } from "@/lib/servicos/nav";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -120,6 +123,8 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   const messages = await getMessages();
+  const servicesPages = await getServicesPages(locale);
+  const serviceNavItems = await getMergedServiceNavItems(locale, servicesPages);
 
   return (
     <html lang={locale} suppressHydrationWarning>
@@ -137,9 +142,11 @@ export default async function LocaleLayout({
         <JsonLd id="jsonld-organization" data={organizationJsonLd()} />
         <JsonLd id="jsonld-website" data={websiteJsonLd(locale)} />
         <NextIntlClientProvider messages={messages}>
-          <ScrollToTop />
-          <NavbarConditional />
-          {children}
+          <NavServicesProvider items={serviceNavItems}>
+            <ScrollToTop />
+            <NavbarConditional />
+            {children}
+          </NavServicesProvider>
         </NextIntlClientProvider>
       </body>
     </html>

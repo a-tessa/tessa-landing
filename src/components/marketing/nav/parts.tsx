@@ -11,10 +11,11 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
-import { Menu, X } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { NAV_KEYS, isActivePath } from "./shared";
+import { useNavServices } from "./services-context";
 
 interface PortalDrawerStyle {
   top: number;
@@ -129,26 +130,201 @@ interface DesktopLinksProps {
   activeClassName: string;
 }
 
+const DESKTOP_LINK_CLASS =
+  "hidden text-xs font-medium uppercase tracking-wide transition-colors sm:block";
+
+interface NavDropdownPosition {
+  top: number;
+  left: number;
+}
+
+function useNavDropdownPosition(
+  triggerRef: RefObject<HTMLElement | null>,
+  open: boolean,
+): NavDropdownPosition | null {
+  const [position, setPosition] = useState<NavDropdownPosition | null>(null);
+
+  const updatePosition = useCallback(() => {
+    const trigger = triggerRef.current;
+    if (!trigger) return;
+
+    const rect = trigger.getBoundingClientRect();
+    setPosition({
+      top: rect.bottom + 8,
+      left: rect.left,
+    });
+  }, [triggerRef]);
+
+  useLayoutEffect(() => {
+    if (!open) {
+      setPosition(null);
+      return;
+    }
+    updatePosition();
+  }, [open, updatePosition]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    window.addEventListener("scroll", updatePosition, true);
+    window.addEventListener("resize", updatePosition);
+
+    return () => {
+      window.removeEventListener("scroll", updatePosition, true);
+      window.removeEventListener("resize", updatePosition);
+    };
+  }, [open, updatePosition]);
+
+  return position;
+}
+
+function ServicesNavLink({ activeClassName }: DesktopLinksProps) {
+  const pathname = usePathname();
+  const t = useTranslations("nav");
+  const serviceItems = useNavServices();
+  const isActive = isActivePath(pathname, "/servicos");
+  const hasDropdown = serviceItems.length > 0;
+  const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const closeTimerRef = useRef<number | null>(null);
+  const dropdownPosition = useNavDropdownPosition(triggerRef, open);
+
+  const cancelClose = useCallback(() => {
+    if (closeTimerRef.current !== null) {
+      window.clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+  }, []);
+
+  const scheduleClose = useCallback(() => {
+    cancelClose();
+    closeTimerRef.current = window.setTimeout(() => setOpen(false), 120);
+  }, [cancelClose]);
+
+  const handleOpen = useCallback(() => {
+    cancelClose();
+    setOpen(true);
+  }, [cancelClose]);
+
+  useEffect(() => {
+    return () => {
+      if (closeTimerRef.current !== null) {
+        window.clearTimeout(closeTimerRef.current);
+      }
+    };
+  }, []);
+
+  if (!hasDropdown) {
+    return (
+      <Link
+        href="/servicos"
+        className={cn(
+          DESKTOP_LINK_CLASS,
+          isActive ? activeClassName : "text-white/90 hover:text-white",
+        )}
+      >
+        {t("services")}
+      </Link>
+    );
+  }
+
+  const dropdown =
+    open && dropdownPosition
+      ? createPortal(
+          <div
+            ref={dropdownRef}
+            role="menu"
+            aria-label={t("services")}
+            style={{
+              position: "fixed",
+              top: dropdownPosition.top,
+              left: dropdownPosition.left,
+              zIndex: 60,
+            }}
+            className="max-h-80 min-w-56 overflow-y-auto rounded-lg border border-white/10 bg-[oklch(0.25_0.01_250)] py-1 shadow-xl backdrop-blur-md"
+            onMouseEnter={handleOpen}
+            onMouseLeave={scheduleClose}
+          >
+            {serviceItems.map((item) => {
+              const itemHref = `/servicos/${item.slug}`;
+              const isItemActive = pathname === itemHref;
+
+              return (
+                <Link
+                  key={item.slug}
+                  href={itemHref}
+                  role="menuitem"
+                  className={cn(
+                    "block px-4 py-2.5 text-xs font-medium uppercase tracking-wide transition-colors hover:bg-white/10",
+                    isItemActive ? activeClassName : "text-white/90 hover:text-white",
+                  )}
+                >
+                  {item.title}
+                </Link>
+              );
+            })}
+          </div>,
+          document.body,
+        )
+      : null;
+
+  return (
+    <div
+      ref={triggerRef}
+      className="relative hidden sm:block"
+      onMouseEnter={handleOpen}
+      onMouseLeave={scheduleClose}
+    >
+      <Link
+        href="/servicos"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        className={cn(
+          "inline-flex items-center gap-1 text-xs font-medium uppercase tracking-wide transition-colors",
+          isActive ? activeClassName : "text-white/90 hover:text-white",
+        )}
+      >
+        {t("services")}
+        <ChevronDown
+          size={14}
+          className={cn(
+            "opacity-70 transition-transform",
+            open && "rotate-180",
+          )}
+          aria-hidden
+        />
+      </Link>
+
+      {dropdown}
+    </div>
+  );
+}
+
 export function DesktopLinks({ activeClassName }: DesktopLinksProps) {
   const pathname = usePathname();
   const t = useTranslations("nav");
 
   return (
     <>
-      {NAV_KEYS.map(({ href, key }) => (
-        <Link
-          key={href}
-          href={href}
-          className={cn(
-            "hidden text-xs font-medium uppercase tracking-wide transition-colors sm:block",
-            isActivePath(pathname, href)
-              ? activeClassName
-              : "text-white/90 hover:text-white",
-          )}
-        >
-          {t(key)}
-        </Link>
-      ))}
+      {NAV_KEYS.map(({ href, key }) =>
+        href === "/servicos" ? (
+          <ServicesNavLink key={href} activeClassName={activeClassName} />
+        ) : (
+          <Link
+            key={href}
+            href={href}
+            className={cn(
+              DESKTOP_LINK_CLASS,
+              isActivePath(pathname, href)
+                ? activeClassName
+                : "text-white/90 hover:text-white",
+            )}
+          >
+            {t(key)}
+          </Link>
+        ),
+      )}
     </>
   );
 }
@@ -205,6 +381,7 @@ export function MobileDrawer({
 }: MobileDrawerProps) {
   const pathname = usePathname();
   const t = useTranslations("nav");
+  const serviceItems = useNavServices();
   const drawerRef = useRef<HTMLDivElement>(null);
   const position = usePortalDrawerPosition(
     portalAnchorRef,
@@ -214,20 +391,60 @@ export function MobileDrawer({
 
   if (!open || !position) return null;
 
-  const links = NAV_KEYS.map(({ href, key }) => (
-    <Link
-      key={href}
-      href={href}
-      onClick={onClose}
-      className={cn(
-        "py-2 text-sm font-medium uppercase tracking-wide",
-        linkClassName,
-        isActivePath(pathname, href) ? activeClassName : "text-white/90",
-      )}
-    >
-      {t(key)}
-    </Link>
-  ));
+  const links = NAV_KEYS.map(({ href, key }) => {
+    if (href === "/servicos" && serviceItems.length > 0) {
+      return (
+        <div key={href} className="flex flex-col gap-1">
+          <Link
+            href={href}
+            onClick={onClose}
+            className={cn(
+              "py-2 text-sm font-medium uppercase tracking-wide",
+              linkClassName,
+              isActivePath(pathname, href) ? activeClassName : "text-white/90",
+            )}
+          >
+            {t(key)}
+          </Link>
+          <div className="ml-2 flex flex-col gap-0.5 border-l border-white/15 pl-3">
+            {serviceItems.map((item) => {
+              const itemHref = `/servicos/${item.slug}`;
+
+              return (
+                <Link
+                  key={item.slug}
+                  href={itemHref}
+                  onClick={onClose}
+                  className={cn(
+                    "py-1.5 text-xs font-medium uppercase tracking-wide",
+                    linkClassName,
+                    pathname === itemHref ? activeClassName : "text-white/80",
+                  )}
+                >
+                  {item.title}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <Link
+        key={href}
+        href={href}
+        onClick={onClose}
+        className={cn(
+          "py-2 text-sm font-medium uppercase tracking-wide",
+          linkClassName,
+          isActivePath(pathname, href) ? activeClassName : "text-white/90",
+        )}
+      >
+        {t(key)}
+      </Link>
+    );
+  });
 
   const drawer = (
     <div
