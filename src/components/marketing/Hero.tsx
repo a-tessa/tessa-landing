@@ -42,6 +42,36 @@ const HERO_AUTO_ADVANCE_MS = 3000;
 
 const HERO_TEXT_CLAMP_CLASS = "line-clamp-2";
 
+const HERO_TITLE_CLASS =
+  "max-w-2xl text-[clamp(1.625rem,2.8vw+0.75rem,3.75rem)] font-bold uppercase leading-[1.05] text-white";
+
+const HERO_DESCRIPTION_CLASS = cn(
+  "mt-3 max-w-xl font-semibold uppercase tracking-[0.18em] text-white/70 sm:mt-4 lg:mt-5",
+  "text-[clamp(0.625rem,0.45vw+0.55rem,0.75rem)]",
+  HERO_TEXT_CLAMP_CLASS,
+);
+
+const HERO_SLIDE_CARD_BASE_CLASS = cn(
+  "flex @container aspect-square max-w-full flex-col justify-end rounded-2xl border text-left transition-all duration-300 sm:rounded-3xl",
+  "size-[clamp(8.5rem,10vw,15rem)]",
+  "p-[clamp(0.625rem,1vw,1.5rem)]",
+);
+
+const HERO_SLIDE_CARD_ACTIVE_CLASS = cn(
+  HERO_SLIDE_CARD_BASE_CLASS,
+  "border-chart-5/60 bg-primary text-white shadow-xl shadow-chart-5/20",
+);
+
+const HERO_SLIDE_CARD_INACTIVE_CLASS = cn(
+  HERO_SLIDE_CARD_BASE_CLASS,
+  "border-white/20 bg-transparent text-white backdrop-blur-md hover:bg-white/12",
+);
+
+const HERO_SLIDE_CARD_LABEL_CLASS = cn(
+  "w-full whitespace-pre-line font-semibold uppercase leading-[1.05] wrap-break-word",
+  "text-[length:clamp(1.1rem,8.5cqw,1.7rem)]",
+);
+
 function ScrollIndicator() {
   return (
     <div className="flex flex-col items-center gap-1">
@@ -81,7 +111,7 @@ const LOGO_WRAPPER_CLASSNAME =
   "inline-flex shrink-0 items-center justify-center grayscale opacity-60 transition-all hover:grayscale-0 hover:opacity-100";
 
 const MARQUEE_CLASSNAME =
-  "[--duration:26s] [--gap:3rem] sm:[--gap:4rem] [&_img]:[content-visibility:auto]";
+  "p-1 sm:p-2 [--duration:26s] [--gap:2rem] sm:[--gap:4rem]";
 
 function LogoItem({ client }: { client: ClientLogo }) {
   const logo = (
@@ -93,7 +123,7 @@ function LogoItem({ client }: { client: ClientLogo }) {
       sizes="(max-width: 640px) 96px, 140px"
       loading="lazy"
       decoding="async"
-      className="h-[26px] w-auto object-contain sm:h-12"
+      className="h-5 w-auto object-contain sm:h-12"
     />
   );
 
@@ -266,7 +296,7 @@ export function Hero({ heroSection, clients }: HeroProps) {
           "w-full",
         )}
       >
-        <div className="relative aspect-square w-full shrink-0 overflow-hidden rounded-3xl shadow-2xl shadow-primary/20 xl:max-h-screen md:aspect-video">
+        <div className="relative aspect-square w-full shrink-0 overflow-hidden rounded-3xl shadow-2xl shadow-primary/20 xl:max-h-screen md:aspect-16/6">
           {SLIDES.map((slide, index) => (
             <m.div
               key={`${slide.bgImage}-${index}`}
@@ -287,21 +317,18 @@ export function Hero({ heroSection, clients }: HeroProps) {
             </m.div>
           ))}
 
-          <div className="absolute inset-0 z-1 rounded-3xl bg-linear-to-r from-black/65 via-black/35 to-black/10" />
-          <div className="absolute inset-0 z-1 rounded-3xl bg-linear-to-t from-black/60 via-transparent to-transparent" />
-
           <div className="absolute inset-0 z-10 grid grid-rows-[minmax(0,1fr)_auto_auto] overflow-hidden">
             <div
               className={cn(
-                "flex min-h-0 flex-col justify-start pt-10 sm:justify-end sm:pt-24",
+                "flex min-h-full flex-col justify-center md:pt-10",
                 insideCardSpacing,
               )}
             >
-              <div className="w-full gap-10 flex flex-col lg:flex-row justify-between max-h-full">
-                <div className="min-h-54 pb-4 sm:min-h-0 lg:pb-0">
+              <div className="flex max-h-full min-h-0 w-full flex-col items-center gap-6 overflow-hidden sm:gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-8 xl:gap-10">
+                <div className="min-h-0 w-full shrink lg:max-w-2xl">
                   <h2
                     id="hero-title"
-                    className="max-w-2xl text-4xl font-bold uppercase text-white sm:text-5xl lg:text-6xl"
+                    className={HERO_TITLE_CLASS}
                   >
                     <AnimatePresence mode="wait" initial={false}>
                       <m.span
@@ -320,10 +347,7 @@ export function Hero({ heroSection, clients }: HeroProps) {
                   <AnimatePresence mode="wait" initial={false}>
                     <m.p
                       key={activeSlide.description}
-                      className={cn(
-                        "mt-5 max-w-xl text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/70 sm:text-xs",
-                        HERO_TEXT_CLAMP_CLASS,
-                      )}
+                      className={HERO_DESCRIPTION_CLASS}
                       initial={{ opacity: 0, y: 16 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
@@ -333,7 +357,7 @@ export function Hero({ heroSection, clients }: HeroProps) {
                     </m.p>
                   </AnimatePresence>
 
-                  <div className="mt-8 flex flex-wrap items-center gap-3">
+                  <div className="mt-4 flex flex-wrap items-center gap-3 sm:mt-6 lg:mt-8">
                     {heroSection?.[current]?.button ? (
                       <Link
                         href={heroSection[current].button.url}
@@ -368,17 +392,17 @@ export function Hero({ heroSection, clients }: HeroProps) {
                   </div>
                 </div>
 
-                <div className="hidden items-end justify-end pb-16 lg:flex md:-mb-14 lg:pb-0">
-                  <div className="flex w-full max-w-76 flex-col gap-4 xxl:max-w-80">
-                    <div className="flex flex-col gap-4 lg:min-h-25 xl:min-h-25 xxl:min-h-30">
+                <div className="relative z-20 hidden shrink-0 items-center justify-end lg:flex">
+                  <div className="flex flex-col gap-[clamp(0.5rem,1vw,1rem)]">
+                    <div className="flex flex-col gap-[clamp(0.5rem,1vw,1rem)]">
                       {SLIDES.length === 1 ? (
                         <button
                           type="button"
                           onClick={() => setCurrent(0)}
                           aria-pressed
-                          className="flex flex-col justify-end rounded-3xl border border-chart-5/60 bg-primary p-6 text-left text-white shadow-xl shadow-chart-5/20 transition-all duration-300 lg:size-44 xl:size-52 xxl:size-60"
+                          className={HERO_SLIDE_CARD_ACTIVE_CLASS}
                         >
-                          <p className="whitespace-pre-line text-2xl font-semibold uppercase xxl:text-3xl">
+                          <p className={HERO_SLIDE_CARD_LABEL_CLASS}>
                             {SLIDES[0].cardLabel}
                           </p>
                         </button>
@@ -386,7 +410,7 @@ export function Hero({ heroSection, clients }: HeroProps) {
                         <AnimatePresence mode="wait" initial={false}>
                           <m.div
                             key={current}
-                            className="flex flex-col gap-4"
+                            className="flex flex-col gap-[clamp(0.5rem,1vw,1rem)]"
                             initial={{ opacity: 0, y: 18 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -14 }}
@@ -396,9 +420,9 @@ export function Hero({ heroSection, clients }: HeroProps) {
                               type="button"
                               onClick={() => setCurrent(current)}
                               aria-pressed
-                              className="flex flex-col justify-end rounded-3xl border border-chart-5/60 bg-primary p-6 text-left text-white shadow-xl shadow-chart-5/20 transition-all duration-300 lg:size-44 xl:size-52 xxl:size-60"
+                              className={HERO_SLIDE_CARD_ACTIVE_CLASS}
                             >
-                              <p className="whitespace-pre-line text-2xl font-semibold uppercase xxl:text-3xl">
+                              <p className={HERO_SLIDE_CARD_LABEL_CLASS}>
                                 {activeSlide.cardLabel}
                               </p>
                             </button>
@@ -407,12 +431,9 @@ export function Hero({ heroSection, clients }: HeroProps) {
                               onClick={() => setCurrent(nextSideIndex)}
                               aria-pressed={false}
                               aria-label={nextSideSlide.heading}
-                              className={cn(
-                                "flex flex-col justify-end rounded-3xl border p-6 text-left transition-all duration-300 lg:size-44 xl:size-52 xxl:size-60",
-                                "border-white/20 bg-transparent text-white backdrop-blur-md hover:bg-white/12",
-                              )}
+                              className={HERO_SLIDE_CARD_INACTIVE_CLASS}
                             >
-                              <p className="whitespace-pre-line text-2xl font-semibold uppercase xxl:text-3xl">
+                              <p className={HERO_SLIDE_CARD_LABEL_CLASS}>
                                 {nextSideSlide.cardLabel}
                               </p>
                             </button>
@@ -421,7 +442,7 @@ export function Hero({ heroSection, clients }: HeroProps) {
                       )}
                     </div>
 
-                    <div className="flex items-center justify-end gap-3">
+                    <div className="flex items-center justify-end gap-2 sm:gap-3">
                       <div className="h-1 min-w-0 flex-1 overflow-hidden rounded-full bg-white/15">
                         <m.div
                           className="h-full rounded-full bg-chart-5/80"
@@ -435,9 +456,9 @@ export function Hero({ heroSection, clients }: HeroProps) {
                       <Button
                         onClick={next}
                         aria-label={t("nextHeroBanner")}
-                        className="cursor-pointer size-11 rounded-full transition-transform hover:scale-105"
+                        className="size-9 shrink-0 cursor-pointer rounded-full transition-transform hover:scale-95 sm:size-10 xl:size-11"
                       >
-                        <ArrowRight size={18} />
+                        <ArrowRight className="size-4 sm:size-[18px]" />
                       </Button>
                     </div>
                   </div>
@@ -445,12 +466,12 @@ export function Hero({ heroSection, clients }: HeroProps) {
               </div>
             </div>
 
-            <div className="flex max-sm:-translate-y-1 items-center justify-between px-5 sm:translate-y-0 sm:px-8 lg:px-14">
+            <div className="pointer-events-none absolute bottom-8 md:bottom-14 left-0 right-0 flex max-sm:-translate-y-1 items-center justify-between px-5 sm:translate-y-0 sm:px-8 lg:px-14">
               <div className="flex items-center gap-3 text-white/70">
                 <ScrollIndicator />
               </div>
 
-              <div className="flex items-center gap-3 lg:hidden">
+              <div className="pointer-events-auto flex items-center gap-3 lg:hidden">
                 <Button
                   onClick={prev}
                   aria-label={t("prevHeroBanner")}
@@ -467,25 +488,23 @@ export function Hero({ heroSection, clients }: HeroProps) {
                 </Button>
               </div>
             </div>
-
-            <div className="pb-10 text-center sm:pb-14">
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-white sm:text-sm">
-                {t("trustedCompanies")}
-              </p>
-            </div>
           </div>
 
-          <button
-            type="button"
+          <Button
             onClick={prev}
-            className="absolute left-5 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/16 lg:flex"
+            className="absolute cursor-pointer left-5 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/16 lg:flex"
             aria-label={t("prevHeroBanner")}
           >
             <ChevronLeft size={20} />
-          </button>
+          </Button>
         </div>
         <div className="relative z-10 h-fit -mt-8 sm:-mt-10">
-          <div className="overflow-hidden rounded-full bg-card py-[17px] shadow-2xl shadow-primary/10 sm:py-10">
+          <div className="pb-2 text-center sm:pb-2">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-white sm:text-sm">
+              {t("trustedCompanies")}
+            </p>
+          </div>
+          <div className="overflow-hidden rounded-full bg-card py-2 shadow-2xl shadow-primary/10 sm:py-10">
             <LogoStrip clients={clients} />
           </div>
         </div>
