@@ -18,6 +18,8 @@ interface HeroNavbarProps {
   titleAs?: "h1" | "p";
   /** Background image (decorative). Defaults to `/services-heading.webp`. */
   backgroundSrc?: string;
+  /** Alt text for the background image. Omit for decorative images. */
+  backgroundAlt?: string;
   /** Override the active link color. Defaults to brand orange. */
   activeClassName?: string;
 }
@@ -171,6 +173,7 @@ export function HeroNavbar({
   description,
   titleAs = "h1",
   backgroundSrc = "/services-heading.webp",
+  backgroundAlt,
   activeClassName = ACTIVE_CLASS,
 }: HeroNavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -199,11 +202,11 @@ export function HeroNavbar({
           <div className="hero-nav__background pointer-events-none absolute inset-0 overflow-hidden">
             <Image
               src={backgroundSrc}
-              alt=""
+              alt={backgroundAlt ?? ""}
               fill
               sizes="100vw"
               priority
-              aria-hidden
+              {...(backgroundAlt ? {} : { "aria-hidden": true })}
               className="-z-20 object-cover"
             />
             <div

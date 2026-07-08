@@ -611,7 +611,8 @@
     },
     "blog": {
       "title": "Blog",
-      "description": "Discover valuable content and expert advice from our experienced team to elevate your knowledge and help you make a safer decision when hiring Tessa."
+      "description": "Discover valuable content and expert advice from our experienced team to elevate your knowledge and help you make a safer decision when hiring Tessa.",
+      "headingImageAlt": "custom metal structures at a company"
     },
     "contato": {
       "title": "Contact",

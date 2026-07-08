@@ -59,6 +59,8 @@ interface RouteHeadingProps {
   namespace?: RouteNamespace;
   /** Optional override for the heading background image. */
   backgroundSrc?: string;
+  /** Optional override for the heading background image alt text. */
+  backgroundAlt?: string;
 }
 
 /**
@@ -68,6 +70,7 @@ interface RouteHeadingProps {
 export function RouteHeading({
   namespace,
   backgroundSrc,
+  backgroundAlt,
 }: RouteHeadingProps = {}) {
   const pathname = usePathname();
   const routeConfig = resolveHeadingConfig(pathname);
@@ -79,6 +82,7 @@ export function RouteHeading({
     <RouteHeadingInner
       namespace={resolvedNamespace}
       backgroundSrc={backgroundSrc ?? routeConfig?.backgroundSrc}
+      backgroundAlt={backgroundAlt}
     />
   );
 }
@@ -86,16 +90,23 @@ export function RouteHeading({
 function RouteHeadingInner({
   namespace,
   backgroundSrc,
+  backgroundAlt,
 }: {
   namespace: RouteNamespace;
   backgroundSrc?: string;
+  backgroundAlt?: string;
 }) {
   const t = useTranslations(namespace);
+  const resolvedBackgroundAlt =
+    backgroundAlt ??
+    (t.has("headingImageAlt") ? t("headingImageAlt") : undefined);
+
   return (
     <Heading
       title={t("title")}
       description={t("description")}
       backgroundSrc={backgroundSrc}
+      backgroundAlt={resolvedBackgroundAlt}
     />
   );
 }

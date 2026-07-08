@@ -5,6 +5,7 @@ interface HeadingProps {
   description: string;
   titleAs?: "h1" | "p";
   backgroundSrc?: string;
+  backgroundAlt?: string;
 }
 
 const DEFAULT_BACKGROUND_SRC = "/services-heading.webp";
@@ -72,6 +73,7 @@ export function Heading({
   description,
   titleAs,
   backgroundSrc = DEFAULT_BACKGROUND_SRC,
+  backgroundAlt,
 }: HeadingProps) {
   return (
     <>
@@ -84,6 +86,7 @@ export function Heading({
         titleAs={titleAs}
         activeClassName="text-primary text"
         backgroundSrc={backgroundSrc}
+        backgroundAlt={backgroundAlt}
       />
     </>
   );

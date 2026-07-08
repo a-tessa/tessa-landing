@@ -611,7 +611,8 @@
     },
     "blog": {
       "title": "Blog",
-      "description": "Descubra conteúdos valiosos e conselhos de especialistas da nossa equipe experiente para elevar seu conhecimento e ajudar você a tomar uma decisão mais segura na hora de contratar a Tessa."
+      "description": "Descubra conteúdos valiosos e conselhos de especialistas da nossa equipe experiente para elevar seu conhecimento e ajudar você a tomar uma decisão mais segura na hora de contratar a Tessa.",
+      "headingImageAlt": "estruturas metálicas sob medida em uma empresa"
     },
     "contato": {
       "title": "Contato",
