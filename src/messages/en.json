@@ -4,6 +4,7 @@
     "services": "SERVICES",
     "representatives": "REPRESENTATIVES",
     "blog": "BLOG",
+    "downloads": "DOWNLOADS",
     "contact": "CONTACT",
     "since": "SINCE 2001",
     "selectLanguage": "Select language",
@@ -614,6 +615,19 @@
       "description": "Discover valuable content and expert advice from our experienced team to elevate your knowledge and help you make a safer decision when hiring Tessa.",
       "headingImageAlt": "custom metal structures at a company"
     },
+    "downloads": {
+      "title": "Downloads",
+      "description": "Presentations, folders and manuals for Tessa structures. Download materials in your language.",
+      "headingImageAlt": "Tessa technical materials and manuals",
+      "downloadCta": "Download PDF",
+      "coverImageAlt": "{title} — cover image",
+      "seeMore": "See more about",
+      "descriptionDialogClose": "Close",
+      "allDocuments": "All",
+      "filterLabel": "Filter documents by category",
+      "empty": "No documents available in this language yet.",
+      "emptyInCategory": "No documents in this category yet."
+    },
     "contato": {
       "title": "Contact",
       "description": "Talk to our team to ask questions, request a quote or learn about our solutions."
@@ -640,6 +654,7 @@
       "structures": "Structures",
       "representatives": "Representatives",
       "blog": "Blog",
+      "downloads": "Downloads",
       "contact": "Contact/Location"
     },
     "legal": {

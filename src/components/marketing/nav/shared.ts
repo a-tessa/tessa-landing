@@ -3,6 +3,7 @@ export const NAV_KEYS = [
   { href: "/servicos", key: "services" },
   { href: "/representantes", key: "representatives" },
   { href: "/blog", key: "blog" },
+  { href: "/downloads", key: "downloads" },
   { href: "/contato", key: "contact" },
 ] as const;
 

@@ -4,6 +4,7 @@
     "services": "SERVICIOS",
     "representatives": "REPRESENTANTES",
     "blog": "BLOG",
+    "downloads": "DESCARGAS",
     "contact": "CONTACTO",
     "since": "DESDE 2001",
     "selectLanguage": "Seleccionar idioma",
@@ -614,6 +615,19 @@
       "description": "Descubra contenidos valiosos y consejos de especialistas de nuestro equipo experimentado para elevar su conocimiento y ayudarle a tomar una decisión más segura al contratar a Tessa.",
       "headingImageAlt": "estructuras metálicas a medida en una empresa"
     },
+    "downloads": {
+      "title": "Descargas",
+      "description": "Presentaciones, folders y manuales de las estructuras Tessa. Descargue los materiales en su idioma.",
+      "headingImageAlt": "materiales técnicos y manuales Tessa",
+      "downloadCta": "Descargar PDF",
+      "coverImageAlt": "{title} — imagen de portada",
+      "seeMore": "Ver más sobre",
+      "descriptionDialogClose": "Cerrar",
+      "allDocuments": "Todos",
+      "filterLabel": "Filtrar documentos por categoría",
+      "empty": "No hay documentos disponibles en este idioma por el momento.",
+      "emptyInCategory": "Aún no hay documentos en esta categoría."
+    },
     "contato": {
       "title": "Contacto",
       "description": "Hable con nuestro equipo para resolver dudas, solicitar presupuesto o conocer nuestras soluciones."
@@ -640,6 +654,7 @@
       "structures": "Estructuras",
       "representatives": "Representantes",
       "blog": "Blog",
+      "downloads": "Descargas",
       "contact": "Contacto/Ubicación"
     },
     "legal": {

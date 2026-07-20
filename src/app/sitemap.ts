@@ -11,6 +11,7 @@ const STATIC_PATHS = [
   "/servicos",
   "/representantes",
   "/blog",
+  "/downloads",
   "/contato",
 ];
 
