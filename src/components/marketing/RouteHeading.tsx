@@ -32,6 +32,11 @@ const ROUTE_NAMESPACES = [
     backgroundSrc: "/blog-heading.jpg",
   },
   {
+    prefix: "/galeria",
+    namespace: "pages.gallery",
+    backgroundSrc: "/blog-heading.jpg",
+  },
+  {
     prefix: "/contato",
     namespace: "pages.contato",
     /** Banner Elementor 748b261 */

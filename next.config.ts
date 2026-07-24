@@ -36,6 +36,11 @@ const nextConfig: NextConfig = {
         hostname: "**.fbcdn.net",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "i.ytimg.com",
+        pathname: "/**",
+      },
     ],
   },
   bundlePagesRouterDependencies: true,

@@ -5,6 +5,7 @@
     "representatives": "REPRESENTATIVES",
     "blog": "BLOG",
     "downloads": "DOWNLOADS",
+    "gallery": "GALLERY",
     "contact": "CONTACT",
     "since": "SINCE 2001",
     "selectLanguage": "Select language",
@@ -634,6 +635,20 @@
       "empty": "No documents available in this language yet.",
       "emptyInCategory": "No documents in this category yet."
     },
+    "gallery": {
+      "title": "Gallery",
+      "description": "Photos and videos of Tessa structures and operations. Browse the archive by category.",
+      "headingImageAlt": "photo and video gallery of Tessa structures",
+      "photosHeading": "Photos",
+      "videosHeading": "Videos",
+      "allItems": "All",
+      "filterLabel": "Filter gallery by category",
+      "empty": "No media available right now.",
+      "emptyInCategory": "No media in this category yet.",
+      "playVideo": "Play video",
+      "close": "Close",
+      "lightboxLabel": "Gallery media"
+    },
     "contato": {
       "title": "Contact",
       "description": "Talk to our team to ask questions, request a quote or learn about our solutions."
@@ -661,6 +676,7 @@
       "representatives": "Representatives",
       "blog": "Blog",
       "downloads": "Downloads",
+      "gallery": "Gallery",
       "contact": "Contact/Location"
     },
     "legal": {

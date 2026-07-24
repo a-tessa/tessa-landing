@@ -4,6 +4,7 @@ export const NAV_KEYS = [
   { href: "/representantes", key: "representatives" },
   { href: "/blog", key: "blog" },
   { href: "/downloads", key: "downloads" },
+  { href: "/galeria", key: "gallery" },
   { href: "/contato", key: "contact" },
 ] as const;
 
