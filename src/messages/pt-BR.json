@@ -71,6 +71,8 @@
     "expandImage": "Expandir imagem",
     "collapseImage": "Recolher imagem",
     "closeImage": "Fechar imagem",
+    "gallerySummary": "Galeria de operações com {count} imagens.",
+    "imageLoadError": "Não foi possível carregar a imagem.",
     "captions": {
       "galeria_tessa_01": "Estrutura carport projetada e fabricada pela Tessa, ideal para cobertura de veículos com integração de energia solar.",
       "galeria_tessa_02": "Detalhe de estruturas metálicas galvanizadas com acabamento e dimensional rigorosos da linha Tessa.",

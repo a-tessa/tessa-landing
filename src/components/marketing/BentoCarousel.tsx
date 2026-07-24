@@ -2,7 +2,6 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import Image from "next/image";
 import { motion } from "motion/react";
 import {
   IconArrowNarrowLeft,
@@ -16,6 +15,13 @@ import {
 } from "@/components/ui/dialog";
 import { VisuallyHidden } from "radix-ui";
 import { cn, insideCardSpacing } from "@/lib/utils";
+import {
+  getDesktopOperationFlatIndex,
+  getOperationImageLoading,
+  isPriorityOperationImageIndex,
+  OPERATION_IMAGE_SIZES,
+} from "@/lib/operations-image";
+import { OperationsGalleryImage } from "./OperationsGalleryImage";
 
 export interface BentoImage {
   src: string;
@@ -55,32 +61,38 @@ function getImageCaption(
   return null;
 }
 
+function countGalleryImages(slides: BentoSlide[]): number {
+  return slides.reduce((total, slide) => total + slide.images.length, 0);
+}
+
 function MobileExpandedImage({
   image,
   caption,
   onClose,
   closeLabel,
+  errorLabel,
 }: {
   image: BentoImage;
   caption: string | null;
   onClose: () => void;
   closeLabel: string;
+  errorLabel: string;
 }) {
   return (
     <>
       <div className="relative aspect-4/3 w-full">
-        <Image
+        <OperationsGalleryImage
           src={image.src}
           alt={image.alt}
-          fill
-          sizes="100vw"
-          className="object-cover"
+          sizes={OPERATION_IMAGE_SIZES.mobileExpand}
+          loading="eager"
           priority
+          errorLabel={errorLabel}
         />
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-3 top-3 flex size-9 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition-colors hover:bg-black/80"
+          className="absolute right-3 top-3 z-10 flex size-9 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition-colors hover:bg-black/80"
           aria-label={closeLabel}
         >
           <IconX className="size-5" />
@@ -104,6 +116,7 @@ function DesktopExpandedImage({
   closeLabel,
   slideIndex,
   colIndex,
+  errorLabel,
 }: {
   image: BentoImage;
   caption: string | null;
@@ -111,6 +124,7 @@ function DesktopExpandedImage({
   closeLabel: string;
   slideIndex: number;
   colIndex: number;
+  errorLabel: string;
 }) {
   return (
     <motion.div
@@ -122,18 +136,18 @@ function DesktopExpandedImage({
       className="flex h-full flex-col overflow-hidden rounded-xl lg:rounded-2xl"
     >
       <div className="relative w-full flex-1 min-h-0">
-        <Image
+        <OperationsGalleryImage
           src={image.src}
           alt={image.alt}
-          fill
-          sizes="(max-width: 1024px) 60vw, 720px"
-          className="object-cover"
+          sizes={OPERATION_IMAGE_SIZES.desktopExpand}
+          loading="eager"
           priority
+          errorLabel={errorLabel}
         />
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-3 top-3 flex size-10 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition-colors hover:bg-black/80"
+          className="absolute right-3 top-3 z-10 flex size-10 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition-colors hover:bg-black/80"
           aria-label={closeLabel}
         >
           <IconX className="size-5" />
@@ -151,8 +165,12 @@ function DesktopExpandedImage({
 }
 
 export function BentoCarousel({ slides, className }: BentoCarouselProps) {
+  const t = useTranslations("operations");
+  const imageCount = countGalleryImages(slides);
+
   return (
     <div className={cn("relative w-full", className)}>
+      <p className="sr-only">{t("gallerySummary", { count: imageCount })}</p>
       <MobileCarousel slides={slides} />
       <DesktopBento slides={slides} />
     </div>
@@ -216,12 +234,17 @@ function MobileCarousel({ slides }: { slides: BentoSlide[] }) {
               transition={{ duration: 0.4, delay: 0.05 * Math.min(i, 3) }}
               className="relative aspect-4/3 w-full shrink-0 cursor-pointer snap-center overflow-hidden rounded-2xl"
               aria-label={t("expandImage")}
+              data-gallery-flat-index={i}
             >
-              <Image
+              <OperationsGalleryImage
                 src={img.src}
                 alt={img.alt}
-                fill
-                sizes="90vw"
+                sizes={OPERATION_IMAGE_SIZES.mobileThumb}
+                loading={getOperationImageLoading(i)}
+                // Single high-priority preload is reserved for the desktop
+                // first thumb (larger LCP candidate); mobile stays eager-only.
+                priority={false}
+                errorLabel={t("imageLoadError")}
                 className="object-cover"
               />
             </motion.button>
@@ -280,6 +303,7 @@ function MobileCarousel({ slides }: { slides: BentoSlide[] }) {
               caption={getImageCaption(t, openImage)}
               onClose={() => setOpenImage(null)}
               closeLabel={t("closeImage")}
+              errorLabel={t("imageLoadError")}
             />
           ) : null}
         </DialogContent>
@@ -377,10 +401,7 @@ function DesktopBento({ slides }: { slides: BentoSlide[] }) {
                   : "w-[560px] lg:w-[780px]",
               )}
             >
-              <motion.div
-                layout
-                className="flex h-full gap-6"
-              >
+              <motion.div layout className="flex h-full gap-6">
                 {columns.map((col, colIndex) => {
                   const isExpandedCol =
                     isExpandedSlide && expanded?.colIndex === colIndex;
@@ -409,32 +430,44 @@ function DesktopBento({ slides }: { slides: BentoSlide[] }) {
                           closeLabel={t("collapseImage")}
                           slideIndex={slideIndex}
                           colIndex={colIndex}
+                          errorLabel={t("imageLoadError")}
                         />
                       ) : (
-                        col.map((img, imgIndex) => (
-                          <motion.button
-                            key={`${slideIndex}-${colIndex}-${imgIndex}`}
-                            type="button"
-                            onClick={() =>
-                              setExpanded({
-                                slideIndex,
-                                colIndex,
-                                image: img,
-                              })
-                            }
-                            layout
-                            className="group relative h-full min-h-0 flex-1 cursor-pointer overflow-hidden rounded-xl lg:rounded-2xl"
-                            aria-label={t("expandImage")}
-                          >
-                            <Image
-                              src={img.src}
-                              alt={img.alt}
-                              fill
-                              sizes="(max-width: 1024px) 30vw, 260px"
-                              className="object-cover transition-transform duration-500 group-hover:scale-105"
-                            />
-                          </motion.button>
-                        ))
+                        col.map((img, imgIndex) => {
+                          const flatIndex = getDesktopOperationFlatIndex(
+                            slideIndex,
+                            colIndex,
+                            imgIndex,
+                          );
+
+                          return (
+                            <motion.button
+                              key={`${slideIndex}-${colIndex}-${imgIndex}`}
+                              type="button"
+                              onClick={() =>
+                                setExpanded({
+                                  slideIndex,
+                                  colIndex,
+                                  image: img,
+                                })
+                              }
+                              layout
+                              className="group relative h-full min-h-0 flex-1 cursor-pointer overflow-hidden rounded-xl lg:rounded-2xl"
+                              aria-label={t("expandImage")}
+                              data-gallery-flat-index={flatIndex}
+                            >
+                              <OperationsGalleryImage
+                                src={img.src}
+                                alt={img.alt}
+                                sizes={OPERATION_IMAGE_SIZES.desktopThumb}
+                                loading={getOperationImageLoading(flatIndex)}
+                                priority={isPriorityOperationImageIndex(flatIndex)}
+                                errorLabel={t("imageLoadError")}
+                                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                              />
+                            </motion.button>
+                          );
+                        })
                       )}
                     </motion.div>
                   );

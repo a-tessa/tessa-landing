@@ -71,6 +71,8 @@
     "expandImage": "Expand image",
     "collapseImage": "Collapse image",
     "closeImage": "Close image",
+    "gallerySummary": "Operations gallery with {count} images.",
+    "imageLoadError": "The image could not be loaded.",
     "captions": {
       "galeria_tessa_01": "Tessa-designed and manufactured carport structure, ideal for vehicle coverage with solar energy integration.",
       "galeria_tessa_02": "Close-up of galvanized steel structures with the precise finish and dimensions of the Tessa product line.",
