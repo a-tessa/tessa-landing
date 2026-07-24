@@ -15,6 +15,20 @@ export interface SceneryItem {
   image: string;
 }
 
+export interface IndustryVideo {
+  url: string;
+  startSeconds?: number;
+}
+
+export interface IndustrySection {
+  titlePrefix: string;
+  title: string;
+  subtitle: string;
+  videos: {
+    "pt-BR": IndustryVideo;
+  };
+}
+
 export interface ServicesPageImage {
   imgUrl: string;
 }
@@ -55,6 +69,7 @@ export interface BlogCategory {
 export interface PublicContentResponse {
   content: {
     heroSection?: HeroTopic[];
+    industrySection?: IndustrySection;
     scenerySection?: SceneryItem[];
     servicesPages?: ServicesPageItem[];
     clients?: ClientLogo[];

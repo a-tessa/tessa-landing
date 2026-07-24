@@ -1,14 +1,27 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { ServiceVideoPlayer } from "@/components/marketing/ServiceVideoPlayer";
-import { getIndustryVideoConfig } from "@/lib/industry-content";
+import {
+  getIndustryVideoConfig,
+  resolveIndustrySection,
+} from "@/lib/industry-content";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 
-export async function IndustrySection() {
+interface IndustrySectionProps {
+  industrySection?: unknown;
+}
+
+export async function IndustrySection({
+  industrySection,
+}: IndustrySectionProps) {
   const [t, locale] = await Promise.all([
     getTranslations("industry"),
     getLocale(),
   ]);
-  const video = getIndustryVideoConfig(locale);
+  const cmsContent = resolveIndustrySection(industrySection, locale);
+  const video = cmsContent?.video ?? getIndustryVideoConfig(locale);
+  const titlePrefix = cmsContent?.titlePrefix ?? t("titlePrefix");
+  const title = cmsContent?.title ?? t("title");
+  const subtitle = cmsContent?.subtitle ?? t("description");
 
   return (
     <section
@@ -21,12 +34,12 @@ export async function IndustrySection() {
             id="industry-title"
             className="whitespace-pre-line font-barlow text-3xl font-bold uppercase leading-tight text-foreground sm:text-4xl lg:text-[2.75rem]"
           >
-            <span className="text-primary">{t("titlePrefix")}</span>
+            <span className="text-primary">{titlePrefix}</span>
             {"\n"}
-            {t("title")}
+            {title}
           </h2>
           <p className="mt-2 max-w-3xl text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground sm:text-sm">
-            {t("description")}
+            {subtitle}
           </p>
           <div
             aria-hidden

@@ -41,8 +41,12 @@ export async function generateMetadata({
 export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
   const tMeta = await getTranslations({ locale, namespace: "metadata" });
-  const [{ heroSection, scenerySection, clients }, testimonials, latestBlogResp, instagramResp] =
-    await Promise.all([
+  const [
+    { heroSection, industrySection, scenerySection, clients },
+    testimonials,
+    latestBlogResp,
+    instagramResp,
+  ] = await Promise.all([
       getLandingContent(locale),
       getApprovedTestimonials(),
       fetchBlogArticles({ page: 1, perPage: 1, order: "desc", locale }),
@@ -69,7 +73,7 @@ export default async function HomePage({ params }: HomePageProps) {
       <main className="flex flex-col items-center justify-center gap-10 mx-auto">
         <h1 className="sr-only">{tMeta("homeTitle")}</h1>
         <Hero heroSection={heroSection} clients={clients} />
-        <IndustrySection />
+        <IndustrySection industrySection={industrySection} />
         <Scenarios scenerySection={carouselItems} />
         <Operations />
         <NewsAndSocial
