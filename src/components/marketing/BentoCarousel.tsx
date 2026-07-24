@@ -17,14 +17,17 @@ import {
 import { VisuallyHidden } from "radix-ui";
 import { cn, insideCardSpacing } from "@/lib/utils";
 
-interface BentoImage {
+export interface BentoImage {
   src: string;
   alt: string;
   span?: string;
+  /** Static i18n caption key under `operations.captions.*`. */
   captionKey?: string;
+  /** CMS caption already localized by the API. Never falls back to `alt`. */
+  caption?: string;
 }
 
-interface BentoSlide {
+export interface BentoSlide {
   images: BentoImage[];
 }
 
@@ -35,12 +38,116 @@ interface BentoCarouselProps {
 
 type OperationsTranslator = ReturnType<typeof useTranslations<"operations">>;
 
-function getImageCaption(t: OperationsTranslator, image: BentoImage): string {
+function getImageCaption(
+  t: OperationsTranslator,
+  image: BentoImage,
+): string | null {
+  if (typeof image.caption === "string") {
+    const trimmed = image.caption.trim();
+    return trimmed.length > 0 ? trimmed : null;
+  }
+
   if (image.captionKey) {
     return t(`captions.${image.captionKey}` as Parameters<OperationsTranslator>[0]);
   }
 
-  return image.alt;
+  // Never reuse alternative text as a visible caption.
+  return null;
+}
+
+function MobileExpandedImage({
+  image,
+  caption,
+  onClose,
+  closeLabel,
+}: {
+  image: BentoImage;
+  caption: string | null;
+  onClose: () => void;
+  closeLabel: string;
+}) {
+  return (
+    <>
+      <div className="relative aspect-4/3 w-full">
+        <Image
+          src={image.src}
+          alt={image.alt}
+          fill
+          sizes="100vw"
+          className="object-cover"
+          priority
+        />
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute right-3 top-3 flex size-9 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition-colors hover:bg-black/80"
+          aria-label={closeLabel}
+        >
+          <IconX className="size-5" />
+        </button>
+      </div>
+      {caption ? (
+        <div className="max-h-[40vh] overflow-y-auto bg-primary px-5 py-4">
+          <p className="wrap-break-word text-sm leading-relaxed text-white/90">
+            {caption}
+          </p>
+        </div>
+      ) : null}
+    </>
+  );
+}
+
+function DesktopExpandedImage({
+  image,
+  caption,
+  onClose,
+  closeLabel,
+  slideIndex,
+  colIndex,
+}: {
+  image: BentoImage;
+  caption: string | null;
+  onClose: () => void;
+  closeLabel: string;
+  slideIndex: number;
+  colIndex: number;
+}) {
+  return (
+    <motion.div
+      key={`expanded-${slideIndex}-${colIndex}`}
+      layout
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.25, delay: 0.15 }}
+      className="flex h-full flex-col overflow-hidden rounded-xl lg:rounded-2xl"
+    >
+      <div className="relative w-full flex-1 min-h-0">
+        <Image
+          src={image.src}
+          alt={image.alt}
+          fill
+          sizes="(max-width: 1024px) 60vw, 720px"
+          className="object-cover"
+          priority
+        />
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute right-3 top-3 flex size-10 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition-colors hover:bg-black/80"
+          aria-label={closeLabel}
+        >
+          <IconX className="size-5" />
+        </button>
+      </div>
+      {caption ? (
+        <div className="max-h-[35%] shrink-0 overflow-y-auto bg-neutral-400 px-5 py-4">
+          <p className="wrap-break-word text-sm leading-relaxed text-white/90 lg:text-base">
+            {caption}
+          </p>
+        </div>
+      ) : null}
+    </motion.div>
+  );
 }
 
 export function BentoCarousel({ slides, className }: BentoCarouselProps) {
@@ -167,33 +274,14 @@ function MobileCarousel({ slides }: { slides: BentoSlide[] }) {
           <VisuallyHidden.Root>
             <DialogTitle>{openImage?.alt ?? ""}</DialogTitle>
           </VisuallyHidden.Root>
-          {openImage && (
-            <>
-              <div className="relative aspect-4/3 w-full">
-                <Image
-                  src={openImage.src}
-                  alt={openImage.alt}
-                  fill
-                  sizes="100vw"
-                  className="object-cover"
-                  priority
-                />
-                <button
-                  type="button"
-                  onClick={() => setOpenImage(null)}
-                  className="absolute right-3 top-3 flex size-9 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition-colors hover:bg-black/80"
-                  aria-label={t("closeImage")}
-                >
-                  <IconX className="size-5" />
-                </button>
-              </div>
-              <div className="max-h-[40vh] overflow-y-auto bg-primary px-5 py-4">
-                <p className="wrap-break-word text-sm leading-relaxed text-white/90">
-                  {getImageCaption(t, openImage)}
-                </p>
-              </div>
-            </>
-          )}
+          {openImage ? (
+            <MobileExpandedImage
+              image={openImage}
+              caption={getImageCaption(t, openImage)}
+              onClose={() => setOpenImage(null)}
+              closeLabel={t("closeImage")}
+            />
+          ) : null}
         </DialogContent>
       </Dialog>
     </div>
@@ -314,38 +402,14 @@ function DesktopBento({ slides }: { slides: BentoSlide[] }) {
                       )}
                     >
                       {isExpandedCol && expanded ? (
-                        <motion.div
-                          key={`expanded-${slideIndex}-${colIndex}`}
-                          layout
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ duration: 0.25, delay: 0.15 }}
-                          className="flex h-full flex-col overflow-hidden rounded-xl lg:rounded-2xl"
-                        >
-                          <div className="relative w-full flex-1 min-h-0">
-                            <Image
-                              src={expanded.image.src}
-                              alt={expanded.image.alt}
-                              fill
-                              sizes="(max-width: 1024px) 60vw, 720px"
-                              className="object-cover"
-                              priority
-                            />
-                            <button
-                              type="button"
-                              onClick={() => setExpanded(null)}
-                              className="absolute right-3 top-3 flex size-10 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition-colors hover:bg-black/80"
-                              aria-label={t("collapseImage")}
-                            >
-                              <IconX className="size-5" />
-                            </button>
-                          </div>
-                          <div className="max-h-[35%] shrink-0 overflow-y-auto bg-neutral-400 px-5 py-4">
-                            <p className="wrap-break-word text-sm leading-relaxed text-white/90 lg:text-base">
-                              {getImageCaption(t, expanded.image)}
-                            </p>
-                          </div>
-                        </motion.div>
+                        <DesktopExpandedImage
+                          image={expanded.image}
+                          caption={getImageCaption(t, expanded.image)}
+                          onClose={() => setExpanded(null)}
+                          closeLabel={t("collapseImage")}
+                          slideIndex={slideIndex}
+                          colIndex={colIndex}
+                        />
                       ) : (
                         col.map((img, imgIndex) => (
                           <motion.button

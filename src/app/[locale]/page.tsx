@@ -42,7 +42,7 @@ export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
   const tMeta = await getTranslations({ locale, namespace: "metadata" });
   const [
-    { heroSection, industrySection, scenerySection, clients },
+    { heroSection, industrySection, operationSection, scenerySection, clients },
     testimonials,
     latestBlogResp,
     instagramResp,
@@ -75,7 +75,7 @@ export default async function HomePage({ params }: HomePageProps) {
         <Hero heroSection={heroSection} clients={clients} />
         <IndustrySection industrySection={industrySection} />
         <Scenarios scenerySection={carouselItems} />
-        <Operations />
+        <Operations operationSection={operationSection} />
         <NewsAndSocial
           latestPost={latestPost}
           instagramPublications={instagramPublications}

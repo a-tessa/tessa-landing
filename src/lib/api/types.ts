@@ -31,6 +31,16 @@ export interface IndustrySection {
   };
 }
 
+export interface OperationImage {
+  url: string;
+  alt?: string;
+  caption?: string;
+}
+
+export interface OperationSection {
+  images: OperationImage[];
+}
+
 export interface ServicesPageImage {
   imgUrl: string;
 }
@@ -72,6 +82,7 @@ export interface PublicContentResponse {
   content: {
     heroSection?: HeroTopic[];
     industrySection?: IndustrySection;
+    operationSection?: OperationSection;
     scenerySection?: SceneryItem[];
     servicesPages?: ServicesPageItem[];
     clients?: ClientLogo[];
