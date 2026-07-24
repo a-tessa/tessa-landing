@@ -4,11 +4,7 @@ interface HeadingProps {
   title: string;
   description: string;
   titleAs?: "h1" | "p";
-  backgroundSrc?: string;
-  backgroundAlt?: string;
 }
-
-const DEFAULT_BACKGROUND_SRC = "/services-heading.webp";
 
 const css = /* css */ `
 @keyframes marketing-heading-shell {
@@ -72,8 +68,6 @@ export function Heading({
   title,
   description,
   titleAs,
-  backgroundSrc = DEFAULT_BACKGROUND_SRC,
-  backgroundAlt,
 }: HeadingProps) {
   return (
     <>
@@ -85,8 +79,6 @@ export function Heading({
         title={title}
         titleAs={titleAs}
         activeClassName="text-primary text"
-        backgroundSrc={backgroundSrc}
-        backgroundAlt={backgroundAlt}
       />
     </>
   );

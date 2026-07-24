@@ -2,9 +2,42 @@
 
 import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
+import {
+  HERO_NAV_COLLAPSE_RANGE_PX,
+  HERO_NAV_COLLAPSED_SECONDARY_TOP,
+} from "@/components/marketing/nav/hero-collapse";
 import { Link } from "@/i18n/navigation";
 import type { ServiceNavItem } from "@/lib/servicos/nav";
-import { cn, freeSectionShellSpacing, serviceCarouselCss } from "@/lib/utils";
+import { cn, freeSectionShellSpacing } from "@/lib/utils";
+
+const serviceCarouselCss = /* css */ `
+@keyframes service-carousel-follow-heading {
+  from { top: calc(1.5rem + 16rem + 1.5rem); }
+  to   { top: ${HERO_NAV_COLLAPSED_SECONDARY_TOP.md}; }
+}
+
+.service-heading-carousel {
+  left: 50%;
+  position: fixed;
+  top: calc(1.5rem + 20rem + 1.5rem);
+  transform: translateX(-50%);
+  z-index: 50;
+}
+
+@supports (animation-timeline: scroll()) {
+  .service-heading-carousel {
+    animation: service-carousel-follow-heading linear forwards;
+    animation-timeline: scroll(root block);
+    animation-range: 0 ${String(HERO_NAV_COLLAPSE_RANGE_PX)}px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-heading-carousel {
+    animation-name: none;
+  }
+}
+`;
 
 interface ServiceNavCarouselProps {
   locale: string;

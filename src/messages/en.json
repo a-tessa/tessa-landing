@@ -619,13 +619,11 @@
     },
     "blog": {
       "title": "Blog",
-      "description": "Discover valuable content and expert advice from our experienced team to elevate your knowledge and help you make a safer decision when hiring Tessa.",
-      "headingImageAlt": "custom metal structures at a company"
+      "description": "Discover valuable content and expert advice from our experienced team to elevate your knowledge and help you make a safer decision when hiring Tessa."
     },
     "downloads": {
       "title": "Downloads",
       "description": "Presentations, folders and manuals for Tessa structures. Download materials in your language.",
-      "headingImageAlt": "Tessa technical materials and manuals",
       "downloadCta": "Download PDF",
       "coverImageAlt": "{title} — cover image",
       "seeMore": "See more about",
@@ -638,7 +636,6 @@
     "gallery": {
       "title": "Gallery",
       "description": "Photos and videos of Tessa structures and operations. Browse the archive by category.",
-      "headingImageAlt": "photo and video gallery of Tessa structures",
       "photosHeading": "Photos",
       "videosHeading": "Videos",
       "allItems": "All",

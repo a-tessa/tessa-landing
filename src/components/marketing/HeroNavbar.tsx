@@ -1,25 +1,23 @@
 "use client";
 
-import Image from "next/image";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Tooltip } from "radix-ui";
 import { cn, insideCardSpacing } from "@/lib/utils";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { Navbar } from "./Navbar";
 import {
   DesktopLinks,
   MobileDrawer,
   MobileToggle,
   NavLogo,
 } from "./nav/parts";
+import { HERO_NAV_COLLAPSE_RANGE_PX } from "./nav/hero-collapse";
+import { useScrollProgress } from "./nav/use-scroll-progress";
 
 interface HeroNavbarProps {
   title: string;
   description: string;
   titleAs?: "h1" | "p";
-  /** Background image (decorative). Defaults to `/services-heading.webp`. */
-  backgroundSrc?: string;
-  /** Alt text for the background image. Omit for decorative images. */
-  backgroundAlt?: string;
   /** Override the active link color. Defaults to brand orange. */
   activeClassName?: string;
 }
@@ -32,8 +30,6 @@ const css = /* css */ `
 .hero-nav,
 .hero-nav__spacer {
   --hero-h: 14rem;
-  --hero-h-shrunk: 8rem;
-  --hero-title-scale: 0.5;
   --hero-top: 1.5rem;
   --hero-side: 1rem;
   width: calc(100% - 1rem * 2);
@@ -44,24 +40,18 @@ const css = /* css */ `
   .hero-nav__spacer {
     width: calc(100% - var(--hero-side) * 2);
     --hero-h: 20rem;
-    --hero-h-shrunk: 7rem;
-    --hero-title-scale: 0.4;
   }
 }
 @media (min-width: 768px) {
   .hero-nav,
   .hero-nav__spacer {
     --hero-h: 22rem;
-    --hero-h-shrunk: 7.5rem;
-    --hero-title-scale: 0.32;
   }
 }
 @media (min-width: 1024px) {
   .hero-nav,
   .hero-nav__spacer {
     --hero-h: 18.75rem;
-    --hero-h-shrunk: 9.5rem;
-    --hero-title-scale: 0.28;
   }
 }
 
@@ -83,25 +73,26 @@ const css = /* css */ `
 
 .hero-nav__shell {
   contain: layout;
-  will-change: height, background-color;
+  will-change: height, opacity;
   height: var(--hero-h);
   border-radius: 1.5rem;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .hero-nav__background {
   contain: paint;
   border-radius: 1.5rem;
+  background-color: oklch(0.55 0.005 50);
 }
 
 .hero-nav__overlay {
-  background-color: rgb(0 0 0 / 0.35);
+  background-color: rgb(0 0 0 / 0.08);
   will-change: background-color;
 }
 
 .hero-nav__title {
   transform-origin: left bottom;
-  will-change: transform;
+  will-change: transform, opacity;
 }
 
 .hero-nav__subtitle {
@@ -111,14 +102,21 @@ const css = /* css */ `
   overflow: hidden;
 }
 
-@keyframes hero-shell-shrink {
-  to { height: var(--hero-h-shrunk); }
+@keyframes hero-shell-collapse {
+  to {
+    height: 0;
+    opacity: 0;
+    border-radius: 1.5rem;
+  }
 }
 @keyframes hero-overlay-darken {
-  to { background-color: rgb(0 0 0 / 0.50); }
+  to { background-color: rgb(0 0 0 / 0.2); }
 }
-@keyframes hero-title-shrink {
-  to { transform: scale(var(--hero-title-scale)); }
+@keyframes hero-title-collapse {
+  to {
+    transform: scale(0.4);
+    opacity: 0;
+  }
 }
 @keyframes hero-subtitle-hide {
   from {
@@ -137,25 +135,31 @@ const css = /* css */ `
 
 @supports (animation-timeline: scroll()) {
   .hero-nav__shell {
-    animation: hero-shell-shrink linear forwards;
+    animation: hero-shell-collapse linear forwards;
     animation-timeline: scroll(root block);
-    animation-range: 0 220px;
+    animation-range: 0 ${String(HERO_NAV_COLLAPSE_RANGE_PX)}px;
   }
   .hero-nav__overlay {
     animation: hero-overlay-darken linear forwards;
     animation-timeline: scroll(root block);
-    animation-range: 0 220px;
+    animation-range: 0 ${String(HERO_NAV_COLLAPSE_RANGE_PX)}px;
   }
   .hero-nav__title {
-    animation: hero-title-shrink linear forwards;
+    animation: hero-title-collapse linear forwards;
     animation-timeline: scroll(root block);
-    animation-range: 0 220px;
+    animation-range: 0 ${String(HERO_NAV_COLLAPSE_RANGE_PX)}px;
   }
   .hero-nav__subtitle {
     animation: hero-subtitle-hide linear forwards;
     animation-timeline: scroll(root block);
     animation-range: 0 140px;
   }
+}
+
+.hero-nav--collapsed .hero-nav__shell {
+  height: 0;
+  opacity: 0;
+  animation: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -172,13 +176,16 @@ export function HeroNavbar({
   title,
   description,
   titleAs = "h1",
-  backgroundSrc = "/services-heading.webp",
-  backgroundAlt,
   activeClassName = ACTIVE_CLASS,
 }: HeroNavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const shellRef = useRef<HTMLDivElement>(null);
   const navRowRef = useRef<HTMLDivElement>(null);
+  const { expanded: collapsed } = useScrollProgress(HERO_NAV_COLLAPSE_RANGE_PX);
+
+  useEffect(() => {
+    if (collapsed) setMenuOpen(false);
+  }, [collapsed]);
 
   const { visibleDescription, isTruncated } = useMemo(() => {
     if (description.length <= NAV_DESCRIPTION_MAX_CHARS) {
@@ -197,20 +204,24 @@ export function HeroNavbar({
         {css}
       </style>
 
-      <header className="hero-nav">
+      <div
+        className={cn(
+          "transition-opacity duration-200",
+          collapsed ? "opacity-100" : "pointer-events-none opacity-0",
+        )}
+        aria-hidden={!collapsed}
+      >
+        <Navbar />
+      </div>
+
+      <header
+        className={cn("hero-nav", collapsed && "hero-nav--collapsed pointer-events-none")}
+        aria-hidden={collapsed}
+      >
         <div ref={shellRef} className="hero-nav__shell relative w-full text-white">
           <div className="hero-nav__background pointer-events-none absolute inset-0 overflow-hidden">
-            <Image
-              src={backgroundSrc}
-              alt={backgroundAlt ?? ""}
-              fill
-              sizes="100vw"
-              priority
-              {...(backgroundAlt ? {} : { "aria-hidden": true })}
-              className="-z-20 object-cover"
-            />
             <div
-              className="hero-nav__overlay absolute inset-0 -z-10"
+              className="hero-nav__overlay absolute inset-0"
               aria-hidden
             />
           </div>

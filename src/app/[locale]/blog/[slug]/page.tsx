@@ -178,7 +178,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <Heading
           title={t("title")}
           description={t("description")}
-          backgroundSrc="/blog-heading.jpg"
           titleAs="p"
         />
 

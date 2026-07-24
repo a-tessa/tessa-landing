@@ -8,6 +8,7 @@ import { AnimatePresence, domAnimation, LazyMotion, m } from "motion/react";
 import { ArrowRight, ChevronDown, ChevronLeft } from "lucide-react";
 import {
   cn,
+  freeSectionShellSpacing,
   insideCardSpacing,
   sectionCardShellSpacing,
 } from "@/lib/utils";
@@ -111,19 +112,19 @@ const LOGO_WRAPPER_CLASSNAME =
   "inline-flex shrink-0 items-center justify-center grayscale opacity-60 transition-all hover:grayscale-0 hover:opacity-100";
 
 const MARQUEE_CLASSNAME =
-  "p-1 sm:p-2 [--duration:26s] [--gap:2rem] sm:[--gap:4rem]";
+  "p-1 sm:p-2 [--duration:26s] [--gap:1.5rem] sm:[--gap:2.5rem]";
 
 function LogoItem({ client }: { client: ClientLogo }) {
   const logo = (
     <Image
       src={client.logoUrl}
       alt={client.alt}
-      width={140}
-      height={56}
-      sizes="(max-width: 640px) 96px, 140px"
+      width={96}
+      height={36}
+      sizes="(max-width: 640px) 64px, 96px"
       loading="lazy"
       decoding="async"
-      className="h-5 w-auto object-contain sm:h-12"
+      className="h-3.5 w-auto object-contain sm:h-7"
     />
   );
 
@@ -290,12 +291,9 @@ export function Hero({ heroSection, clients }: HeroProps) {
     <LazyMotion features={domAnimation}>
       <section
         aria-labelledby="hero-title"
-        className={cn(
-          "relative overflow-hidden pt-24 sm:pt-6 flex flex-col",
-          sectionCardShellSpacing,
-          "w-full",
-        )}
+        className="relative flex w-full flex-col overflow-hidden pt-24 sm:pt-6"
       >
+        <div className={cn(sectionCardShellSpacing, "w-full")}>
         <div className="relative aspect-square w-full shrink-0 overflow-hidden rounded-3xl shadow-2xl shadow-primary/20 xl:max-h-screen md:aspect-16/6">
           {SLIDES.map((slide, index) => (
             <m.div
@@ -498,7 +496,13 @@ export function Hero({ heroSection, clients }: HeroProps) {
             <ChevronLeft size={20} />
           </Button>
         </div>
-        <div className="relative z-10 h-fit -mt-8 sm:-mt-10">
+        </div>
+        <div
+          className={cn(
+            freeSectionShellSpacing,
+            "relative z-10 -mt-8 h-fit sm:-mt-10",
+          )}
+        >
           <div className="pb-2 text-center sm:pb-2">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-white sm:text-sm">
               {t("trustedCompanies")}

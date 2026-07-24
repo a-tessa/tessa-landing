@@ -62,32 +62,3 @@ export const OPERATIONS_SLIDES = [
 ];
 
 export const OPERATIONS_IMAGES = [...OPERATIONS_GALLERY_IMAGES];
-
-export const serviceCarouselCss = /* css */ `
-@keyframes service-carousel-follow-heading {
-  from { top: calc(1.5rem + 16rem + 1.5rem); }
-  to   { top: 9.8rem; }
-}
-
-.service-heading-carousel {
-  left: 50%;
-  position: fixed;
-  top: calc(1.5rem + 20rem + 1.5rem);
-  transform: translateX(-50%);
-  z-index: 50;
-}
-
-@supports (animation-timeline: scroll()) {
-  .service-heading-carousel {
-    animation: service-carousel-follow-heading linear forwards;
-    animation-timeline: scroll(root block);
-    animation-range: 0 28vh;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .service-heading-carousel {
-    animation-name: none;
-  }
-}
-`;

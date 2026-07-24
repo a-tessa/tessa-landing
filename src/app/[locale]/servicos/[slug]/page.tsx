@@ -249,11 +249,7 @@ export default async function ServiceDetailPage({
       ) : null}
 
       <main className="flex flex-col items-center mt-36 sm:mt-20">
-        <Heading
-          title={service.title}
-          description={service.subtitle}
-          backgroundSrc={service.backgroundImageUrl}
-        />
+        <Heading title={service.title} description={service.subtitle} />
 
         <ServiceNavCarousel
           locale={locale}

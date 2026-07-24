@@ -19,10 +19,7 @@ import { EstruturasMetalicasTelhadoSections } from "@/components/marketing/stati
 import { EstruturasParaCrechesSections } from "@/components/marketing/static-services/EstruturasParaCrechesSections";
 import { PerfisEspeciaisSections } from "@/components/marketing/static-services/PerfisEspeciaisSections";
 import { getMergedServiceNavItems } from "@/lib/servicos/nav";
-import {
-  getStaticServiceHeadingImage,
-  type StaticServiceSlug,
-} from "@/lib/servicos/static-pages";
+import type { StaticServiceSlug } from "@/lib/servicos/static-pages";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 import { localePath } from "@/i18n/routing";
 import { toBlogPostFromListItem } from "@/lib/blog/mappers";
@@ -113,11 +110,7 @@ export async function StaticServicePage({ locale, slug }: StaticServicePageProps
       <JsonLd id={`jsonld-service-${slug}`} data={serviceJsonLd} />
 
       <main className="mt-36 flex flex-col items-center sm:mt-20">
-        <Heading
-          title={title}
-          description={description}
-          backgroundSrc={getStaticServiceHeadingImage(slug)}
-        />
+        <Heading title={title} description={description} />
 
         <section className="w-full">
           <div className={cn("mb-4", freeSectionShellSpacing)}>

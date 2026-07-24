@@ -619,13 +619,11 @@
     },
     "blog": {
       "title": "Blog",
-      "description": "Descubra contenidos valiosos y consejos de especialistas de nuestro equipo experimentado para elevar su conocimiento y ayudarle a tomar una decisión más segura al contratar a Tessa.",
-      "headingImageAlt": "estructuras metálicas a medida en una empresa"
+      "description": "Descubra contenidos valiosos y consejos de especialistas de nuestro equipo experimentado para elevar su conocimiento y ayudarle a tomar una decisión más segura al contratar a Tessa."
     },
     "downloads": {
       "title": "Descargas",
       "description": "Presentaciones, folders y manuales de las estructuras Tessa. Descargue los materiales en su idioma.",
-      "headingImageAlt": "materiales técnicos y manuales Tessa",
       "downloadCta": "Descargar PDF",
       "coverImageAlt": "{title} — imagen de portada",
       "seeMore": "Ver más sobre",
@@ -638,7 +636,6 @@
     "gallery": {
       "title": "Galería",
       "description": "Fotos y videos de las estructuras y operaciones Tessa. Explore el acervo por categoría.",
-      "headingImageAlt": "galería de fotos y videos de estructuras Tessa",
       "photosHeading": "Fotos",
       "videosHeading": "Videos",
       "allItems": "Todos",

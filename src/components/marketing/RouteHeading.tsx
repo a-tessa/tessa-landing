@@ -13,34 +13,26 @@ const ROUTE_NAMESPACES = [
   {
     prefix: "/servicos",
     namespace: "pages.servicos",
-    backgroundSrc: "/services-heading.webp",
   },
   {
     prefix: "/representantes",
     namespace: "pages.representantes",
-    /** Banner Elementor 725fee5 — path distinto evita cache do otimizador Next em troca de arquivo. */
-    backgroundSrc: "/representantes-banner.jpg",
   },
   {
     prefix: "/blog",
     namespace: "pages.blog",
-    backgroundSrc: "/blog-heading.jpg",
   },
   {
     prefix: "/downloads",
     namespace: "pages.downloads",
-    backgroundSrc: "/blog-heading.jpg",
   },
   {
     prefix: "/galeria",
     namespace: "pages.gallery",
-    backgroundSrc: "/blog-heading.jpg",
   },
   {
     prefix: "/contato",
     namespace: "pages.contato",
-    /** Banner Elementor 748b261 */
-    backgroundSrc: "/contato-banner.webp",
   },
 ] as const;
 
@@ -67,10 +59,6 @@ function resolveHeadingConfig(pathname: string): RouteConfig | null {
 interface RouteHeadingProps {
   /** Optional override — skips auto-detection when provided. */
   namespace?: RouteNamespace;
-  /** Optional override for the heading background image. */
-  backgroundSrc?: string;
-  /** Optional override for the heading background image alt text. */
-  backgroundAlt?: string;
 }
 
 /**
@@ -79,8 +67,6 @@ interface RouteHeadingProps {
  */
 export function RouteHeading({
   namespace,
-  backgroundSrc,
-  backgroundAlt,
 }: RouteHeadingProps = {}) {
   const pathname = usePathname();
   const routeConfig = resolveHeadingConfig(pathname);
@@ -88,35 +74,20 @@ export function RouteHeading({
 
   if (!resolvedNamespace) return null;
 
-  return (
-    <RouteHeadingInner
-      namespace={resolvedNamespace}
-      backgroundSrc={backgroundSrc ?? routeConfig?.backgroundSrc}
-      backgroundAlt={backgroundAlt}
-    />
-  );
+  return <RouteHeadingInner namespace={resolvedNamespace} />;
 }
 
 function RouteHeadingInner({
   namespace,
-  backgroundSrc,
-  backgroundAlt,
 }: {
   namespace: RouteNamespace;
-  backgroundSrc?: string;
-  backgroundAlt?: string;
 }) {
   const t = useTranslations(namespace);
-  const resolvedBackgroundAlt =
-    backgroundAlt ??
-    (t.has("headingImageAlt") ? t("headingImageAlt") : undefined);
 
   return (
     <Heading
       title={t("title")}
       description={t("description")}
-      backgroundSrc={backgroundSrc}
-      backgroundAlt={resolvedBackgroundAlt}
     />
   );
 }

@@ -5,23 +5,23 @@ import type { BlogCategory } from "@/lib/api/types";
 import { buildBlogListHref } from "@/lib/blog/posts";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 import { BlogCategoryNavScroller } from "@/components/marketing/BlogCategoryNavScroller";
+import {
+  HERO_NAV_COLLAPSE_RANGE_PX,
+  HERO_NAV_COLLAPSED_SECONDARY_TOP,
+} from "@/components/marketing/nav/hero-collapse";
 
 /**
  * Breakpoint-aware scroll-driven positioning.
  *
- * `--nav-top-from` / `--nav-top-to` = vertical position for the
- * expanded / shrunk states of the `<HeroNavbar />` above.
+ * `--nav-top-from` = below the expanded `<HeroNavbar />`.
+ * `--nav-top-to` = under the homepage-style `Navbar` once the heading is gone.
  *
- * Formula: hero-top (1.5rem) + hero-height + gap (1rem)
- *   - expanded hero heights: 18 / 20 / 22 / 24 rem
- *   - shrunk hero heights:    6.5 / 7 / 7.5 / 8 rem
- *
- * Keep `animation-range` in sync with `HeroNavbar` (`0 220px`).
+ * Keep `animation-range` in sync with `HERO_NAV_COLLAPSE_RANGE_PX`.
  */
 const CATEGORY_NAV_CSS = /* css */ `
 .blog-category-nav {
   --nav-top-from: 17.5rem;
-  --nav-top-to: 9rem;
+  --nav-top-to: ${HERO_NAV_COLLAPSED_SECONDARY_TOP.base};
 
   position: fixed;
   top: var(--nav-top-from);
@@ -32,13 +32,13 @@ const CATEGORY_NAV_CSS = /* css */ `
 }
 
 @media (min-width: 640px) {
-  .blog-category-nav { --nav-top-from: 22.5rem; --nav-top-to: 9.5rem; }
+  .blog-category-nav { --nav-top-from: 22.5rem; --nav-top-to: ${HERO_NAV_COLLAPSED_SECONDARY_TOP.sm}; }
 }
 @media (min-width: 768px) {
-  .blog-category-nav { --nav-top-from: 24.5rem; --nav-top-to: 10rem; }
+  .blog-category-nav { --nav-top-from: 24.5rem; --nav-top-to: ${HERO_NAV_COLLAPSED_SECONDARY_TOP.md}; }
 }
 @media (min-width: 1024px) {
-  .blog-category-nav { --nav-top-from: 18.8rem; --nav-top-to: 9.5rem; }
+  .blog-category-nav { --nav-top-from: 18.8rem; --nav-top-to: ${HERO_NAV_COLLAPSED_SECONDARY_TOP.lg}; }
 }
 
 @keyframes blog-category-nav-follow {
@@ -49,7 +49,7 @@ const CATEGORY_NAV_CSS = /* css */ `
   .blog-category-nav {
     animation: blog-category-nav-follow linear forwards;
     animation-timeline: scroll(root block);
-    animation-range: 0 220px;
+    animation-range: 0 ${String(HERO_NAV_COLLAPSE_RANGE_PX)}px;
   }
 }
 

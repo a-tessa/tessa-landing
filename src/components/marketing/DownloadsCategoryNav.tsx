@@ -2,6 +2,10 @@
 
 import { useTranslations } from "next-intl";
 import { BlogCategoryNavScroller } from "@/components/marketing/BlogCategoryNavScroller";
+import {
+  HERO_NAV_COLLAPSE_RANGE_PX,
+  HERO_NAV_COLLAPSED_SECONDARY_TOP,
+} from "@/components/marketing/nav/hero-collapse";
 import { Link } from "@/i18n/navigation";
 import type { BlogCategory } from "@/lib/api/types";
 import { buildDownloadsListHref } from "@/lib/downloads/href";
@@ -9,12 +13,12 @@ import { cn, freeSectionShellSpacing } from "@/lib/utils";
 
 /**
  * Same scroll-follow positioning as `BlogCategoryNav`, kept in sync with
- * `HeroNavbar` (`animation-range: 0 220px`).
+ * `HERO_NAV_COLLAPSE_RANGE_PX`.
  */
 const CATEGORY_NAV_CSS = /* css */ `
 .downloads-category-nav {
   --nav-top-from: 17.5rem;
-  --nav-top-to: 9rem;
+  --nav-top-to: ${HERO_NAV_COLLAPSED_SECONDARY_TOP.base};
 
   position: fixed;
   top: var(--nav-top-from);
@@ -25,13 +29,13 @@ const CATEGORY_NAV_CSS = /* css */ `
 }
 
 @media (min-width: 640px) {
-  .downloads-category-nav { --nav-top-from: 22.5rem; --nav-top-to: 9.5rem; }
+  .downloads-category-nav { --nav-top-from: 22.5rem; --nav-top-to: ${HERO_NAV_COLLAPSED_SECONDARY_TOP.sm}; }
 }
 @media (min-width: 768px) {
-  .downloads-category-nav { --nav-top-from: 24.5rem; --nav-top-to: 10rem; }
+  .downloads-category-nav { --nav-top-from: 24.5rem; --nav-top-to: ${HERO_NAV_COLLAPSED_SECONDARY_TOP.md}; }
 }
 @media (min-width: 1024px) {
-  .downloads-category-nav { --nav-top-from: 18.8rem; --nav-top-to: 9.5rem; }
+  .downloads-category-nav { --nav-top-from: 18.8rem; --nav-top-to: ${HERO_NAV_COLLAPSED_SECONDARY_TOP.lg}; }
 }
 
 @keyframes downloads-category-nav-follow {
@@ -42,7 +46,7 @@ const CATEGORY_NAV_CSS = /* css */ `
   .downloads-category-nav {
     animation: downloads-category-nav-follow linear forwards;
     animation-timeline: scroll(root block);
-    animation-range: 0 220px;
+    animation-range: 0 ${String(HERO_NAV_COLLAPSE_RANGE_PX)}px;
   }
 }
 
