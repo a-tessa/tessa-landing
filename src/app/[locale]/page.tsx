@@ -12,6 +12,7 @@ import { JsonLd } from "@/lib/seo/jsonld";
 import { breadcrumbJsonLd } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { fetchBlogArticles } from "@/lib/api/blog";
+import { fetchInstagramPosts } from "@/lib/api/instagram";
 import { getLandingContent } from "@/lib/api/content";
 import { getApprovedTestimonials } from "@/lib/api/testimonials";
 import { getScenariosCarouselItems } from "@/lib/servicos/carousel";
@@ -40,16 +41,18 @@ export async function generateMetadata({
 export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
   const tMeta = await getTranslations({ locale, namespace: "metadata" });
-  const [{ heroSection, scenerySection, clients }, testimonials, latestBlogResp] =
+  const [{ heroSection, scenerySection, clients }, testimonials, latestBlogResp, instagramResp] =
     await Promise.all([
       getLandingContent(locale),
       getApprovedTestimonials(),
       fetchBlogArticles({ page: 1, perPage: 1, order: "desc", locale }),
+      fetchInstagramPosts({ limit: 3, locale }),
     ]);
 
   const latestPost = latestBlogResp?.articles[0]
     ? toBlogPostFromListItem(latestBlogResp.articles[0])
     : null;
+  const instagramPublications = instagramResp?.media ?? null;
 
   const carouselItems = await getScenariosCarouselItems(
     locale,
@@ -69,7 +72,10 @@ export default async function HomePage({ params }: HomePageProps) {
         <IndustrySection />
         <Scenarios scenerySection={carouselItems} />
         <Operations />
-        <NewsAndSocial latestPost={latestPost} />
+        <NewsAndSocial
+          latestPost={latestPost}
+          instagramPublications={instagramPublications}
+        />
         <Testimonials items={testimonials} />
         <Results />
       </main>

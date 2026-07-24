@@ -2,12 +2,15 @@ import { getTranslations } from "next-intl/server";
 import { BackNavLink } from "@/components/marketing/BackNavLink";
 import { Footer } from "@/components/marketing/Footer";
 import { Heading } from "@/components/marketing/Heading";
+import { NewsAndSocial } from "@/components/marketing/NewsAndSocial";
 import { ServiceMaterialsSection } from "@/components/marketing/ServiceMaterialsSection";
 import { ServiceNavCarousel } from "@/components/marketing/ServiceNavCarousel";
 import { Testimonials } from "@/components/marketing/Testimonials";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
 import { getServicesPages } from "@/lib/api/content";
+import { fetchBlogArticles } from "@/lib/api/blog";
+import { fetchInstagramPosts } from "@/lib/api/instagram";
 import { getApprovedTestimonials } from "@/lib/api/testimonials";
 import { CarportSections } from "@/components/marketing/static-services/CarportSections";
 import { EstruturaDeAviarioSections } from "@/components/marketing/static-services/EstruturaDeAviarioSections";
@@ -22,6 +25,7 @@ import {
 } from "@/lib/servicos/static-pages";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 import { localePath } from "@/i18n/routing";
+import { toBlogPostFromListItem } from "@/lib/blog/mappers";
 
 function StaticServicePageSections({
   locale,
@@ -54,17 +58,31 @@ interface StaticServicePageProps {
 }
 
 export async function StaticServicePage({ locale, slug }: StaticServicePageProps) {
-  const [t, ts, tPage, testimonials, servicesPages] = await Promise.all([
+  const [
+    t,
+    ts,
+    tPage,
+    testimonials,
+    servicesPages,
+    latestBlogResp,
+    instagramResp,
+  ] = await Promise.all([
     getTranslations({ locale, namespace: "pages.servicoDetail" }),
     getTranslations({ locale, namespace: "pages.servicos" }),
     getTranslations({ locale, namespace: "pages.staticServices" }),
     getApprovedTestimonials(),
     getServicesPages(locale),
+    fetchBlogArticles({ page: 1, perPage: 1, order: "desc", locale }),
+    fetchInstagramPosts({ limit: 3, locale }),
   ]);
 
   const title = tPage(`${slug}.title`);
   const description = tPage(`${slug}.description`);
   const navItems = await getMergedServiceNavItems(locale, servicesPages);
+  const latestPost = latestBlogResp?.articles[0]
+    ? toBlogPostFromListItem(latestBlogResp.articles[0])
+    : null;
+  const instagramPublications = instagramResp?.media ?? null;
 
   const serviceJsonLd = {
     "@context": "https://schema.org",
@@ -120,6 +138,10 @@ export async function StaticServicePage({ locale, slug }: StaticServicePageProps
 
         <ServiceMaterialsSection locale={locale} slug={slug} />
 
+        <NewsAndSocial
+          latestPost={latestPost}
+          instagramPublications={instagramPublications}
+        />
         <Testimonials items={testimonials} />
       </main>
 

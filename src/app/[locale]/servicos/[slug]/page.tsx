@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { IconArrowRight } from "@tabler/icons-react";
 import { getTranslations } from "next-intl/server";
@@ -18,6 +17,7 @@ import { JsonLd } from "@/lib/seo/jsonld";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { fetchBlogArticles } from "@/lib/api/blog";
+import { fetchInstagramPosts } from "@/lib/api/instagram";
 import { getApprovedTestimonials } from "@/lib/api/testimonials";
 import {
   getServicePageBySlug,
@@ -169,7 +169,7 @@ export default async function ServiceDetailPage({
   const navServices = await getMergedServiceNavItems(locale, servicesPages);
 
   const categorySlug = service.category?.trim() || undefined;
-  const [categoryLatestResp, fallbackLatestResp] = await Promise.all([
+  const [categoryLatestResp, fallbackLatestResp, instagramResp] = await Promise.all([
     categorySlug
       ? fetchBlogArticles({
         page: 1,
@@ -180,6 +180,7 @@ export default async function ServiceDetailPage({
       })
       : Promise.resolve(null),
     fetchBlogArticles({ page: 1, perPage: 1, order: "desc", locale }),
+    fetchInstagramPosts({ limit: 3, locale }),
   ]);
 
   const latestArticleDto =
@@ -187,6 +188,7 @@ export default async function ServiceDetailPage({
   const latestPost = latestArticleDto
     ? toBlogPostFromListItem(latestArticleDto)
     : null;
+  const instagramPublications = instagramResp?.media ?? null;
 
   const bentoImages =
     service.images.length > 0
@@ -304,7 +306,10 @@ export default async function ServiceDetailPage({
           </div>
         </section>
 
-        <NewsAndSocial latestPost={latestPost} />
+        <NewsAndSocial
+          latestPost={latestPost}
+          instagramPublications={instagramPublications}
+        />
         <Testimonials items={testimonials} />
 
         <ServiceMaterialsSection locale={locale} slug={slug} />

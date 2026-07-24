@@ -126,7 +126,11 @@
     "newsTitle": "No centro das\nnovidades",
     "socialTitle": "Redes\nsociais",
     "goToBlog": "Ir para o blog",
-    "goToInstagram": "Ir para o instagram"
+    "goToInstagram": "Ir para o Instagram",
+    "instagramEmptyTitle": "Publicações em breve",
+    "instagramEmptyDescription": "A seleção editorial de fotos e legendas do Instagram aparecerá aqui em breve.",
+    "instagramImageAlt": "Publicação do Instagram da Tessa",
+    "openInstagramPost": "Abrir publicação no Instagram"
   },
   "blog": {
     "youAreReading": "Você está lendo",

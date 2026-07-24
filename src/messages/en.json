@@ -126,7 +126,11 @@
     "newsTitle": "At the center\nof the news",
     "socialTitle": "Social\nmedia",
     "goToBlog": "Go to blog",
-    "goToInstagram": "Go to Instagram"
+    "goToInstagram": "Go to Instagram",
+    "instagramEmptyTitle": "Posts coming soon",
+    "instagramEmptyDescription": "Our curated selection of Instagram photos and captions will appear here soon.",
+    "instagramImageAlt": "Tessa Instagram post",
+    "openInstagramPost": "Open Instagram post"
   },
   "blog": {
     "youAreReading": "You are reading",

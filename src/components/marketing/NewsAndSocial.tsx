@@ -2,7 +2,10 @@ import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { IconArrowNarrowRight } from "@tabler/icons-react";
 import { BlogFeatureCard } from "@/components/marketing/BlogFeatureCard";
+import { InstagramPostCard } from "@/components/marketing/InstagramPostCard";
+import type { InstagramPublicationDto } from "@/lib/api/instagram.types";
 import type { BlogPost } from "@/lib/blog/posts";
+import { SITE } from "@/lib/seo/schemas";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 
 interface FeaturedBlogPost {
@@ -17,11 +20,6 @@ interface FeaturedBlogPost {
   publishedAt: string;
   image: string;
   imageAlt: string;
-}
-
-interface InstagramPost {
-  title: string;
-  url: string;
 }
 
 const FALLBACK_FEATURED_POST: FeaturedBlogPost = {
@@ -47,7 +45,6 @@ function toFeaturedPost(post: BlogPost): FeaturedBlogPost {
     author: {
       name: post.author.name,
       avatar: post.author.avatarUrl ?? undefined,
-      initials: post.author.initials,
     },
     publishedAt: post.publishedAt,
     image: post.imageSrc,
@@ -55,29 +52,20 @@ function toFeaturedPost(post: BlogPost): FeaturedBlogPost {
   };
 }
 
-const INSTAGRAM_POSTS: InstagramPost[] = [
-  {
-    title: "Quando um terreno improdutivo vira um ativo energético",
-    url: "https://www.instagram.com/p/example1",
-  },
-  {
-    title: "Estruturas de solo para usinas fotovoltaicas",
-    url: "https://www.instagram.com/p/example2",
-  },
-  {
-    title: "Desde o primeiro parafuso",
-    url: "https://www.instagram.com/p/example3",
-  },
-];
-
 interface NewsAndSocialProps {
   /** Most recent blog article. Falls back to a hardcoded post when absent. */
   latestPost?: BlogPost | null;
+  /** Curated Instagram publications in their named layout slots. */
+  instagramPublications?: InstagramPublicationDto[] | null;
 }
 
-export function NewsAndSocial({ latestPost }: NewsAndSocialProps = {}) {
+export function NewsAndSocial({
+  latestPost,
+  instagramPublications = null,
+}: NewsAndSocialProps = {}) {
   const t = useTranslations("newsAndSocial");
   const featured = latestPost ? toFeaturedPost(latestPost) : FALLBACK_FEATURED_POST;
+  const publications = instagramPublications ?? [];
 
   return (
     <section
@@ -96,7 +84,7 @@ export function NewsAndSocial({ latestPost }: NewsAndSocialProps = {}) {
             </h2>
 
             <article
-              className="mt-8 flex flex-1 flex-col min-h-[500px]"
+              className="mt-8 flex min-h-125 flex-1 flex-col"
               itemScope
               itemType="https://schema.org/BlogPosting"
             >
@@ -135,39 +123,50 @@ export function NewsAndSocial({ latestPost }: NewsAndSocialProps = {}) {
               {t("socialTitle")}
             </h2>
 
-            <div className="mt-8 grid flex-1 grid-cols-2 gap-x-4 gap-y-4 grid-rows-[auto_auto]">
-              {INSTAGRAM_POSTS.map((post, index) => (
-                <a
-                  key={post.url}
-                  href={post.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={cn(
-                    "group flex h-full min-h-0 flex-col rounded-2xl border border-border bg-card p-5 transition-shadow hover:shadow-lg",
-                    index === 0 && "col-start-1 row-span-2 row-start-1",
-                    index === 1 && "col-start-2 row-start-2",
-                    index === 2 && "col-start-2 row-start-1",
-                  )}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
-                      Instagram
-                    </span>
-                    <div className="flex size-7 items-center justify-center rounded-full bg-primary">
-                      <InstagramIcon />
-                    </div>
-                  </div>
-
-                  <h3 className="mt-4 font-barlow text-lg font-bold uppercase leading-tight text-foreground sm:text-xl text-start">
-                    {post.title}
-                  </h3>
-                </a>
-              ))}
-            </div>
+            {publications.length === 3 ? (
+              <div className="mt-8 grid flex-1 grid-cols-1 gap-4 sm:grid-cols-2 sm:grid-rows-2">
+                {publications.map((publication) => (
+                  <InstagramPostCard
+                    key={publication.slot}
+                    href={publication.permalink}
+                    caption={publication.caption}
+                    imageSrc={publication.imageUrl}
+                    imageAlt={
+                      publication.altText?.trim() ||
+                      t("instagramImageAlt")
+                    }
+                    mediaType={publication.mediaType}
+                    openPostLabel={t("openInstagramPost")}
+                    className={cn(
+                      publication.slot === "primary" &&
+                        "sm:col-start-1 sm:row-span-2 sm:row-start-1",
+                      publication.slot === "upperRight" &&
+                        "sm:col-start-2 sm:row-start-1",
+                      publication.slot === "lowerRight" &&
+                        "sm:col-start-2 sm:row-start-2",
+                    )}
+                    imageSizes={
+                      publication.slot === "primary"
+                        ? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 28vw"
+                        : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 18vw"
+                    }
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="mt-8 flex flex-1 flex-col items-start justify-center rounded-2xl border border-dashed border-border bg-card/60 p-6">
+                <p className="font-barlow text-lg font-semibold uppercase text-foreground">
+                  {t("instagramEmptyTitle")}
+                </p>
+                <p className="mt-2 max-w-md text-sm text-muted-foreground">
+                  {t("instagramEmptyDescription")}
+                </p>
+              </div>
+            )}
 
             <div className="mt-6 flex justify-center lg:justify-end">
               <a
-                href="https://www.instagram.com/"
+                href={SITE.socials.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-full bg-secondary px-6 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
@@ -180,25 +179,5 @@ export function NewsAndSocial({ latestPost }: NewsAndSocialProps = {}) {
         </div>
       </div>
     </section>
-  );
-}
-
-function InstagramIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="size-3.5 text-white"
-      aria-hidden="true"
-    >
-      <rect width={20} height={20} x={2} y={2} rx={5} ry={5} />
-      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-      <line x1={17.5} x2={17.51} y1={6.5} y2={6.5} />
-    </svg>
   );
 }
