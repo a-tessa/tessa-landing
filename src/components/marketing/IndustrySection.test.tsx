@@ -69,6 +69,22 @@ const cmsSection = {
   },
 };
 
+const cmsSectionWithSpanishVideo = {
+  titlePrefix: "La fuerza de la",
+  title: "industria brasileña",
+  subtitle: "Contenido publicado por el CMS",
+  videos: {
+    "pt-BR": {
+      url: "https://youtu.be/EeLYcZsdYrw",
+      startSeconds: 8,
+    },
+    es: {
+      url: "https://youtu.be/eGdFPCZYNYQ",
+      startSeconds: 3,
+    },
+  },
+};
+
 describe("public IndustrySection", () => {
   beforeEach(() => {
     localeState.value = "pt-BR";
@@ -105,19 +121,68 @@ describe("public IndustrySection", () => {
     );
   });
 
-  it("keeps English and Spanish on their current static content", async () => {
+  it("uses CMS content and the Portuguese video pair for English and Spanish when no locale video is configured", async () => {
     localeState.value = "es";
     render(await IndustrySection({ industrySection: cmsSection }));
 
-    expect(screen.queryByText("Conteúdo publicado pelo CMS")).not.toBeInTheDocument();
-    expect(screen.getByText("Contenido estático en español")).toBeInTheDocument();
+    expect(screen.getByText("Tessa na")).toBeInTheDocument();
+    expect(screen.getByText("Conteúdo publicado pelo CMS")).toBeInTheDocument();
+    expect(
+      screen.queryByText("Contenido estático en español"),
+    ).not.toBeInTheDocument();
     expect(screen.getByTestId("industry-player")).toHaveAttribute(
       "data-video-url",
-      "https://www.youtube.com/watch?v=eGdFPCZYNYQ",
+      cmsSection.videos["pt-BR"].url,
     );
     expect(screen.getByTestId("industry-player")).toHaveAttribute(
       "data-start-seconds",
-      "6",
+      "8",
+    );
+  });
+
+  it("uses CMS content and the Portuguese video pair for English when no locale video is configured", async () => {
+    localeState.value = "en";
+    render(await IndustrySection({ industrySection: cmsSection }));
+
+    expect(screen.getByText("Tessa na")).toBeInTheDocument();
+    expect(screen.getByText("Conteúdo publicado pelo CMS")).toBeInTheDocument();
+    expect(
+      screen.queryByText("Static English content"),
+    ).not.toBeInTheDocument();
+    expect(screen.getByTestId("industry-player")).toHaveAttribute(
+      "data-video-url",
+      cmsSection.videos["pt-BR"].url,
+    );
+    expect(screen.getByTestId("industry-player")).toHaveAttribute(
+      "data-start-seconds",
+      "8",
+    );
+  });
+
+  it("uses the Spanish video when the CMS section configures one", async () => {
+    localeState.value = "es";
+    render(await IndustrySection({ industrySection: cmsSectionWithSpanishVideo }));
+
+    expect(screen.getByText("industria brasileña")).toBeInTheDocument();
+    expect(screen.getByTestId("industry-player")).toHaveAttribute(
+      "data-video-url",
+      cmsSectionWithSpanishVideo.videos.es.url,
+    );
+    expect(screen.getByTestId("industry-player")).toHaveAttribute(
+      "data-start-seconds",
+      "3",
+    );
+  });
+
+  it("falls back to fully static content when the CMS section is unavailable for English", async () => {
+    localeState.value = "en";
+    render(await IndustrySection({}));
+
+    expect(screen.getByText("industry")).toBeInTheDocument();
+    expect(screen.getByText("Static English content")).toBeInTheDocument();
+    expect(screen.getByTestId("industry-player")).toHaveAttribute(
+      "data-video-url",
+      "https://www.youtube.com/watch?v=EeLYcZsdYrw",
     );
   });
 });

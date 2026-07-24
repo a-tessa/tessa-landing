@@ -26,6 +26,8 @@ export interface IndustrySection {
   subtitle: string;
   videos: {
     "pt-BR": IndustryVideo;
+    en?: IndustryVideo;
+    es?: IndustryVideo;
   };
 }
 

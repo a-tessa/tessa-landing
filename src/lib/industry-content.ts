@@ -60,10 +60,6 @@ export function resolveIndustrySection(
   value: unknown,
   locale: string,
 ): IndustrySectionContent | null {
-  if (locale !== "pt-BR") {
-    return null;
-  }
-
   if (!isObject(value) || !isObject(value.videos)) {
     return null;
   }
@@ -81,11 +77,17 @@ export function resolveIndustrySection(
     return null;
   }
 
+  // Text is already localized by the API when a translation is available and falls
+  // back to Portuguese text otherwise. The video, however, is either the locale's own
+  // full URL/start-seconds pair or the entire Portuguese pair — never a mix of both.
+  const localizedVideo =
+    locale === "pt-BR" ? null : parseIndustryVideo(value.videos[locale]);
+
   return {
     titlePrefix: value.titlePrefix.trim(),
     title: value.title.trim(),
     subtitle: value.subtitle.trim(),
-    video: portugueseVideo,
+    video: localizedVideo ?? portugueseVideo,
   };
 }
 
