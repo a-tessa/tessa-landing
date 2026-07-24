@@ -7,6 +7,9 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 const nextConfig: NextConfig = {
   reactCompiler: true,
   images: {
+    // Explicit allow-list for next/image `quality` (Next 16+).
+    // Used by apple-cards-carousel (90) and StaticServiceQualitySection (100).
+    qualities: [70, 75, 90, 100],
     remotePatterns: [
       {
         protocol: "https",
