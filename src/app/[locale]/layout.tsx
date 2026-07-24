@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { GoogleTagManager } from "@next/third-parties/google";
 import { Geist, Geist_Mono, Inter, Barlow } from "next/font/google";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
@@ -128,6 +129,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} suppressHydrationWarning>
+      <GoogleTagManager gtmId="GTM-MW6Q3VL" />
       <body
         className={cn(
           geistSans.variable,
@@ -136,7 +138,7 @@ export default async function LocaleLayout({
           barlow.variable,
           barlow.className,
           "antialiased",
-          "max-w-[1920px] mx-auto",
+          "max-w-480 mx-auto",
         )}
       >
         <JsonLd id="jsonld-organization" data={organizationJsonLd()} />
