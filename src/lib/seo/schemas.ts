@@ -62,7 +62,7 @@ export const SITE = {
   socials: {
     linkedin: "https://www.linkedin.com/company/tessa",
     youtube: "https://www.youtube.com/@tessa",
-    instagram: "https://www.instagram.com/tessa",
+    instagram: "https://www.instagram.com/tessa.eng.br",
   },
   keywords: [
     "Estrutura metálica para telhado",
