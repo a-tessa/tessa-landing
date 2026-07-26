@@ -94,6 +94,36 @@ describe("industry content", () => {
     ).toBeNull();
   });
 
+  it("accepts subtitles up to the API max length of 700 characters", () => {
+    const longSubtitle = "a".repeat(615);
+    expect(
+      resolveIndustrySection(
+        {
+          ...section,
+          subtitle: longSubtitle,
+        },
+        "pt-BR",
+      ),
+    ).toEqual({
+      titlePrefix: section.titlePrefix,
+      title: section.title,
+      subtitle: longSubtitle,
+      video: section.videos["pt-BR"],
+    });
+  });
+
+  it("rejects subtitles longer than 700 characters", () => {
+    expect(
+      resolveIndustrySection(
+        {
+          ...section,
+          subtitle: "a".repeat(701),
+        },
+        "pt-BR",
+      ),
+    ).toBeNull();
+  });
+
   it("preserves the existing static video behavior", () => {
     expect(getIndustryVideoConfig("es")).toEqual({
       url: "https://www.youtube.com/watch?v=eGdFPCZYNYQ",

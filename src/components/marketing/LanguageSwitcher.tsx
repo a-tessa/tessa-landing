@@ -67,6 +67,8 @@ function SpainFlag() {
 
 interface LanguageSwitcherProps {
   className?: string;
+  /** White label on home; black on inner pages. */
+  tone?: "white" | "black";
 }
 
 interface DropdownPosition {
@@ -114,7 +116,10 @@ function useLanguageDropdownPosition(
   return position;
 }
 
-export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
+export function LanguageSwitcher({
+  className,
+  tone = "white",
+}: LanguageSwitcherProps) {
   const locale = useLocale();
   const t = useTranslations("nav");
   const router = useRouter();
@@ -204,7 +209,12 @@ export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
         aria-haspopup="listbox"
       >
         {current.flag}
-        <span className="text-[10px] font-semibold uppercase tracking-wide text-white/80">
+        <span
+          className={cn(
+            "text-[10px] font-semibold uppercase tracking-wide",
+            tone === "black" ? "text-foreground/80" : "text-white/80",
+          )}
+        >
           {current.short}
         </span>
       </button>

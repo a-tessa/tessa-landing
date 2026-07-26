@@ -4,7 +4,8 @@ const INDUSTRY_VIDEO_PT = "https://www.youtube.com/watch?v=EeLYcZsdYrw";
 const INDUSTRY_VIDEO_ES = "https://www.youtube.com/watch?v=eGdFPCZYNYQ";
 const MAX_TITLE_PREFIX_LENGTH = 60;
 const MAX_TITLE_LENGTH = 100;
-const MAX_SUBTITLE_LENGTH = 300;
+/** Keep in sync with tessa-api `MAX_INDUSTRY_SUBTITLE_LENGTH`. */
+const MAX_SUBTITLE_LENGTH = 700;
 
 export interface IndustryVideo {
   url: string;

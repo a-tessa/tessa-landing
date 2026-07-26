@@ -13,19 +13,25 @@ import {
   MobileDrawer,
   MobileToggle,
   NavLogo,
+  type NavTone,
 } from "./nav/parts";
 import { useScrollProgress } from "./nav/use-scroll-progress";
 
 const SCROLL_THRESHOLD = 150;
 const ACTIVE_CLASS = "text-[#FF6F00]";
 
-export function Navbar() {
+interface NavbarProps {
+  tone?: NavTone;
+}
+
+export function Navbar({ tone = "white" }: NavbarProps) {
   const { scrollProgress, expanded } = useScrollProgress(SCROLL_THRESHOLD);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const navRef = useRef<HTMLElement>(null);
 
   const blurPx = 8 + scrollProgress * 4;
+  const isBlack = tone === "black";
 
   return (
     <header
@@ -47,9 +53,13 @@ export function Navbar() {
           <nav
             ref={navRef}
             className={cn(
-              "flex h-18 w-full items-center justify-between rounded-3xl border bg-neutral-800 px-7 text-base font-medium transition-[background-color,padding,backdrop-filter,border-color] duration-500 md:bg-transparent md:px-0",
+              "flex h-18 w-full items-center justify-between rounded-3xl border px-7 text-base font-medium transition-[background-color,padding,backdrop-filter,border-color] duration-500 md:bg-transparent md:px-0",
+              isBlack ? "bg-background" : "bg-neutral-800",
               expanded
-                ? "border-white/10 backdrop-blur-xl backdrop-contrast-50 md:px-10"
+                ? cn(
+                    "backdrop-blur-xl backdrop-contrast-50 md:px-10",
+                    isBlack ? "border-foreground/10" : "border-white/10",
+                  )
                 : "border-transparent",
               mobileMenuOpen && "rounded-b-none",
             )}
@@ -58,24 +68,32 @@ export function Navbar() {
                 // backdropFilter: `blur(${blurPx}px)`,
                 WebkitBackdropFilter: `blur(${blurPx}px)`,
               }),
-              textShadow: "0 1px 3px rgba(0, 0, 0, 0.4)",
+              ...(!isBlack && {
+                textShadow: "0 1px 3px rgba(0, 0, 0, 0.4)",
+              }),
             }}
           >
-            <NavLogo />
+            <NavLogo tone={tone} />
 
             <div className="flex items-center gap-4 sm:gap-6">
-              <DesktopLinks activeClassName={ACTIVE_CLASS} />
-              <LanguageSwitcher />
+              <DesktopLinks activeClassName={ACTIVE_CLASS} tone={tone} />
+              <LanguageSwitcher tone={tone} />
               <MobileToggle
                 open={mobileMenuOpen}
                 onToggle={() => setMobileMenuOpen((o) => !o)}
+                tone={tone}
               />
             </div>
           </nav>
         </div>
 
         {!expanded && (
-          <div className="h-px bg-white/15 transition-all duration-500" />
+          <div
+            className={cn(
+              "h-px transition-all duration-500",
+              isBlack ? "bg-foreground/15" : "bg-white/15",
+            )}
+          />
         )}
       </div>
 

@@ -14,8 +14,19 @@ import { useTranslations } from "next-intl";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
-import { NAV_KEYS, isActivePath } from "./shared";
+import {
+  NAV_DIVIDER_CLASS,
+  NAV_ICON_CLASS,
+  NAV_INACTIVE_LINK_CLASS,
+  NAV_KEYS,
+  NAV_LOGO_SRC,
+  NAV_MUTED_TEXT_CLASS,
+  isActivePath,
+  type NavTone,
+} from "./shared";
 import { useNavServices } from "./services-context";
+
+export type { NavTone };
 
 interface PortalDrawerStyle {
   top: number;
@@ -75,9 +86,11 @@ interface NavLogoProps {
    * the Link (Navbar variant).
    */
   inline?: boolean;
+  /** White on home; black on inner pages. */
+  tone?: NavTone;
 }
 
-export function NavLogo({ inline = false }: NavLogoProps) {
+export function NavLogo({ inline = false, tone = "white" }: NavLogoProps) {
   const t = useTranslations("nav");
 
   const logoLink = (
@@ -89,20 +102,25 @@ export function NavLogo({ inline = false }: NavLogoProps) {
       )}
     >
       <Image
-        src="/tessa-logo.svg"
+        src={NAV_LOGO_SRC[tone]}
         alt="Tessa"
         width={80}
         height={40}
-        className="h-8 w-auto sm:h-10"
+        className="h-8 w-auto sm:h-10 mb-1"
         priority
       />
       {inline && (
         <>
           <span
-            className="hidden h-4 w-px bg-white/40 sm:block"
+            className={cn("hidden h-4 w-px sm:block", NAV_DIVIDER_CLASS[tone])}
             aria-hidden
           />
-          <span className="hidden text-xs font-medium uppercase tracking-wide text-white/60 sm:block">
+          <span
+            className={cn(
+              "hidden text-xs font-medium uppercase tracking-wide sm:block",
+              NAV_MUTED_TEXT_CLASS[tone],
+            )}
+          >
             {t("since")}
           </span>
         </>
@@ -116,10 +134,15 @@ export function NavLogo({ inline = false }: NavLogoProps) {
     <div className="flex items-center gap-3 sm:gap-4">
       {logoLink}
       <span
-        className="hidden h-4 w-px shrink-0 bg-white/40 sm:block"
+        className={cn("hidden h-4 w-px shrink-0 sm:block", NAV_DIVIDER_CLASS[tone])}
         aria-hidden
       />
-      <span className="hidden text-xs font-medium uppercase tracking-wide text-white/60 sm:block">
+      <span
+        className={cn(
+          "hidden text-xs font-medium uppercase tracking-wide sm:block",
+          NAV_MUTED_TEXT_CLASS[tone],
+        )}
+      >
         {t("since")}
       </span>
     </div>
@@ -128,10 +151,11 @@ export function NavLogo({ inline = false }: NavLogoProps) {
 
 interface DesktopLinksProps {
   activeClassName: string;
+  tone?: NavTone;
 }
 
 const DESKTOP_LINK_CLASS =
-  "hidden text-xs font-medium uppercase tracking-wide transition-colors sm:block";
+  "hidden text-xs font-medium uppercase leading-none tracking-wide transition-colors sm:block";
 
 interface NavDropdownPosition {
   top: number;
@@ -178,7 +202,10 @@ function useNavDropdownPosition(
   return position;
 }
 
-function ServicesNavLink({ activeClassName }: DesktopLinksProps) {
+function ServicesNavLink({
+  activeClassName,
+  tone = "white",
+}: DesktopLinksProps) {
   const pathname = usePathname();
   const t = useTranslations("nav");
   const serviceItems = useNavServices();
@@ -189,6 +216,7 @@ function ServicesNavLink({ activeClassName }: DesktopLinksProps) {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const closeTimerRef = useRef<number | null>(null);
   const dropdownPosition = useNavDropdownPosition(triggerRef, open);
+  const inactiveClassName = NAV_INACTIVE_LINK_CLASS[tone];
 
   const cancelClose = useCallback(() => {
     if (closeTimerRef.current !== null) {
@@ -221,7 +249,7 @@ function ServicesNavLink({ activeClassName }: DesktopLinksProps) {
         href="/servicos"
         className={cn(
           DESKTOP_LINK_CLASS,
-          isActive ? activeClassName : "text-white/90 hover:text-white",
+          isActive ? activeClassName : inactiveClassName,
         )}
       >
         {t("services")}
@@ -272,7 +300,7 @@ function ServicesNavLink({ activeClassName }: DesktopLinksProps) {
   return (
     <div
       ref={triggerRef}
-      className="relative hidden sm:block"
+      className="relative hidden sm:flex sm:items-center"
       onMouseEnter={handleOpen}
       onMouseLeave={scheduleClose}
     >
@@ -281,15 +309,15 @@ function ServicesNavLink({ activeClassName }: DesktopLinksProps) {
         aria-haspopup="menu"
         aria-expanded={open}
         className={cn(
-          "inline-flex items-center gap-1 text-xs font-medium uppercase tracking-wide transition-colors",
-          isActive ? activeClassName : "text-white/90 hover:text-white",
+          "inline-flex items-center gap-0.5 text-xs font-medium uppercase leading-none tracking-wide transition-colors",
+          isActive ? activeClassName : inactiveClassName,
         )}
       >
         {t("services")}
         <ChevronDown
-          size={14}
+          size={12}
           className={cn(
-            "opacity-70 transition-transform",
+            "shrink-0 opacity-70 transition-transform",
             open && "rotate-180",
           )}
           aria-hidden
@@ -301,15 +329,23 @@ function ServicesNavLink({ activeClassName }: DesktopLinksProps) {
   );
 }
 
-export function DesktopLinks({ activeClassName }: DesktopLinksProps) {
+export function DesktopLinks({
+  activeClassName,
+  tone = "white",
+}: DesktopLinksProps) {
   const pathname = usePathname();
   const t = useTranslations("nav");
+  const inactiveClassName = NAV_INACTIVE_LINK_CLASS[tone];
 
   return (
     <>
       {NAV_KEYS.map(({ href, key }) =>
         href === "/servicos" ? (
-          <ServicesNavLink key={href} activeClassName={activeClassName} />
+          <ServicesNavLink
+            key={href}
+            activeClassName={activeClassName}
+            tone={tone}
+          />
         ) : (
           <Link
             key={href}
@@ -318,7 +354,7 @@ export function DesktopLinks({ activeClassName }: DesktopLinksProps) {
               DESKTOP_LINK_CLASS,
               isActivePath(pathname, href)
                 ? activeClassName
-                : "text-white/90 hover:text-white",
+                : inactiveClassName,
             )}
           >
             {t(key)}
@@ -332,15 +368,23 @@ export function DesktopLinks({ activeClassName }: DesktopLinksProps) {
 interface MobileToggleProps {
   open: boolean;
   onToggle: () => void;
+  tone?: NavTone;
 }
 
-export function MobileToggle({ open, onToggle }: MobileToggleProps) {
+export function MobileToggle({
+  open,
+  onToggle,
+  tone = "white",
+}: MobileToggleProps) {
   const t = useTranslations("nav");
 
   return (
     <button
       type="button"
-      className="flex size-9 items-center justify-center rounded text-white sm:hidden"
+      className={cn(
+        "flex size-9 items-center justify-center rounded sm:hidden",
+        NAV_ICON_CLASS[tone],
+      )}
       onClick={onToggle}
       aria-label={open ? t("closeMenu") : t("openMenu")}
       aria-expanded={open}

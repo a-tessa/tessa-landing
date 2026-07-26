@@ -82,7 +82,7 @@ const css = /* css */ `
 .hero-nav__background {
   contain: paint;
   border-radius: 1.5rem;
-  background-color: oklch(0.55 0.005 50);
+  background-color: oklch(0.8853 0 0);
 }
 
 .hero-nav__overlay {
@@ -211,14 +211,14 @@ export function HeroNavbar({
         )}
         aria-hidden={!collapsed}
       >
-        <Navbar />
+        <Navbar tone="black" />
       </div>
 
       <header
         className={cn("hero-nav", collapsed && "hero-nav--collapsed pointer-events-none")}
         aria-hidden={collapsed}
       >
-        <div ref={shellRef} className="hero-nav__shell relative w-full text-white">
+        <div ref={shellRef} className="hero-nav__shell relative w-full text-foreground">
           <div className="hero-nav__background pointer-events-none absolute inset-0 overflow-hidden">
             <div
               className="hero-nav__overlay absolute inset-0"
@@ -232,18 +232,22 @@ export function HeroNavbar({
           >
             <div
               className={cn(
-                "mx-auto flex h-22 w-full items-center justify-between [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]",
+                "mx-auto flex h-22 w-full items-center justify-between",
                 insideCardSpacing,
               )}
             >
-              <NavLogo inline />
+              <NavLogo inline tone="black" />
 
               <div className="flex items-center gap-4 sm:gap-6">
-                <DesktopLinks activeClassName={activeClassName} />
-                <LanguageSwitcher />
+                <DesktopLinks
+                  activeClassName={activeClassName}
+                  tone="black"
+                />
+                <LanguageSwitcher tone="black" />
                 <MobileToggle
                   open={menuOpen}
                   onToggle={() => setMenuOpen((v) => !v)}
+                  tone="black"
                 />
               </div>
             </div>
@@ -251,11 +255,11 @@ export function HeroNavbar({
 
           <div
             className={cn(
-              "absolute inset-x-0 bottom-0 pb-6 sm:pb-8 [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]",
+              "absolute inset-x-0 bottom-0 pb-6 sm:pb-12 [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]",
               insideCardSpacing,
             )}
           >
-            <TitleTag className="hero-nav__title text-32xl font-bold uppercase sm:text-5xl md:text-6xl lg:text-7xl">
+            <TitleTag className="hero-nav__title text-32xl font-bold uppercase sm:text-5xl md:text-6xl lg:text-6xl text-[#252525]">
               {title}
             </TitleTag>
             {isTruncated ? (
@@ -285,11 +289,14 @@ export function HeroNavbar({
                   </Tooltip.Portal>
                 </Tooltip.Root>
               </Tooltip.Provider>
-            ) : (
-              <p className="hero-nav__subtitle mt-3 max-w-2xl text-xxs font-semibold uppercase sm:mt-4 sm:text-xs">
-                {visibleDescription}
-              </p>
-            )}
+            ) :
+              // (
+              //   <p className="hero-nav__subtitle mt-3 max-w-2xl text-xxs font-semibold uppercase sm:mt-4 sm:text-xs">
+              //     {visibleDescription}
+              //   </p>
+              // )
+              null
+            }
           </div>
 
           <MobileDrawer
