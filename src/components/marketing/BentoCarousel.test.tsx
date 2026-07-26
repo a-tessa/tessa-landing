@@ -25,6 +25,7 @@ vi.mock("next/image", () => ({
     alt,
     loading,
     priority,
+    fetchPriority,
     sizes,
     ...props
   }: {
@@ -33,6 +34,7 @@ vi.mock("next/image", () => ({
     fill?: boolean;
     loading?: string;
     priority?: boolean;
+    fetchPriority?: "high" | "low" | "auto";
     sizes?: string;
     className?: string;
   }) => (
@@ -43,6 +45,7 @@ vi.mock("next/image", () => ({
       data-testid="bento-image"
       data-loading={loading}
       data-priority={priority ? "true" : "false"}
+      data-fetch-priority={fetchPriority}
       data-sizes={sizes}
       className={props.className}
     />
@@ -159,8 +162,10 @@ describe("BentoCarousel lazy loading", () => {
 
       if (index < 6) {
         expect(image).toHaveAttribute("data-loading", "eager");
+        expect(image).toHaveAttribute("data-fetch-priority", "low");
       } else {
         expect(image).toHaveAttribute("data-loading", "lazy");
+        expect(image).not.toHaveAttribute("data-fetch-priority");
       }
     }
 
@@ -172,6 +177,7 @@ describe("BentoCarousel lazy loading", () => {
       desktopFirst as HTMLElement,
     ).getByTestId("bento-image");
     expect(desktopFirstImage).toHaveAttribute("data-priority", "true");
+    expect(desktopFirstImage).toHaveAttribute("data-fetch-priority", "high");
     expect(desktopFirstImage).not.toHaveAttribute("data-loading");
 
     const desktopSeventh = document.querySelector(
@@ -181,6 +187,24 @@ describe("BentoCarousel lazy loading", () => {
     expect(
       within(desktopSeventh as HTMLElement).getByTestId("bento-image"),
     ).toHaveAttribute("data-loading", "lazy");
+  });
+
+  it("keeps desktop expansion operable by keyboard", () => {
+    render(<BentoCarousel slides={makeSlides(6)} />);
+
+    const firstDesktop = document.querySelector<HTMLButtonElement>(
+      `.hidden.md\\:block [data-gallery-flat-index="0"]`,
+    );
+    expect(firstDesktop).not.toBeNull();
+
+    expect(firstDesktop).toHaveAttribute("type", "button");
+    fireEvent.click(firstDesktop!);
+    expect(screen.getByRole("button", { name: "collapseImage" })).toBeInTheDocument();
+
+    fireEvent.keyDown(window, { key: "Escape" });
+    expect(
+      screen.queryByRole("button", { name: "collapseImage" }),
+    ).not.toBeInTheDocument();
   });
 
   it("keeps stable aspect boxes so skeletons do not introduce layout shift", () => {

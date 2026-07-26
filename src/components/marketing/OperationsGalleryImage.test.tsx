@@ -12,6 +12,7 @@ vi.mock("next/image", () => ({
     onError,
     loading,
     priority,
+    fetchPriority,
     sizes,
     ...props
   }: {
@@ -20,6 +21,7 @@ vi.mock("next/image", () => ({
     fill?: boolean;
     loading?: string;
     priority?: boolean;
+    fetchPriority?: "high" | "low" | "auto";
     sizes?: string;
     onLoad?: () => void;
     onError?: () => void;
@@ -32,6 +34,7 @@ vi.mock("next/image", () => ({
       data-testid="gallery-img"
       data-loading={loading}
       data-priority={priority ? "true" : "false"}
+      data-fetch-priority={fetchPriority}
       data-sizes={sizes}
       className={props.className}
       onLoad={onLoad}
@@ -62,6 +65,7 @@ describe("OperationsGalleryImage", () => {
     expect(skeleton).toHaveClass("animate-pulse");
     expect(image).toHaveClass("opacity-0");
     expect(image).toHaveAttribute("data-loading", "eager");
+    expect(image).toHaveAttribute("data-fetch-priority", "low");
 
     fireEvent.load(image);
 
@@ -108,6 +112,7 @@ describe("OperationsGalleryImage", () => {
 
     const image = screen.getByTestId("gallery-img");
     expect(image).toHaveAttribute("data-priority", "true");
+    expect(image).toHaveAttribute("data-fetch-priority", "high");
     expect(image).not.toHaveAttribute("data-loading");
   });
 });

@@ -62,6 +62,7 @@ export function OperationsGalleryImage({
           sizes={sizes}
           loading={priority ? undefined : loading}
           priority={priority}
+          fetchPriority={priority ? "high" : loading === "eager" ? "low" : undefined}
           decoding="async"
           className={cn(
             "object-cover transition-opacity duration-300",

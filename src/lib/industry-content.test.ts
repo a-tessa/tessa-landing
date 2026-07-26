@@ -20,6 +20,10 @@ const sectionWithLocaleVideos = {
   ...section,
   videos: {
     ...section.videos,
+    en: {
+      url: "https://www.youtube.com/watch?v=EeLYcZsdYrw",
+      startSeconds: 12,
+    },
     es: {
       url: "https://www.youtube.com/watch?v=eGdFPCZYNYQ",
       startSeconds: 6,
@@ -53,6 +57,12 @@ describe("industry content", () => {
   });
 
   it("uses the locale's own video when it is configured", () => {
+    expect(resolveIndustrySection(sectionWithLocaleVideos, "en")).toEqual({
+      titlePrefix: sectionWithLocaleVideos.titlePrefix,
+      title: sectionWithLocaleVideos.title,
+      subtitle: sectionWithLocaleVideos.subtitle,
+      video: sectionWithLocaleVideos.videos.en,
+    });
     expect(resolveIndustrySection(sectionWithLocaleVideos, "es")).toEqual({
       titlePrefix: sectionWithLocaleVideos.titlePrefix,
       title: sectionWithLocaleVideos.title,
@@ -62,11 +72,39 @@ describe("industry content", () => {
   });
 
   it("falls back to the full Portuguese URL and start-seconds pair when a locale has no video of its own", () => {
-    expect(resolveIndustrySection(sectionWithLocaleVideos, "en")).toEqual({
-      titlePrefix: sectionWithLocaleVideos.titlePrefix,
-      title: sectionWithLocaleVideos.title,
-      subtitle: sectionWithLocaleVideos.subtitle,
-      video: sectionWithLocaleVideos.videos["pt-BR"],
+    const onlyPortugueseAndSpanish = {
+      ...section,
+      videos: {
+        "pt-BR": section.videos["pt-BR"],
+        es: sectionWithLocaleVideos.videos.es,
+      },
+    };
+
+    expect(resolveIndustrySection(onlyPortugueseAndSpanish, "en")).toEqual({
+      titlePrefix: onlyPortugueseAndSpanish.titlePrefix,
+      title: onlyPortugueseAndSpanish.title,
+      subtitle: onlyPortugueseAndSpanish.subtitle,
+      video: onlyPortugueseAndSpanish.videos["pt-BR"],
+    });
+  });
+
+  it("ignores a locale startSeconds without URL and uses the full Portuguese pair", () => {
+    expect(
+      resolveIndustrySection(
+        {
+          ...section,
+          videos: {
+            "pt-BR": section.videos["pt-BR"],
+            en: { startSeconds: 99 } as { url: string; startSeconds?: number },
+          },
+        },
+        "en",
+      ),
+    ).toEqual({
+      titlePrefix: section.titlePrefix,
+      title: section.title,
+      subtitle: section.subtitle,
+      video: section.videos["pt-BR"],
     });
   });
 
