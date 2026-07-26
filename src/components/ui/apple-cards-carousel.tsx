@@ -23,7 +23,7 @@ type Card = {
   priority?: boolean;
 };
 
-const SCENARIO_CARD_IMAGE_SIZES = "(min-width: 768px) 400px, 224px";
+const SCENARIO_CARD_IMAGE_SIZES = "(min-width: 768px) 304px, 192px";
 
 export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -73,16 +73,13 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
         <div
           className={cn(
             "flex flex-row justify-start gap-4",
-            "mx-auto py-10 pl-6 sm:pl-24 md:pl-25 lg:pl-36 xl:pl-60",
+            "mx-auto py-10 pl-6 pr-6 sm:pl-24 md:pl-25 lg:pl-36 xl:pl-60",
           )}
         >
           {items.map((item, index) => (
             <div
               key={"card" + index}
-              className={cn(
-                "shrink-0 cursor-pointer",
-                index === items.length - 1 && "pr-[5%] md:pr-[33%]",
-              )}
+              className="shrink-0 cursor-pointer"
             >
               <motion.div
                 initial={{
@@ -154,7 +151,7 @@ export const Card = ({
     >
       <motion.article
         layoutId={layout ? `card-${card.title}` : undefined}
-        className="group relative z-10 flex h-80 w-56 flex-col items-start justify-start overflow-hidden rounded-3xl bg-gray-100 md:h-160 md:w-100 dark:bg-neutral-900"
+        className="group relative z-10 flex h-64 w-48 flex-col items-start justify-start overflow-hidden rounded-3xl bg-gray-100 md:h-120 md:w-76 dark:bg-neutral-900"
       >
         <BlurImage
           src={card.src}
@@ -171,10 +168,10 @@ export const Card = ({
         />
         <div className="pointer-events-none absolute inset-0 z-20 bg-primary/75 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         <div className="pointer-events-none absolute inset-x-0 top-0 z-30 h-full bg-linear-to-b from-black/40 via-transparent to-transparent" />
-        <div className="relative z-40 p-8">
+        <div className="relative z-40 p-5 md:p-6">
           <motion.p
             layoutId={layout ? `title-${card.title}` : undefined}
-            className="mt-2 max-w-xs text-left text-lg sm:text-xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-balance text-white font-barlow uppercase"
+            className="mt-2 max-w-xs text-left text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold text-balance text-white font-barlow uppercase"
           >
             {card.title}
           </motion.p>

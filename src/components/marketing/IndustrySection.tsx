@@ -28,7 +28,7 @@ export async function IndustrySection({
       aria-labelledby="industry-title"
       className={cn("w-full mb-20 pt-4 sm:pt-6", freeSectionShellSpacing)}
     >
-      <div className="mx-auto flex w-full flex-col gap-10 xl:grid xl:max-w-none xl:grid-cols-[minmax(0,1fr)_minmax(280px,550px)] xl:items-center lg:gap-10 xl:gap-12">
+      <div className="mx-auto flex w-full flex-col gap-10 xl:grid xl:max-w-none xl:grid-cols-[minmax(0,1fr)_minmax(280px,550px)] xl:items-start lg:gap-10 xl:gap-12">
         <div className="text-left">
           <h2
             id="industry-title"
@@ -38,7 +38,7 @@ export async function IndustrySection({
             {"\n"}
             {title}
           </h2>
-          <p className="mt-2 max-w-3xl text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground sm:text-sm">
+          <p className="mt-2 max-w-3xl text-xs font-normal tracking-wide text-muted-foreground sm:text-sm">
             {subtitle}
           </p>
           <div
@@ -52,7 +52,7 @@ export async function IndustrySection({
           startSeconds={video.startSeconds}
           playLabel={t("videoPlayLabel")}
           caption={t("videoCaption")}
-          className="mx-auto aspect-video w-full max-w-[550px] shadow-lg lg:mx-0 lg:max-w-none"
+          className="cinema-frame mx-auto flex h-56 w-full max-w-137.5 items-center justify-center bg-black shadow-lg sm:h-72 lg:mx-0 lg:max-w-none"
         />
       </div>
     </section>

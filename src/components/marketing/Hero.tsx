@@ -76,7 +76,7 @@ const HERO_SLIDE_CARD_LABEL_CLASS = cn(
 function ScrollIndicator() {
   return (
     <div className="flex flex-col items-center gap-1">
-      <div className="flex h-9 w-[22px] items-start justify-center rounded-full border border-white/35 pt-1.5">
+      <div className="flex h-9 w-5.5 items-start justify-center rounded-full border border-white/35 pt-1.5">
         <m.div
           className="h-1.5 w-1.5 rounded-full bg-white/80"
           animate={{ y: [0, 10, 0] }}
@@ -315,6 +315,11 @@ export function Hero({ heroSection, clients }: HeroProps) {
             </m.div>
           ))}
 
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 z-5 bg-linear-to-b from-black/35 via-black/15 to-transparent"
+          />
+
           <div className="absolute inset-0 z-10 grid grid-rows-[minmax(0,1fr)_auto_auto] overflow-hidden">
             <div
               className={cn(
@@ -456,7 +461,7 @@ export function Hero({ heroSection, clients }: HeroProps) {
                         aria-label={t("nextHeroBanner")}
                         className="size-9 shrink-0 cursor-pointer rounded-full transition-transform hover:scale-95 sm:size-10 xl:size-11"
                       >
-                        <ArrowRight className="size-4 sm:size-[18px]" />
+                        <ArrowRight className="size-4 sm:size-4.5" />
                       </Button>
                     </div>
                   </div>
