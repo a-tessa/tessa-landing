@@ -1,9 +1,9 @@
 "use client";
 
-import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { Play, X } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { VisuallyHidden } from "radix-ui";
 import { useMemo, useState } from "react";
 import type { GalleryMediaItemPublicDto } from "@/lib/api/gallery";
 import { cn } from "@/lib/utils";
