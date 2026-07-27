@@ -101,6 +101,8 @@
     "nextTestimonial": "Next testimonial",
     "starsLabel": "{rating} out of 5 stars",
     "viewTestimonial": "View testimonial from {name}",
+    "viaGoogle": "Via Google",
+    "ratingSummary": "{average} · {count, plural, one {# review} other {# reviews}}",
     "emptyTitle": "You will be the first to review.",
     "emptyDescription": "Leave your testimonial and be part of this story!"
   },

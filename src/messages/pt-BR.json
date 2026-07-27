@@ -101,6 +101,8 @@
     "nextTestimonial": "Próximo depoimento",
     "starsLabel": "{rating} de 5 estrelas",
     "viewTestimonial": "Ver depoimento de {name}",
+    "viaGoogle": "Via Google",
+    "ratingSummary": "{average} · {count, plural, one {# avaliação} other {# avaliações}}",
     "emptyTitle": "Você será o primeiro a avaliar.",
     "emptyDescription": "Deixe seu depoimento e participe dessa história!"
   },

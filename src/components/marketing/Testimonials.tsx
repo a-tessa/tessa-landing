@@ -11,7 +11,7 @@ import {
 } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "motion/react";
 import { WriteTestimonialDialog } from "@/components/marketing/WriteTestimonialDialog";
-import type { PublicTestimonial } from "@/lib/api/types";
+import type { PublicTestimonial, TestimonialSource } from "@/lib/api/types";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 
 interface Testimonial {
@@ -22,6 +22,8 @@ interface Testimonial {
   reviewImage: string | null;
   rating: number;
   text: string;
+  source: TestimonialSource;
+  authorUrl: string | null;
 }
 
 function mapPublicTestimonial(item: PublicTestimonial): Testimonial {
@@ -32,7 +34,9 @@ function mapPublicTestimonial(item: PublicTestimonial): Testimonial {
     profileImage: item.profileImageUrl,
     reviewImage: item.reviewImageUrl,
     rating: item.rating,
-    text: item.comment,
+    text: item.comment.trim(),
+    source: item.source,
+    authorUrl: item.authorUrl,
   };
 }
 
@@ -58,6 +62,49 @@ function Stars({ rating }: { rating: number }) {
         />
       ))}
     </div>
+  );
+}
+
+function GoogleGlyph({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={cn("size-3.5", className)}
+      aria-hidden
+      focusable="false"
+    >
+      <path
+        fill="#4285F4"
+        d="M23.52 12.27c0-.79-.07-1.54-.2-2.27H12v4.51h6.47a5.53 5.53 0 0 1-2.4 3.63v3h3.88c2.27-2.09 3.57-5.17 3.57-8.87Z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 24c3.24 0 5.96-1.08 7.95-2.91l-3.88-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96H1.26v3.09A12 12 0 0 0 12 24Z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M5.27 14.29a7.2 7.2 0 0 1 0-4.58v-3.1H1.26a12 12 0 0 0 0 10.77l4.01-3.09Z"
+      />
+      <path
+        fill="#EA4335"
+        d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.44-3.44A11.5 11.5 0 0 0 12 0 12 12 0 0 0 1.26 6.61l4.01 3.1C6.22 6.86 8.87 4.75 12 4.75Z"
+      />
+    </svg>
+  );
+}
+
+function GoogleBadge({ className }: { className?: string }) {
+  const t = useTranslations("testimonials");
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-[11px] font-semibold text-muted-foreground ring-1 ring-foreground/10",
+        className,
+      )}
+    >
+      <GoogleGlyph />
+      {t("viaGoogle")}
+    </span>
   );
 }
 
@@ -190,9 +237,18 @@ function TestimonialNextPreviewCard({
       className="flex h-44 w-full cursor-pointer flex-col justify-between rounded-2xl bg-card p-4 text-left shadow-sm transition-shadow hover:shadow-md lg:h-48"
       aria-label={ariaLabel}
     >
-      <p className="line-clamp-4 text-sm leading-relaxed text-muted-foreground">
-        &ldquo;{testimonial.text}&rdquo;
-      </p>
+      {testimonial.text ? (
+        <p className="line-clamp-4 text-sm leading-relaxed text-muted-foreground">
+          &ldquo;{testimonial.text}&rdquo;
+        </p>
+      ) : (
+        <div className="flex items-center gap-1.5">
+          <span className="text-sm font-bold text-foreground">
+            {testimonial.rating.toFixed(1)}
+          </span>
+          <Stars rating={testimonial.rating} />
+        </div>
+      )}
       <div className="flex items-center gap-3">
         <div className="relative size-10 shrink-0 overflow-hidden rounded-full">
           <AvatarImage
@@ -202,8 +258,11 @@ function TestimonialNextPreviewCard({
           />
         </div>
         <div className="min-w-0">
-          <p className="truncate text-sm font-semibold text-foreground">
+          <p className="flex items-center gap-1 truncate text-sm font-semibold text-foreground">
             {testimonial.name}
+            {testimonial.source === "google" ? (
+              <GoogleGlyph className="size-3 shrink-0" />
+            ) : null}
           </p>
           {testimonial.company ? (
             <p className="truncate text-xs font-bold uppercase tracking-wider text-muted-foreground">
@@ -230,6 +289,17 @@ export function Testimonials({ items, className }: TestimonialsProps = {}) {
     }
     return [];
   }, [items]);
+
+  const aggregate = useMemo(() => {
+    if (resolvedTestimonials.length === 0) {
+      return { average: 0, count: 0 };
+    }
+    const sum = resolvedTestimonials.reduce((acc, item) => acc + item.rating, 0);
+    return {
+      average: sum / resolvedTestimonials.length,
+      count: resolvedTestimonials.length,
+    };
+  }, [resolvedTestimonials]);
 
   const length = resolvedTestimonials.length;
   const initialIndex = length > 1 ? 1 : 0;
@@ -319,9 +389,10 @@ export function Testimonials({ items, className }: TestimonialsProps = {}) {
         itemType="https://schema.org/AggregateRating"
         className="sr-only"
       >
-        <meta itemProp="ratingValue" content="5" />
-        <meta itemProp="reviewCount" content={String(length)} />
+        <meta itemProp="ratingValue" content={aggregate.average.toFixed(1)} />
+        <meta itemProp="reviewCount" content={String(aggregate.count)} />
         <meta itemProp="bestRating" content="5" />
+        <meta itemProp="worstRating" content="1" />
       </div>
 
       <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[240px_1fr_200px] lg:gap-6">
@@ -334,6 +405,20 @@ export function Testimonials({ items, className }: TestimonialsProps = {}) {
             >
               {t("title")}
             </h2>
+            {aggregate.count > 0 ? (
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                <span className="text-2xl font-bold text-foreground">
+                  {aggregate.average.toFixed(1)}
+                </span>
+                <Stars rating={Math.round(aggregate.average)} />
+                <span className="w-full text-xs font-medium text-muted-foreground sm:w-auto">
+                  {t("ratingSummary", {
+                    average: aggregate.average.toFixed(1),
+                    count: aggregate.count,
+                  })}
+                </span>
+              </div>
+            ) : null}
             <WriteTestimonialDialog>
               <button
                 type="button"
@@ -373,8 +458,11 @@ export function Testimonials({ items, className }: TestimonialsProps = {}) {
                 />
               </div>
               <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-foreground">
+                <p className="flex items-center gap-1 truncate text-sm font-semibold text-foreground">
                   {prevT.name}
+                  {prevT.source === "google" ? (
+                    <GoogleGlyph className="size-3 shrink-0" />
+                  ) : null}
                 </p>
                 {prevT.company ? (
                   <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
@@ -431,18 +519,17 @@ export function Testimonials({ items, className }: TestimonialsProps = {}) {
                 itemType="https://schema.org/Review"
               >
                 {activeHasReviewImage ? (
-                  <blockquote
-                    className="text-sm leading-relaxed text-muted-foreground sm:text-base"
-                    itemProp="reviewBody"
-                  >
-                    {active.text}
-                  </blockquote>
-                ) : (
-                  <TestimonialQuoteBubble
-                    text={active.text}
-                    className="mb-2"
-                  />
-                )}
+                  active.text ? (
+                    <blockquote
+                      className="text-sm leading-relaxed text-muted-foreground sm:text-base"
+                      itemProp="reviewBody"
+                    >
+                      {active.text}
+                    </blockquote>
+                  ) : null
+                ) : active.text ? (
+                  <TestimonialQuoteBubble text={active.text} className="mb-2" />
+                ) : null}
 
                 <div
                   className={cn(
@@ -473,6 +560,9 @@ export function Testimonials({ items, className }: TestimonialsProps = {}) {
                       <p className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
                         {active.company}
                       </p>
+                    ) : null}
+                    {active.source === "google" ? (
+                      <GoogleBadge className="mt-1.5" />
                     ) : null}
                   </div>
                 </div>

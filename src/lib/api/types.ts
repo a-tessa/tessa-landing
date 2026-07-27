@@ -139,6 +139,8 @@ export interface PublicClientsResponse {
   clients: ClientLogo[];
 }
 
+export type TestimonialSource = "submitted" | "google";
+
 export interface PublicTestimonial {
   id: string;
   authorName: string;
@@ -149,10 +151,18 @@ export interface PublicTestimonial {
   question: string | null;
   profileImageUrl: string | null;
   reviewImageUrl: string | null;
+  source: TestimonialSource;
+  authorUrl: string | null;
   createdAt: string;
   reviewedAt: string | null;
 }
 
+export interface TestimonialAggregate {
+  average: number;
+  count: number;
+}
+
 export interface PublicTestimonialsResponse {
   testimonials: PublicTestimonial[];
+  aggregate: TestimonialAggregate;
 }
