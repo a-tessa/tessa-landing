@@ -11,6 +11,10 @@ import { Heading } from "./Heading";
  */
 const ROUTE_NAMESPACES = [
   {
+    prefix: "/quem-somos",
+    namespace: "pages.quemSomos",
+  },
+  {
     prefix: "/servicos",
     namespace: "pages.servicos",
   },

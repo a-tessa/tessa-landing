@@ -1,6 +1,6 @@
 {
   "nav": {
-    "about": "ABOUT TESSA",
+    "about": "ABOUT US",
     "services": "SERVICES",
     "representatives": "REPRESENTATIVES",
     "blog": "BLOG",
@@ -649,6 +649,27 @@
     "contato": {
       "title": "Contact",
       "description": "Talk to our team to ask questions, request a quote or learn about our solutions."
+    },
+    "quemSomos": {
+      "title": "About Us",
+      "description": "Meet Tessa: our history, galvanized steel structure industry, and the pillars of Mission, Vision, and Values.",
+      "heroTitle": "WE ARE TESSA",
+      "videoPlayLabel": "Watch Tessa's institutional video",
+      "videoCaption": "Institutional video presenting Tessa Engenharia.",
+      "sideImageAlt": "Team and production at the Tessa plant",
+      "body": "Founded in 2001, Tessa was created to turn projects into high-performance metal structures.\n\nSpecialized in galvanized steel, the company combines applied engineering, industrial production, and close customer support to deliver predictable solutions for construction, energy, and production.\n\nOver the years, it has built a strong presence in the Brazilian market across civil construction, solar energy, poultry farming, and commercial developments.",
+      "mission": {
+        "title": "OUR MISSION",
+        "description": "Design and manufacture metal structures with applied engineering, industrial quality, and close support, so every project leaves the drawing board with safety and predictability."
+      },
+      "vision": {
+        "title": "TESSA'S VISION",
+        "description": "Be a national reference in metal structures and custom profiles, recognized for technical excellence, innovation, and partner trust."
+      },
+      "values": {
+        "title": "OUR VALUES",
+        "description": "Quality, safety, commitment to deadlines, customer proximity, and continuous improvement at every stage of the process."
+      }
     }
   },
   "footer": {
@@ -667,7 +688,7 @@
     "allRightsReserved": "All rights reserved.",
     "legalLabel": "Legal links",
     "links": {
-      "about": "About Tessa",
+      "about": "About Us",
       "services": "Services",
       "structures": "Structures",
       "representatives": "Representatives",

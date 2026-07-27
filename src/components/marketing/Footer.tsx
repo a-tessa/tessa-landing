@@ -6,7 +6,7 @@ import { SITE } from "@/lib/seo/schemas";
 import { cn, insideCardSpacing } from "@/lib/utils";
 
 const MENU_KEYS = [
-  { href: "/", key: "about" },
+  { href: "/quem-somos", key: "about" },
   { href: "/servicos", key: "services" },
   { href: "/representantes", key: "representatives" },
   { href: "/blog", key: "blog" },

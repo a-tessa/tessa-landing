@@ -8,6 +8,11 @@ describe("nav shared", () => {
     expect(hrefs.indexOf("/galeria")).toBeGreaterThan(hrefs.indexOf("/downloads"));
   });
 
+  it("points About to Quem Somos", () => {
+    const about = NAV_KEYS.find((item) => item.key === "about");
+    expect(about?.href).toBe("/quem-somos");
+  });
+
   it("marks /galeria as active for the gallery route", () => {
     expect(isActivePath("/galeria", "/galeria")).toBe(true);
     expect(isActivePath("/galeria", "/downloads")).toBe(false);

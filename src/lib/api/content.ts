@@ -1,5 +1,6 @@
 import { localeCacheKey, toApiLocale } from "./locale";
 import type {
+  AboutSection,
   BlogCategory,
   ClientLogo,
   HeroTopic,
@@ -46,6 +47,13 @@ export async function getHeroSection(
 ): Promise<HeroTopic[] | null> {
   const data = await getPublicContent(locale);
   return data?.content.heroSection ?? null;
+}
+
+export async function getAboutSection(
+  locale?: string,
+): Promise<AboutSection | null> {
+  const data = await getPublicContent(locale);
+  return data?.content.aboutSection ?? null;
 }
 
 export async function getScenerySection(

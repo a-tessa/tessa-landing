@@ -8,10 +8,12 @@ import { localePath, routing } from "@/i18n/routing";
 
 const STATIC_PATHS = [
   "/",
+  "/quem-somos",
   "/servicos",
   "/representantes",
   "/blog",
   "/downloads",
+  "/galeria",
   "/contato",
 ];
 

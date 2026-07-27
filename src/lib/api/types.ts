@@ -31,6 +31,28 @@ export interface IndustrySection {
   };
 }
 
+export interface AboutPillar {
+  title: string;
+  description: string;
+}
+
+export interface AboutSection {
+  heroTitle: string;
+  videos: {
+    "pt-BR": IndustryVideo;
+    en?: IndustryVideo;
+    es?: IndustryVideo;
+  };
+  sideImage: {
+    url: string;
+    alt: string;
+  };
+  body: string;
+  mission: AboutPillar;
+  vision: AboutPillar;
+  values: AboutPillar;
+}
+
 export interface OperationImage {
   url: string;
   alt?: string;
@@ -82,6 +104,7 @@ export interface PublicContentResponse {
   content: {
     heroSection?: HeroTopic[];
     industrySection?: IndustrySection;
+    aboutSection?: AboutSection;
     operationSection?: OperationSection;
     scenerySection?: SceneryItem[];
     servicesPages?: ServicesPageItem[];

@@ -1,6 +1,6 @@
 {
   "nav": {
-    "about": "A TESSA",
+    "about": "QUEM SOMOS",
     "services": "SERVIÇOS",
     "representatives": "REPRESENTANTES",
     "blog": "BLOG",
@@ -649,6 +649,27 @@
     "contato": {
       "title": "Contato",
       "description": "Fale com nossa equipe para tirar dúvidas, solicitar orçamento ou conhecer nossas soluções."
+    },
+    "quemSomos": {
+      "title": "Quem Somos",
+      "description": "Conheça a Tessa: história, indústria de estruturas metálicas galvanizadas e os pilares de Missão, Visão e Valores.",
+      "heroTitle": "NÓS SOMOS A TESSA",
+      "videoPlayLabel": "Assistir vídeo institucional da Tessa",
+      "videoCaption": "Vídeo institucional apresentando a Tessa Engenharia.",
+      "sideImageAlt": "Equipe e produção na indústria Tessa",
+      "body": "Fundada em 2001, a Tessa nasceu com o propósito de transformar projetos em estruturas metálicas de alta performance.\n\nEspecializada em aço galvanizado, a empresa une engenharia aplicada, produção industrial e proximidade com o cliente para entregar soluções previsíveis em obra, energia e produção.\n\nAo longo dos anos, consolidou presença no mercado brasileiro atendendo setores como construção civil, energia solar, avicultura e empreendimentos comerciais.",
+      "mission": {
+        "title": "NOSSA MISSÃO",
+        "description": "Desenvolver e fabricar estruturas metálicas com engenharia aplicada, qualidade industrial e atendimento próximo, para que cada projeto saia do papel com segurança e previsibilidade."
+      },
+      "vision": {
+        "title": "VISÃO DA TESSA",
+        "description": "Ser referência nacional em estruturas metálicas e perfis sob medida, reconhecida pela excelência técnica, inovação e confiança dos parceiros."
+      },
+      "values": {
+        "title": "NOSSOS VALORES",
+        "description": "Qualidade, segurança, compromisso com prazos, proximidade com o cliente e melhoria contínua em cada etapa do processo."
+      }
     }
   },
   "footer": {
@@ -667,7 +688,7 @@
     "allRightsReserved": "Todos os direitos reservados.",
     "legalLabel": "Links legais",
     "links": {
-      "about": "A Tessa",
+      "about": "Quem Somos",
       "services": "Serviços",
       "structures": "Estruturas",
       "representatives": "Representantes",
