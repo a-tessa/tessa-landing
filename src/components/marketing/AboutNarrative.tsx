@@ -20,22 +20,24 @@ export function AboutNarrative({
   return (
     <div
       className={cn(
-        "grid w-full gap-8 lg:grid-cols-2 lg:items-center lg:gap-12",
+        "flex w-full flex-col gap-8 lg:flex-row lg:items-start lg:gap-10",
         className,
       )}
     >
-      <div className="relative aspect-4/3 w-full overflow-hidden rounded-3xl bg-muted">
+      <div className="relative mx-auto aspect-4/3 w-full max-w-60 shrink-0 overflow-hidden rounded-3xl bg-muted sm:max-w-70 lg:mx-0">
         <Image
           src={imageUrl}
           alt={imageAlt}
           fill
-          sizes="(max-width: 1024px) 100vw, 50vw"
+          sizes="(max-width: 1024px) 280px, 240px"
           className="object-cover"
         />
       </div>
-      <div className="space-y-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
+      <div className="min-w-0 w-full flex-1 space-y-4 text-xs leading-relaxed text-muted-foreground sm:text-xs">
         {paragraphs.map((paragraph, index) => (
-          <p key={`about-body-${String(index)}`}>{paragraph}</p>
+          <p key={`about-body-${String(index)}`} className="w-full text-pretty">
+            {paragraph}
+          </p>
         ))}
       </div>
     </div>

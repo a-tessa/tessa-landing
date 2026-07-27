@@ -83,7 +83,7 @@ export default async function QuemSomosPage({ params }: QuemSomosPageProps) {
         <section
           className={cn(
             freeSectionShellSpacing,
-            "mt-10 flex w-full max-w-7xl flex-col gap-12 px-4 py-12 sm:mt-0 sm:gap-16 sm:px-6 sm:py-10",
+            "mt-10 flex w-full flex-col gap-12 py-12 sm:mt-0 sm:gap-16 sm:py-10",
           )}
         >
           <AboutHeroVideo

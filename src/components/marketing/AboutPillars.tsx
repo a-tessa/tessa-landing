@@ -30,10 +30,10 @@ export function AboutPillars({
           key={pillar.title}
           className="rounded-3xl border border-border bg-card p-6 sm:p-8"
         >
-          <span className="font-barlow text-sm font-medium tabular-nums text-muted-foreground/70">
+          <span className="font-barlow text-xs font-medium tabular-nums text-muted-foreground/70 leading-none">
             {PILLAR_NUMBERS[index]}
           </span>
-          <h3 className="mt-3 font-barlow text-base font-bold uppercase tracking-wide text-foreground sm:text-lg">
+          <h3 className="font-barlow text-base leading-none font-bold uppercase tracking-wide text-foreground sm:text-lg">
             {pillar.title}
           </h3>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
