@@ -20,10 +20,12 @@ import { fetchBlogArticles } from "@/lib/api/blog";
 import { fetchInstagramPosts } from "@/lib/api/instagram";
 import { getApprovedTestimonials } from "@/lib/api/testimonials";
 import {
+  getHeadingImageUrl,
   getServicePageBySlug,
   getServicesPages,
 } from "@/lib/api/content";
 import { toBlogPostFromListItem } from "@/lib/blog/mappers";
+import { resolveHeadingImageUrl } from "@/lib/heading-image";
 import { getMergedServiceNavItems } from "@/lib/servicos/nav";
 import {
   isStaticServiceSlug,
@@ -156,15 +158,22 @@ export default async function ServiceDetailPage({
     return <StaticServicePage locale={locale} slug={slug} />;
   }
 
-  const [service, servicesPages, t, ts, testimonials] = await Promise.all([
-    getServicePageBySlug(slug, locale),
-    getServicesPages(locale),
-    getTranslations({ locale, namespace: "pages.servicoDetail" }),
-    getTranslations({ locale, namespace: "pages.servicos" }),
-    getApprovedTestimonials(),
-  ]);
+  const [service, servicesPages, t, ts, testimonials, servicesHeadingImageUrl] =
+    await Promise.all([
+      getServicePageBySlug(slug, locale),
+      getServicesPages(locale),
+      getTranslations({ locale, namespace: "pages.servicoDetail" }),
+      getTranslations({ locale, namespace: "pages.servicos" }),
+      getApprovedTestimonials(),
+      getHeadingImageUrl("servicos", locale),
+    ]);
 
   if (!service) notFound();
+
+  const headingImageUrl = resolveHeadingImageUrl(
+    service.backgroundImageUrl,
+    servicesHeadingImageUrl,
+  );
 
   const navServices = await getMergedServiceNavItems(locale, servicesPages);
 
@@ -249,7 +258,11 @@ export default async function ServiceDetailPage({
       ) : null}
 
       <main className="flex flex-col items-center mt-36 sm:mt-20">
-        <Heading title={service.title} description={service.subtitle} />
+        <Heading
+          title={service.title}
+          description={service.subtitle}
+          imageSrc={headingImageUrl}
+        />
 
         <ServiceNavCarousel
           locale={locale}

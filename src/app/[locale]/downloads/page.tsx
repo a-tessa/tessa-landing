@@ -5,7 +5,7 @@ import { DownloadsCategoryNav } from "@/components/marketing/DownloadsCategoryNa
 import { DownloadsDirectory } from "@/components/marketing/DownloadsDirectory";
 import { Footer } from "@/components/marketing/Footer";
 import { RouteHeading } from "@/components/marketing/RouteHeading";
-import { getBlogCategories } from "@/lib/api/content";
+import { getBlogCategories, getHeadingImageUrl } from "@/lib/api/content";
 import { getDocuments } from "@/lib/api/documents";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { buildPageMetadata } from "@/lib/seo/metadata";
@@ -48,10 +48,11 @@ export default async function DownloadsPage({
   const sp = await searchParams;
   const categoria = (sp.categoria ?? "").trim();
 
-  const [t, documents, categories] = await Promise.all([
+  const [t, documents, categories, headingImageUrl] = await Promise.all([
     getTranslations({ locale, namespace: "pages.downloads" }),
     getDocuments(locale),
     getBlogCategories(locale),
+    getHeadingImageUrl("downloads", locale),
   ]);
 
   const categorySlugsWithDocuments = new Set(
@@ -74,7 +75,7 @@ export default async function DownloadsPage({
       />
 
       <main className="relative flex flex-col items-center pt-10 sm:pt-10">
-        <RouteHeading />
+        <RouteHeading imageSrc={headingImageUrl} />
         <DownloadsCategoryNav
           activeCategory={categoria}
           categories={navCategories}

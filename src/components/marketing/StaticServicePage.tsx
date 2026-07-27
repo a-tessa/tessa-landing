@@ -8,7 +8,7 @@ import { ServiceNavCarousel } from "@/components/marketing/ServiceNavCarousel";
 import { Testimonials } from "@/components/marketing/Testimonials";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
-import { getServicesPages } from "@/lib/api/content";
+import { getHeadingImageUrl, getServicesPages } from "@/lib/api/content";
 import { fetchBlogArticles } from "@/lib/api/blog";
 import { fetchInstagramPosts } from "@/lib/api/instagram";
 import { getApprovedTestimonials } from "@/lib/api/testimonials";
@@ -20,6 +20,8 @@ import { EstruturasParaCrechesSections } from "@/components/marketing/static-ser
 import { PerfisEspeciaisSections } from "@/components/marketing/static-services/PerfisEspeciaisSections";
 import { getMergedServiceNavItems } from "@/lib/servicos/nav";
 import type { StaticServiceSlug } from "@/lib/servicos/static-pages";
+import { getStaticServiceCardImage } from "@/lib/servicos/static-pages";
+import { resolveHeadingImageUrl } from "@/lib/heading-image";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 import { localePath } from "@/i18n/routing";
 import { toBlogPostFromListItem } from "@/lib/blog/mappers";
@@ -63,6 +65,7 @@ export async function StaticServicePage({ locale, slug }: StaticServicePageProps
     servicesPages,
     latestBlogResp,
     instagramResp,
+    servicesHeadingImageUrl,
   ] = await Promise.all([
     getTranslations({ locale, namespace: "pages.servicoDetail" }),
     getTranslations({ locale, namespace: "pages.servicos" }),
@@ -71,10 +74,15 @@ export async function StaticServicePage({ locale, slug }: StaticServicePageProps
     getServicesPages(locale),
     fetchBlogArticles({ page: 1, perPage: 1, order: "desc", locale }),
     fetchInstagramPosts({ limit: 3, locale }),
+    getHeadingImageUrl("servicos", locale),
   ]);
 
   const title = tPage(`${slug}.title`);
   const description = tPage(`${slug}.description`);
+  const headingImageUrl = resolveHeadingImageUrl(
+    getStaticServiceCardImage(slug),
+    servicesHeadingImageUrl,
+  );
   const navItems = await getMergedServiceNavItems(locale, servicesPages);
   const latestPost = latestBlogResp?.articles[0]
     ? toBlogPostFromListItem(latestBlogResp.articles[0])
@@ -110,7 +118,11 @@ export async function StaticServicePage({ locale, slug }: StaticServicePageProps
       <JsonLd id={`jsonld-service-${slug}`} data={serviceJsonLd} />
 
       <main className="mt-36 flex flex-col items-center sm:mt-20">
-        <Heading title={title} description={description} />
+        <Heading
+          title={title}
+          description={description}
+          imageSrc={headingImageUrl}
+        />
 
         <section className="w-full">
           <div className={cn("mb-4", freeSectionShellSpacing)}>

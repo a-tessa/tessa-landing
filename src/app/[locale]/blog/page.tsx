@@ -6,7 +6,7 @@ import { Footer } from "@/components/marketing/Footer";
 import { RouteHeading } from "@/components/marketing/RouteHeading";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { fetchBlogArticles } from "@/lib/api/blog";
-import { getBlogCategories } from "@/lib/api/content";
+import { getBlogCategories, getHeadingImageUrl } from "@/lib/api/content";
 import { toBlogPostFromListItem } from "@/lib/blog/mappers";
 import { BLOG_LIST_PAGE_SIZE } from "@/lib/blog/posts";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
@@ -86,7 +86,7 @@ export default async function BlogPage({
   const pagina = parsePagina(sp.pagina);
   const categoria = (sp.categoria ?? "").trim();
 
-  const [resp, categories] = await Promise.all([
+  const [resp, categories, headingImageUrl] = await Promise.all([
     fetchBlogArticles({
       page: 1,
       perPage: pagina * BLOG_LIST_PAGE_SIZE,
@@ -96,6 +96,7 @@ export default async function BlogPage({
       locale,
     }),
     getBlogCategories(locale),
+    getHeadingImageUrl("blog", locale),
   ]);
 
   const visiblePosts = (resp?.articles ?? []).map(toBlogPostFromListItem);
@@ -113,7 +114,7 @@ export default async function BlogPage({
       <JsonLd id="jsonld-blog" data={blogJsonLd(locale)} />
 
       <main className="flex flex-col items-center pt-10 sm:pt-10">
-        <RouteHeading />
+        <RouteHeading imageSrc={headingImageUrl} />
         <BlogIndex
           query={query}
           ordem={ordem}

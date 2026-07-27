@@ -11,7 +11,7 @@ import {
   getAboutVideoFallback,
   resolveAboutSection,
 } from "@/lib/about-content";
-import { getAboutSection } from "@/lib/api/content";
+import { getAboutSection, getHeadingImageUrl } from "@/lib/api/content";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { breadcrumbJsonLd } from "@/lib/seo/schemas";
@@ -43,9 +43,10 @@ export async function generateMetadata({
 
 export default async function QuemSomosPage({ params }: QuemSomosPageProps) {
   const { locale } = await params;
-  const [t, cmsSection] = await Promise.all([
+  const [t, cmsSection, headingImageUrl] = await Promise.all([
     getTranslations({ locale, namespace: "pages.quemSomos" }),
     getAboutSection(locale),
+    getHeadingImageUrl("quem-somos", locale),
   ]);
 
   const resolved = resolveAboutSection(cmsSection, locale);
@@ -78,7 +79,7 @@ export default async function QuemSomosPage({ params }: QuemSomosPageProps) {
       />
 
       <main className="relative flex flex-col items-center pt-10 sm:pt-10">
-        <RouteHeading />
+        <RouteHeading imageSrc={headingImageUrl} />
 
         <section
           className={cn(

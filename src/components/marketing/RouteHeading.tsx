@@ -63,6 +63,8 @@ function resolveHeadingConfig(pathname: string): RouteConfig | null {
 interface RouteHeadingProps {
   /** Optional override — skips auto-detection when provided. */
   namespace?: RouteNamespace;
+  /** Optional Heading image URL for the current page. */
+  imageSrc?: string | null;
 }
 
 /**
@@ -71,6 +73,7 @@ interface RouteHeadingProps {
  */
 export function RouteHeading({
   namespace,
+  imageSrc,
 }: RouteHeadingProps = {}) {
   const pathname = usePathname();
   const routeConfig = resolveHeadingConfig(pathname);
@@ -78,13 +81,17 @@ export function RouteHeading({
 
   if (!resolvedNamespace) return null;
 
-  return <RouteHeadingInner namespace={resolvedNamespace} />;
+  return (
+    <RouteHeadingInner namespace={resolvedNamespace} imageSrc={imageSrc} />
+  );
 }
 
 function RouteHeadingInner({
   namespace,
+  imageSrc,
 }: {
   namespace: RouteNamespace;
+  imageSrc?: string | null;
 }) {
   const t = useTranslations(namespace);
 
@@ -92,6 +99,7 @@ function RouteHeadingInner({
     <Heading
       title={t("title")}
       description={t("description")}
+      imageSrc={imageSrc}
     />
   );
 }

@@ -8,7 +8,7 @@ import { Testimonials } from "@/components/marketing/Testimonials";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { breadcrumbJsonLd } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
-import { getScenerySection } from "@/lib/api/content";
+import { getHeadingImageUrl, getScenerySection } from "@/lib/api/content";
 import { getApprovedTestimonials } from "@/lib/api/testimonials";
 import { getScenariosCarouselItems } from "@/lib/servicos/carousel";
 
@@ -37,10 +37,11 @@ export async function generateMetadata({
 
 export default async function ServicosPage({ params }: ServicosPageProps) {
   const { locale } = await params;
-  const [t, testimonials, scenerySection] = await Promise.all([
+  const [t, testimonials, scenerySection, headingImageUrl] = await Promise.all([
     getTranslations({ locale, namespace: "pages.servicos" }),
     getApprovedTestimonials(),
     getScenerySection(locale),
+    getHeadingImageUrl("servicos", locale),
   ]);
 
   const carouselItems = await getScenariosCarouselItems(
@@ -56,7 +57,7 @@ export default async function ServicosPage({ params }: ServicosPageProps) {
       />
 
       <main className="flex flex-col items-center pt-10">
-        <RouteHeading />
+        <RouteHeading imageSrc={headingImageUrl} />
         <ServicosIntro locale={locale} carouselItems={carouselItems} />
         <Testimonials items={testimonials} />
         <Results />

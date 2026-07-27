@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { ContactForm } from "@/components/marketing/ContactForm";
 import { Footer } from "@/components/marketing/Footer";
 import { RouteHeading } from "@/components/marketing/RouteHeading";
-import { getServicesPages } from "@/lib/api/content";
+import { getHeadingImageUrl, getServicesPages } from "@/lib/api/content";
 import { getMergedServiceNavItems } from "@/lib/servicos/nav";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
@@ -57,9 +57,10 @@ function contactPointJsonLd(locale: string) {
 
 export default async function ContatoPage({ params }: ContatoPageProps) {
   const { locale } = await params;
-  const [t, servicesPages] = await Promise.all([
+  const [t, servicesPages, headingImageUrl] = await Promise.all([
     getTranslations({ locale, namespace: "pages.contato" }),
     getServicesPages(locale),
+    getHeadingImageUrl("contato", locale),
   ]);
 
   const serviceOptions = await getMergedServiceNavItems(locale, servicesPages);
@@ -75,7 +76,7 @@ export default async function ContatoPage({ params }: ContatoPageProps) {
       <JsonLd id="jsonld-contact" data={contactPointJsonLd(locale)} />
 
       <main className="flex flex-col items-center pt-10">
-        <RouteHeading />
+        <RouteHeading imageSrc={headingImageUrl} />
 
         <section className={cn("w-full pb-20 pt-10", freeSectionShellSpacing)}>
           <ContactForm services={serviceOptions} />

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Tooltip } from "radix-ui";
 import { cn, insideCardSpacing } from "@/lib/utils";
@@ -18,6 +19,7 @@ interface HeroNavbarProps {
   title: string;
   description: string;
   titleAs?: "h1" | "p";
+  imageSrc?: string | null;
   /** Override the active link color. Defaults to brand orange. */
   activeClassName?: string;
 }
@@ -90,6 +92,16 @@ const css = /* css */ `
   will-change: background-color;
 }
 
+.hero-nav__overlay--image {
+  background-color: transparent;
+  background-image: linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 0.72) 0%,
+    rgb(0 0 0 / 0.28) 42%,
+    rgb(0 0 0 / 0.00) 100%
+  );
+}
+
 .hero-nav__title {
   transform-origin: left bottom;
   will-change: transform, opacity;
@@ -139,7 +151,7 @@ const css = /* css */ `
     animation-timeline: scroll(root block);
     animation-range: 0 ${String(HERO_NAV_COLLAPSE_RANGE_PX)}px;
   }
-  .hero-nav__overlay {
+  .hero-nav__overlay:not(.hero-nav__overlay--image) {
     animation: hero-overlay-darken linear forwards;
     animation-timeline: scroll(root block);
     animation-range: 0 ${String(HERO_NAV_COLLAPSE_RANGE_PX)}px;
@@ -176,12 +188,18 @@ export function HeroNavbar({
   title,
   description,
   titleAs = "h1",
+  imageSrc,
   activeClassName = ACTIVE_CLASS,
 }: HeroNavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const shellRef = useRef<HTMLDivElement>(null);
   const navRowRef = useRef<HTMLDivElement>(null);
   const { expanded: collapsed } = useScrollProgress(HERO_NAV_COLLAPSE_RANGE_PX);
+  const hasImage = typeof imageSrc === "string" && imageSrc.trim().length > 0;
+  const navTone = hasImage ? "white" : "black";
+  const titleActiveClassName = hasImage
+    ? "text-white"
+    : activeClassName;
 
   useEffect(() => {
     if (collapsed) setMenuOpen(false);
@@ -218,10 +236,30 @@ export function HeroNavbar({
         className={cn("hero-nav", collapsed && "hero-nav--collapsed pointer-events-none")}
         aria-hidden={collapsed}
       >
-        <div ref={shellRef} className="hero-nav__shell relative w-full text-foreground">
+        <div
+          ref={shellRef}
+          className={cn(
+            "hero-nav__shell relative w-full",
+            hasImage ? "text-white" : "text-foreground",
+          )}
+        >
           <div className="hero-nav__background pointer-events-none absolute inset-0 overflow-hidden">
+            {hasImage ? (
+              <Image
+                src={imageSrc}
+                alt=""
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, 97vw"
+                className="object-cover object-center"
+                aria-hidden
+              />
+            ) : null}
             <div
-              className="hero-nav__overlay absolute inset-0"
+              className={cn(
+                "hero-nav__overlay absolute inset-0",
+                hasImage && "hero-nav__overlay--image",
+              )}
               aria-hidden
             />
           </div>
@@ -236,18 +274,18 @@ export function HeroNavbar({
                 insideCardSpacing,
               )}
             >
-              <NavLogo inline tone="black" />
+              <NavLogo inline tone={navTone} />
 
               <div className="flex items-center gap-4 sm:gap-6">
                 <DesktopLinks
-                  activeClassName={activeClassName}
-                  tone="black"
+                  activeClassName={titleActiveClassName}
+                  tone={navTone}
                 />
-                <LanguageSwitcher tone="black" />
+                <LanguageSwitcher tone={navTone} />
                 <MobileToggle
                   open={menuOpen}
                   onToggle={() => setMenuOpen((v) => !v)}
-                  tone="black"
+                  tone={navTone}
                 />
               </div>
             </div>
@@ -255,11 +293,19 @@ export function HeroNavbar({
 
           <div
             className={cn(
-              "absolute inset-x-0 bottom-0 pb-6 sm:pb-12 [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]",
+              "absolute inset-x-0 bottom-0 pb-6 sm:pb-12",
+              !hasImage && "[text-shadow:0_1px_3px_rgba(0,0,0,0.4)]",
               insideCardSpacing,
             )}
           >
-            <TitleTag className="hero-nav__title text-32xl font-bold uppercase sm:text-5xl md:text-6xl lg:text-6xl text-[#252525]">
+            <TitleTag
+              className={cn(
+                "hero-nav__title text-32xl font-bold uppercase sm:text-5xl md:text-6xl lg:text-6xl",
+                hasImage
+                  ? "inline-block max-w-full rounded-2xl bg-black/55 px-4 py-2 text-white sm:px-5 sm:py-3"
+                  : "text-[#252525]",
+              )}
+            >
               {title}
             </TitleTag>
             {isTruncated ? (
@@ -267,7 +313,12 @@ export function HeroNavbar({
                 <Tooltip.Root>
                   <Tooltip.Trigger asChild>
                     <p
-                      className="hero-nav__subtitle mt-3 max-w-2xl cursor-help text-xxs font-semibold uppercase sm:mt-4 sm:text-xs outline-offset-2 focus-visible:outline-2 focus-visible:outline-white/70"
+                      className={cn(
+                        "hero-nav__subtitle mt-3 max-w-2xl cursor-help text-xxs font-semibold uppercase sm:mt-4 sm:text-xs outline-offset-2 focus-visible:outline-2",
+                        hasImage
+                          ? "text-white focus-visible:outline-white/70"
+                          : "focus-visible:outline-white/70",
+                      )}
                       tabIndex={0}
                     >
                       {visibleDescription}
@@ -302,7 +353,7 @@ export function HeroNavbar({
           <MobileDrawer
             open={menuOpen}
             onClose={() => setMenuOpen(false)}
-            activeClassName={activeClassName}
+            activeClassName={titleActiveClassName}
             portalAnchorRef={navRowRef}
             portalBoundsRef={shellRef}
             containerClassName="px-4 py-4 rounded-b-3xl"

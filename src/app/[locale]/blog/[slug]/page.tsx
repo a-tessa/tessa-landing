@@ -14,12 +14,13 @@ import {
   fetchBlogArticles,
   fetchRelatedBlogArticles,
 } from "@/lib/api/blog";
-import { getBlogCategories } from "@/lib/api/content";
+import { getBlogCategories, getHeadingImageUrl } from "@/lib/api/content";
 import {
   toBlogPostFromArticle,
   toBlogPostFromListItem,
 } from "@/lib/blog/mappers";
 import { sanitizeArticleHtml } from "@/lib/blog/sanitize-article-html";
+import { resolveHeadingImageUrl } from "@/lib/heading-image";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
@@ -127,11 +128,16 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const post = toBlogPostFromArticle(article);
   const sanitizedContent = sanitizeArticleHtml(post.contentHtml ?? "");
 
-  const [relatedDtos, categories] = await Promise.all([
+  const [relatedDtos, categories, blogHeadingImageUrl] = await Promise.all([
     fetchRelatedBlogArticles(post.category, post.slug, 2, locale),
     getBlogCategories(locale),
+    getHeadingImageUrl("blog", locale),
   ]);
   const relatedPosts = relatedDtos.map(toBlogPostFromListItem);
+  const headingImageUrl = resolveHeadingImageUrl(
+    article.headerImageUrl,
+    blogHeadingImageUrl,
+  );
 
   const t = await getTranslations({ locale, namespace: "pages.blog" });
   const bt = await getTranslations({ locale, namespace: "blog" });
@@ -179,6 +185,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           title={t("title")}
           description={t("description")}
           titleAs="p"
+          imageSrc={headingImageUrl}
         />
 
         <BlogCategoryNav

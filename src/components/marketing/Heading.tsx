@@ -4,6 +4,7 @@ interface HeadingProps {
   title: string;
   description: string;
   titleAs?: "h1" | "p";
+  imageSrc?: string | null;
 }
 
 const css = /* css */ `
@@ -68,6 +69,7 @@ export function Heading({
   title,
   description,
   titleAs,
+  imageSrc,
 }: HeadingProps) {
   return (
     <>
@@ -78,6 +80,7 @@ export function Heading({
         description={description}
         title={title}
         titleAs={titleAs}
+        imageSrc={imageSrc}
         activeClassName="text-primary text"
       />
     </>

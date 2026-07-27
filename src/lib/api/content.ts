@@ -3,6 +3,8 @@ import type {
   AboutSection,
   BlogCategory,
   ClientLogo,
+  HeadingImagePageKey,
+  HeadingImages,
   HeroTopic,
   PublicClientsResponse,
   PublicContentResponse,
@@ -132,6 +134,23 @@ export async function getClients(locale?: string): Promise<ClientLogo[] | null> 
   }
 }
 
+export async function getHeadingImages(
+  locale?: string,
+): Promise<HeadingImages> {
+  const data = await getPublicContent(locale);
+  const headingImages = data?.content.headingImages;
+  return headingImages && typeof headingImages === "object" ? headingImages : {};
+}
+
+export async function getHeadingImageUrl(
+  pageKey: HeadingImagePageKey,
+  locale?: string,
+): Promise<string | null> {
+  const headingImages = await getHeadingImages(locale);
+  const url = headingImages[pageKey]?.url?.trim();
+  return url && url.length > 0 ? url : null;
+}
+
 export async function getLandingContent(locale?: string) {
   const [data, clients] = await Promise.all([
     getPublicContent(locale),
@@ -143,6 +162,7 @@ export async function getLandingContent(locale?: string) {
     industrySection: data?.content.industrySection ?? null,
     operationSection: data?.content.operationSection ?? null,
     scenerySection: data?.content.scenerySection ?? null,
+    headingImages: data?.content.headingImages ?? null,
     clients: clients ?? data?.content.clients ?? null,
   };
 }

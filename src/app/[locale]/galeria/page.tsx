@@ -5,7 +5,7 @@ import { Footer } from "@/components/marketing/Footer";
 import { GalleryCategoryNav } from "@/components/marketing/GalleryCategoryNav";
 import { GalleryMediaBrowser } from "@/components/marketing/GalleryMediaBrowser";
 import { RouteHeading } from "@/components/marketing/RouteHeading";
-import { getBlogCategories } from "@/lib/api/content";
+import { getBlogCategories, getHeadingImageUrl } from "@/lib/api/content";
 import { getGalleryItems } from "@/lib/api/gallery";
 import {
   filterGalleryItemsByCategory,
@@ -52,10 +52,11 @@ export default async function GalleryPage({
   const sp = await searchParams;
   const categoria = (sp.categoria ?? "").trim();
 
-  const [t, items, categories] = await Promise.all([
+  const [t, items, categories, headingImageUrl] = await Promise.all([
     getTranslations({ locale, namespace: "pages.gallery" }),
     getGalleryItems(locale),
     getBlogCategories(locale),
+    getHeadingImageUrl("galeria", locale),
   ]);
 
   const visibleItems = filterGalleryItemsByCategory(items, categoria);
@@ -82,7 +83,7 @@ export default async function GalleryPage({
       />
 
       <main className="relative flex flex-col items-center pt-10 sm:pt-10">
-        <RouteHeading />
+        <RouteHeading imageSrc={headingImageUrl} />
         {navCategories.length > 0 ? (
           <GalleryCategoryNav
             activeCategory={categoria}

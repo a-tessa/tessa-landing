@@ -100,6 +100,23 @@ export interface BlogCategory {
   slug: string;
 }
 
+export interface HeadingImageEntry {
+  url: string;
+}
+
+export type HeadingImagePageKey =
+  | "quem-somos"
+  | "servicos"
+  | "representantes"
+  | "blog"
+  | "downloads"
+  | "galeria"
+  | "contato";
+
+export type HeadingImages = Partial<
+  Record<HeadingImagePageKey, HeadingImageEntry>
+>;
+
 export interface PublicContentResponse {
   content: {
     heroSection?: HeroTopic[];
@@ -111,6 +128,7 @@ export interface PublicContentResponse {
     clients?: ClientLogo[];
     representantsBase?: PublicRepresentative[];
     categories?: BlogCategory[];
+    headingImages?: HeadingImages;
     [key: string]: unknown;
   };
   publishedAt: string | null;

@@ -9,7 +9,7 @@ import { JsonLd } from "@/lib/seo/jsonld";
 import { breadcrumbJsonLd } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { getApprovedTestimonials } from "@/lib/api/testimonials";
-import { getRepresentatives } from "@/lib/api/content";
+import { getHeadingImageUrl, getRepresentatives } from "@/lib/api/content";
 import { mapApiRepresentatives } from "@/lib/representatives";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 
@@ -72,13 +72,14 @@ export default async function RepresentantesPage({
   params,
 }: RepresentantesPageProps) {
   const { locale } = await params;
-  const [t, testimonials, apiRepresentatives] = await Promise.all([
+  const [t, testimonials, apiRepresentatives, headingImageUrl] = await Promise.all([
     getTranslations({
       locale,
       namespace: "pages.representantes",
     }),
     getApprovedTestimonials(),
     getRepresentatives(locale),
+    getHeadingImageUrl("representantes", locale),
   ]);
   const representatives = mapApiRepresentatives(apiRepresentatives);
 
@@ -96,7 +97,7 @@ export default async function RepresentantesPage({
       />
 
       <main className="relative flex flex-col items-center pt-10">
-        <RouteHeading />
+        <RouteHeading imageSrc={headingImageUrl} />
 
         <div className="relative h-auto w-fit z-50">
           <div
