@@ -63,6 +63,10 @@ export interface OperationSection {
   images: OperationImage[];
 }
 
+export interface ResultsSection {
+  values: [number, number, number];
+}
+
 export interface ServicesPageImage {
   imgUrl: string;
 }
@@ -123,6 +127,7 @@ export interface PublicContentResponse {
     industrySection?: IndustrySection;
     aboutSection?: AboutSection;
     operationSection?: OperationSection;
+    resultsSection?: ResultsSection;
     scenerySection?: SceneryItem[];
     servicesPages?: ServicesPageItem[];
     clients?: ClientLogo[];

@@ -41,7 +41,8 @@ const PARTNER_NAMES = [
 
 const HERO_AUTO_ADVANCE_MS = 3000;
 
-const HERO_TEXT_CLAMP_CLASS = "line-clamp-2";
+const HERO_TITLE_CLAMP_CLASS = "line-clamp-3";
+const HERO_DESCRIPTION_CLAMP_CLASS = "line-clamp-2";
 
 const HERO_TITLE_CLASS =
   "max-w-2xl text-[clamp(1.625rem,2.8vw+0.75rem,3.75rem)] font-bold uppercase leading-[1.05] text-white";
@@ -49,7 +50,7 @@ const HERO_TITLE_CLASS =
 const HERO_DESCRIPTION_CLASS = cn(
   "mt-3 max-w-xl font-semibold uppercase tracking-[0.18em] text-white/70 sm:mt-4 lg:mt-5",
   "text-[clamp(0.625rem,0.45vw+0.55rem,0.75rem)]",
-  HERO_TEXT_CLAMP_CLASS,
+  HERO_DESCRIPTION_CLAMP_CLASS,
 );
 
 const HERO_SLIDE_CARD_BASE_CLASS = cn(
@@ -336,7 +337,7 @@ export function Hero({ heroSection, clients }: HeroProps) {
                     <AnimatePresence mode="wait" initial={false}>
                       <m.span
                         key={activeSlide.heading}
-                        className={cn("block", HERO_TEXT_CLAMP_CLASS)}
+                        className={cn("block", HERO_TITLE_CLAMP_CLASS)}
                         initial={{ opacity: 0, y: 16 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}

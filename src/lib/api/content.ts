@@ -161,6 +161,7 @@ export async function getLandingContent(locale?: string) {
     heroSection: data?.content.heroSection ?? null,
     industrySection: data?.content.industrySection ?? null,
     operationSection: data?.content.operationSection ?? null,
+    resultsSection: data?.content.resultsSection ?? null,
     scenerySection: data?.content.scenerySection ?? null,
     headingImages: data?.content.headingImages ?? null,
     clients: clients ?? data?.content.clients ?? null,

@@ -3,12 +3,17 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
+import { resolveResultsValues } from "@/lib/results-content";
 
 interface Stat {
   prefix: string;
   value: number;
   suffix: string;
   label: string;
+}
+
+interface ResultsProps {
+  resultsSection?: unknown;
 }
 
 function useCountUp(
@@ -60,31 +65,32 @@ function AnimatedStat({
         {count}
         {stat.suffix}
       </p>
-      <p className="max-w-[160px] text-center text-xs font-bold uppercase tracking-wide text-primary-foreground/70 lg:text-left">
+      <p className="max-w-40 text-center text-xs font-bold uppercase tracking-wide text-primary-foreground/70 lg:text-left">
         {stat.label}
       </p>
     </div>
   );
 }
 
-export function Results() {
+export function Results({ resultsSection }: ResultsProps = {}) {
   const t = useTranslations("results");
+  const values = resolveResultsValues(resultsSection);
   const STATS: Stat[] = [
     {
       prefix: "+",
-      value: 7,
+      value: values[0],
       suffix: "MI",
       label: t("stats.0.label"),
     },
     {
       prefix: "+",
-      value: 200,
+      value: values[1],
       suffix: "K",
       label: t("stats.1.label"),
     },
     {
       prefix: "+",
-      value: 20,
+      value: values[2],
       suffix: "",
       label: t("stats.2.label"),
     },

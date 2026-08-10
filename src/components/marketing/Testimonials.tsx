@@ -108,6 +108,14 @@ function GoogleBadge({ className }: { className?: string }) {
   );
 }
 
+function isGoogleUserContentUrl(src: string): boolean {
+  try {
+    return new URL(src).hostname.endsWith("googleusercontent.com");
+  } catch {
+    return false;
+  }
+}
+
 function AvatarImage({
   src,
   alt,
@@ -143,6 +151,8 @@ function AvatarImage({
       className={cn("object-cover", className)}
       sizes={sizes}
       priority={priority}
+      // Google often rejects the Next image optimizer (400); hotlink in-browser.
+      unoptimized={isGoogleUserContentUrl(src)}
     />
   );
 }
@@ -172,7 +182,7 @@ function TestimonialQuoteBubble({
       </blockquote>
       <div
         aria-hidden
-        className="absolute -bottom-3 left-1/2 size-6 -translate-x-1/2 rotate-45 bg-card ring-1 ring-foreground/10"
+        className="absolute -bottom-3 left-1/2 size-6 -translate-x-1/2 rotate-45 bg-card"
       />
     </div>
   );
@@ -540,16 +550,14 @@ export function Testimonials({ items, className }: TestimonialsProps = {}) {
                   itemScope
                   itemType="https://schema.org/Person"
                 >
-                  {active.profileImage ? (
-                    <div className="relative size-12 shrink-0 overflow-hidden rounded-full">
-                      <AvatarImage
-                        src={active.profileImage}
-                        alt={active.name}
-                        sizes="48px"
-                      />
-                    </div>
-                  ) : null}
-                  <div>
+                  <div className="relative size-12 shrink-0 self-center overflow-hidden rounded-full">
+                    <AvatarImage
+                      src={active.profileImage}
+                      alt={active.name}
+                      sizes="48px"
+                    />
+                  </div>
+                  <div className="flex min-w-0 flex-col items-center text-center">
                     <p
                       className="text-xl font-semibold text-foreground sm:text-2xl"
                       itemProp="name"
@@ -564,28 +572,28 @@ export function Testimonials({ items, className }: TestimonialsProps = {}) {
                     {active.source === "google" ? (
                       <GoogleBadge className="mt-1.5" />
                     ) : null}
+                    <div
+                      className={cn(
+                        "mt-3 flex items-center gap-2",
+                        !activeHasReviewImage && "justify-center",
+                      )}
+                      itemProp="reviewRating"
+                      itemScope
+                      itemType="https://schema.org/Rating"
+                    >
+                      <meta
+                        itemProp="ratingValue"
+                        content={String(active.rating)}
+                      />
+                      <meta itemProp="bestRating" content="5" />
+                      <span className="text-lg font-bold text-foreground">
+                        {active.rating.toFixed(1)}
+                      </span>
+                      <Stars rating={active.rating} />
+                    </div>
                   </div>
                 </div>
 
-                <div
-                  className={cn(
-                    "mt-3 flex items-center gap-2",
-                    !activeHasReviewImage && "justify-center",
-                  )}
-                  itemProp="reviewRating"
-                  itemScope
-                  itemType="https://schema.org/Rating"
-                >
-                  <meta
-                    itemProp="ratingValue"
-                    content={String(active.rating)}
-                  />
-                  <meta itemProp="bestRating" content="5" />
-                  <span className="text-lg font-bold text-foreground">
-                    {active.rating.toFixed(1)}
-                  </span>
-                  <Stars rating={active.rating} />
-                </div>
               </div>
             </motion.div>
           </AnimatePresence>
