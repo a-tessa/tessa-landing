@@ -81,7 +81,7 @@ export function Heading({
         title={title}
         titleAs={titleAs}
         imageSrc={imageSrc}
-        activeClassName="text-primary text"
+        activeClassName="text-primary"
       />
     </>
   );

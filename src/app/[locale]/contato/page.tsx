@@ -3,7 +3,15 @@ import { getTranslations } from "next-intl/server";
 import { ContactForm } from "@/components/marketing/ContactForm";
 import { Footer } from "@/components/marketing/Footer";
 import { RouteHeading } from "@/components/marketing/RouteHeading";
-import { getHeadingImageUrl, getServicesPages } from "@/lib/api/content";
+import {
+  getCompanyInformation,
+  getHeadingImageUrl,
+  getServicesPages,
+} from "@/lib/api/content";
+import {
+  resolveCompanyInformation,
+  toPublicCompanyContact,
+} from "@/lib/company-information";
 import { getMergedServiceNavItems } from "@/lib/servicos/nav";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
@@ -34,22 +42,29 @@ export async function generateMetadata({
   });
 }
 
-function contactPointJsonLd(locale: string) {
+function contactPointJsonLd(
+  locale: string,
+  contact: {
+    name: string;
+    email: string;
+    phones: readonly string[];
+  },
+) {
   return {
     "@context": "https://schema.org",
     "@type": "ContactPage",
-    name: SITE.name,
+    name: contact.name,
     url: `${SITE.domain}${localePath(locale, "/contato")}`,
     mainEntity: {
       "@type": "Organization",
-      name: SITE.name,
-      contactPoint: SITE.phones.map((telephone) => ({
+      name: contact.name,
+      contactPoint: contact.phones.map((telephone) => ({
         "@type": "ContactPoint",
         telephone,
         contactType: "customer service",
         areaServed: "BR",
         availableLanguage: ["Portuguese", "English", "Spanish"],
-        email: SITE.email,
+        email: contact.email,
       })),
     },
   };
@@ -57,10 +72,13 @@ function contactPointJsonLd(locale: string) {
 
 export default async function ContatoPage({ params }: ContatoPageProps) {
   const { locale } = await params;
-  const [t, servicesPages, headingImageUrl] = await Promise.all([
+  const [t, servicesPages, headingImageUrl, companyContact] = await Promise.all([
     getTranslations({ locale, namespace: "pages.contato" }),
     getServicesPages(locale),
     getHeadingImageUrl("contato", locale),
+    getCompanyInformation(locale).then((section) =>
+      toPublicCompanyContact(resolveCompanyInformation(section)),
+    ),
   ]);
 
   const serviceOptions = await getMergedServiceNavItems(locale, servicesPages);
@@ -73,13 +91,16 @@ export default async function ContatoPage({ params }: ContatoPageProps) {
           { name: t("title"), path: "/contato" },
         ])}
       />
-      <JsonLd id="jsonld-contact" data={contactPointJsonLd(locale)} />
+      <JsonLd id="jsonld-contact" data={contactPointJsonLd(locale, companyContact)} />
 
       <main className="flex flex-col items-center pt-10">
         <RouteHeading imageSrc={headingImageUrl} />
 
         <section className={cn("w-full pb-20 pt-10", freeSectionShellSpacing)}>
-          <ContactForm services={serviceOptions} />
+          <ContactForm
+            services={serviceOptions}
+            companyContact={companyContact}
+          />
         </section>
       </main>
 

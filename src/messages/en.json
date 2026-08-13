@@ -128,8 +128,8 @@
     "close": "Close"
   },
   "newsAndSocial": {
-    "newsTitle": "At the center\nof the news",
-    "socialTitle": "Social\nmedia",
+    "newsTitle": "Blog",
+    "socialTitle": "Social media",
     "goToBlog": "Go to blog",
     "goToInstagram": "Go to Instagram",
     "instagramEmptyTitle": "Posts coming soon",
@@ -167,6 +167,7 @@
   "contact": {
     "whereWeAre": "Where\nwe are",
     "expandMap": "Expand map",
+    "whatsappLabel": "Chat on WhatsApp: {phone}",
     "fullName": "Full name*",
     "email": "Email*",
     "phone": "Mobile / WhatsApp*",
@@ -241,6 +242,9 @@
         "productsSection": {
           "title": "Strength, Lightness and Durability",
           "subtitle": "Revolutionize your roofing projects with Tessa metal structures, synonymous with efficiency and durability.",
+          "scrollLabel": "Metal roof structure products",
+          "scrollLeft": "Scroll products left",
+          "scrollRight": "Scroll products right",
           "items": {
             "caibro-aberto": "Open Purlin",
             "caibro-fechado": "Closed Purlin",
@@ -687,6 +691,8 @@
     "menuTitle": "Menu",
     "menuLabel": "Footer menu",
     "contactTitle": "Contact/\nLocation",
+    "cnpjLabel": "CNPJ {cnpj}",
+    "whatsappLabel": "Chat on WhatsApp: {phone}",
     "allRightsReserved": "All rights reserved.",
     "legalLabel": "Legal links",
     "links": {

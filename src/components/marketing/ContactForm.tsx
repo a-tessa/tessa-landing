@@ -10,7 +10,8 @@ import {
 	useEffect,
 	useRef,
 } from "react";
-import { Phone, MapPin, Maximize2, CheckCircle2 } from "lucide-react";
+import { Phone, Mail, MapPin, Maximize2, CheckCircle2 } from "lucide-react";
+import { IconBrandWhatsapp } from "@tabler/icons-react";
 import {
 	submitContact,
 	type ContactActionState,
@@ -28,6 +29,12 @@ import {
 } from "@/components/ui/select";
 import { BRAZILIAN_STATES } from "@/lib/representatives";
 import { cn } from "@/lib/utils";
+import {
+	companyMapsSearchUrl,
+	telephoneHref,
+	whatsappHref,
+	type PublicCompanyContact,
+} from "@/lib/company-information";
 
 interface ContactFormServiceOption {
 	slug: string;
@@ -36,6 +43,7 @@ interface ContactFormServiceOption {
 
 interface ContactFormProps {
 	services?: ContactFormServiceOption[];
+	companyContact: PublicCompanyContact;
 }
 
 const initialState: ContactActionState = { status: "idle" };
@@ -48,13 +56,6 @@ const underlineTextarea =
 
 const fieldLabel =
 	"";
-
-const PHONE_MAIN = "+55 17 3267-1230";
-const PHONE_ALT = "+55 17 3267-1453";
-const ADDRESS_LINE_1 = "Rodovia Assis Chateaubriand SP 425";
-const ADDRESS_LINE_2 = "Km 175, Guapiaçu 15110-000";
-const MAPS_URL =
-	"https://www.google.com/maps/search/?api=1&query=Rodovia+Assis+Chateaubriand+SP+425+Km+175+Guapiacu";
 
 /** Apenas dígitos nacionais (DDD + número), até 11. Remove 55 inicial se colarem +55. */
 function normalizeBrazilPhoneDigits(raw: string): string {
@@ -90,7 +91,11 @@ function formatBrazilPhoneDisplay(digits: string): string {
 	return `(${ddd}) ${sub.slice(0, 4)}-${sub.slice(4)}`;
 }
 
-export function ContactForm({ services = [] }: ContactFormProps) {
+export function ContactForm({
+	services = [],
+	companyContact,
+}: ContactFormProps) {
+	const mapsUrl = companyMapsSearchUrl(companyContact);
 	const t = useTranslations("contact");
 	const [phoneDisplay, setPhoneDisplay] = useState("");
 	const [state, formAction, isPending] = useActionState(
@@ -134,25 +139,45 @@ export function ContactForm({ services = [] }: ContactFormProps) {
 					</div>
 
 					<div className="mt-auto flex flex-col gap-4 text-sm">
+						{companyContact.phones.map((phone) => (
+							<a
+								key={phone}
+								href={telephoneHref(phone)}
+								className="inline-flex items-center gap-3 transition-colors hover:text-primary"
+							>
+								<Phone
+									className="size-4 shrink-0 text-primary"
+									aria-hidden
+								/>
+								{phone}
+							</a>
+						))}
+						{companyContact.whatsapp ? (
+							<a
+								href={whatsappHref(companyContact.whatsapp)}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="inline-flex items-center gap-3 transition-colors hover:text-primary"
+								aria-label={t("whatsappLabel", {
+									phone: companyContact.whatsapp,
+								})}
+							>
+								<IconBrandWhatsapp
+									className="size-4 shrink-0 text-primary"
+									aria-hidden
+								/>
+								{companyContact.whatsapp}
+							</a>
+						) : null}
 						<a
-							href={`tel:${PHONE_MAIN.replace(/\s/g, "")}`}
+							href={`mailto:${companyContact.email}`}
 							className="inline-flex items-center gap-3 transition-colors hover:text-primary"
 						>
-							<Phone
+							<Mail
 								className="size-4 shrink-0 text-primary"
 								aria-hidden
 							/>
-							{PHONE_MAIN}
-						</a>
-						<a
-							href={`tel:${PHONE_ALT.replace(/\s/g, "")}`}
-							className="inline-flex items-center gap-3 transition-colors hover:text-primary"
-						>
-							<Phone
-								className="size-4 shrink-0 text-primary"
-								aria-hidden
-							/>
-							{PHONE_ALT}
+							{companyContact.email}
 						</a>
 						<div className="inline-flex items-start gap-3">
 							<MapPin
@@ -160,15 +185,17 @@ export function ContactForm({ services = [] }: ContactFormProps) {
 								aria-hidden
 							/>
 							<span>
-								{ADDRESS_LINE_1}
+								<span className="whitespace-pre-line">
+									{companyContact.address}
+								</span>
 								<br />
-								{ADDRESS_LINE_2}
+								{companyContact.zipCode}
 							</span>
 						</div>
 					</div>
 
 					<Link
-						href={MAPS_URL}
+						href={mapsUrl}
 						target="_blank"
 						rel="noopener noreferrer"
 						className="inline-flex w-fit items-center gap-2 rounded-lg bg-secondary px-5 py-3 text-sm font-semibold text-secondary-foreground transition-transform hover:-translate-y-0.5"

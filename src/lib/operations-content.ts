@@ -62,6 +62,83 @@ function parseOperationImage(value: unknown): OperationImageContent | null {
   return caption === undefined ? { src, alt } : { src, alt, caption };
 }
 
+const LOCAL_ASSET_PREFIX = "/";
+const IMAGE_PROBE_TIMEOUT_MS = 2_500;
+const IMAGE_PROBE_REVALIDATE_SECONDS = 3600;
+
+function isLocalAssetSrc(src: string): boolean {
+  return src.startsWith(LOCAL_ASSET_PREFIX);
+}
+
+/**
+ * HEAD-probes a remote image URL. Missing blobs (404/410) and failed requests
+ * are treated as unreachable so the page never emits `<img>` tags for them.
+ */
+export async function probeRemoteImageUrl(src: string): Promise<boolean> {
+  try {
+    const response = await fetch(src, {
+      method: "HEAD",
+      redirect: "follow",
+      signal: AbortSignal.timeout(IMAGE_PROBE_TIMEOUT_MS),
+      next: {
+        revalidate: IMAGE_PROBE_REVALIDATE_SECONDS,
+        tags: ["operation-image-reachability"],
+      },
+    });
+
+    if (response.status === 404 || response.status === 410) {
+      return false;
+    }
+
+    if (response.ok) {
+      return true;
+    }
+
+    if (response.status === 405 || response.status === 501) {
+      const ranged = await fetch(src, {
+        method: "GET",
+        headers: { Range: "bytes=0-0" },
+        redirect: "follow",
+        signal: AbortSignal.timeout(IMAGE_PROBE_TIMEOUT_MS),
+        next: {
+          revalidate: IMAGE_PROBE_REVALIDATE_SECONDS,
+          tags: ["operation-image-reachability"],
+        },
+      });
+      return ranged.ok || ranged.status === 206;
+    }
+
+    return false;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Drops remote images that are gone from blob storage. Returns null when fewer
+ * than `MIN_OPERATION_IMAGES` remain so callers keep the static gallery.
+ */
+export async function keepReachableOperationImages(
+  images: OperationImageContent[],
+  isReachable: (src: string) => Promise<boolean> = probeRemoteImageUrl,
+): Promise<OperationImageContent[] | null> {
+  const reachable = await Promise.all(
+    images.map(async (image) => {
+      if (isLocalAssetSrc(image.src)) {
+        return true;
+      }
+      return isReachable(image.src);
+    }),
+  );
+
+  const kept = images.filter((_, index) => reachable[index]);
+  if (kept.length < MIN_OPERATION_IMAGES) {
+    return null;
+  }
+
+  return kept;
+}
+
 /**
  * Validates published CMS gallery content for the landing page.
  * Returns null so the static eight-image fallback remains active when the

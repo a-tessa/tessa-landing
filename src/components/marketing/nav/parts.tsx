@@ -117,7 +117,7 @@ export function NavLogo({ inline = false, tone = "white" }: NavLogoProps) {
           />
           <span
             className={cn(
-              "hidden text-xs font-medium uppercase tracking-wide sm:block",
+              "hidden text-xs font-semibold uppercase tracking-wide sm:block",
               NAV_MUTED_TEXT_CLASS[tone],
             )}
           >
@@ -139,7 +139,7 @@ export function NavLogo({ inline = false, tone = "white" }: NavLogoProps) {
       />
       <span
         className={cn(
-          "hidden text-xs font-medium uppercase tracking-wide sm:block",
+          "hidden text-xs font-semibold uppercase tracking-wide sm:block",
           NAV_MUTED_TEXT_CLASS[tone],
         )}
       >
@@ -155,7 +155,7 @@ interface DesktopLinksProps {
 }
 
 const DESKTOP_LINK_CLASS =
-  "hidden text-xs font-medium uppercase leading-none tracking-wide transition-colors sm:block";
+  "hidden text-xs font-semibold uppercase leading-none tracking-wide transition-colors sm:block";
 
 interface NavDropdownPosition {
   top: number;

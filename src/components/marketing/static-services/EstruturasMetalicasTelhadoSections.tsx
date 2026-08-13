@@ -69,6 +69,9 @@ export async function EstruturasMetalicasTelhadoSections({
         title={t(`${SLUG}.productsSection.title`)}
         subtitle={t(`${SLUG}.productsSection.subtitle`)}
         products={products}
+        productsScrollLabel={t(`${SLUG}.productsSection.scrollLabel`)}
+        scrollLeftLabel={t(`${SLUG}.productsSection.scrollLeft`)}
+        scrollRightLabel={t(`${SLUG}.productsSection.scrollRight`)}
         sectionId="estruturas-metalicas-produtos"
       />
 

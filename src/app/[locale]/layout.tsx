@@ -19,8 +19,12 @@ import { cn } from "@/lib/utils";
 import { NavbarConditional } from "@/components/marketing/NavbarConditional";
 import { NavServicesProvider } from "@/components/marketing/nav/services-context";
 import { ScrollToTop } from "@/components/scroll-to-top";
-import { getServicesPages } from "@/lib/api/content";
+import { getServicesPages, getCompanyInformation } from "@/lib/api/content";
 import { getMergedServiceNavItems } from "@/lib/servicos/nav";
+import {
+  resolveCompanyInformation,
+  toPublicCompanyContact,
+} from "@/lib/company-information";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -123,8 +127,13 @@ export default async function LocaleLayout({
 
   setRequestLocale(locale);
 
-  const messages = await getMessages();
-  const servicesPages = await getServicesPages(locale);
+  const [messages, servicesPages, organizationContact] = await Promise.all([
+    getMessages(),
+    getServicesPages(locale),
+    getCompanyInformation(locale).then((section) =>
+      toPublicCompanyContact(resolveCompanyInformation(section)),
+    ),
+  ]);
   const serviceNavItems = await getMergedServiceNavItems(locale, servicesPages);
 
   return (
@@ -141,7 +150,7 @@ export default async function LocaleLayout({
           "max-w-480 mx-auto",
         )}
       >
-        <JsonLd id="jsonld-organization" data={organizationJsonLd()} />
+        <JsonLd id="jsonld-organization" data={organizationJsonLd(organizationContact)} />
         <JsonLd id="jsonld-website" data={websiteJsonLd(locale)} />
         <NextIntlClientProvider messages={messages}>
           <NavServicesProvider items={serviceNavItems}>

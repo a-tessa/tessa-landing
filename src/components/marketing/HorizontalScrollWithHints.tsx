@@ -10,6 +10,8 @@ interface HorizontalScrollWithHintsProps {
   scrollLeftLabel: string;
   scrollRightLabel: string;
   className?: string;
+  /** Viewport from which the scroller becomes a static layout. */
+  stackFrom?: "md" | "lg";
 }
 
 const SCROLL_STEP_PX = 280;
@@ -21,6 +23,7 @@ export function HorizontalScrollWithHints({
   scrollLeftLabel,
   scrollRightLabel,
   className,
+  stackFrom = "lg",
 }: HorizontalScrollWithHintsProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -50,6 +53,11 @@ export function HorizontalScrollWithHints({
     };
   }, [updateEdges]);
 
+  const hideOnStack =
+    stackFrom === "md" ? "md:hidden" : "lg:hidden";
+  const overflowOnStack =
+    stackFrom === "md" ? "md:overflow-visible" : "lg:overflow-visible";
+
   const handleScroll = (direction: "left" | "right") => {
     const el = scrollerRef.current;
     if (!el) return;
@@ -65,7 +73,8 @@ export function HorizontalScrollWithHints({
       <span
         aria-hidden
         className={cn(
-          "pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-linear-to-r from-muted/40 via-muted/30 to-transparent transition-opacity lg:hidden",
+          "pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-linear-to-r from-muted/40 via-muted/30 to-transparent transition-opacity",
+          hideOnStack,
           canScrollLeft ? "opacity-100" : "opacity-0",
         )}
       />
@@ -76,7 +85,8 @@ export function HorizontalScrollWithHints({
         aria-hidden={!canScrollLeft}
         tabIndex={canScrollLeft ? 0 : -1}
         className={cn(
-          "absolute left-1 top-1/2 z-20 flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-background text-foreground shadow-sm ring-1 ring-border transition-opacity hover:bg-accent lg:hidden",
+          "absolute left-1 top-1/2 z-20 flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-background text-foreground shadow-sm ring-1 ring-border transition-opacity hover:bg-accent",
+          hideOnStack,
           canScrollLeft ? "opacity-100" : "pointer-events-none opacity-0",
         )}
       >
@@ -87,7 +97,10 @@ export function HorizontalScrollWithHints({
         ref={scrollerRef}
         role="region"
         aria-label={ariaLabel}
-        className="overflow-x-auto scroll-smooth [scrollbar-width:none] [-ms-overflow-style:none] lg:overflow-visible [&::-webkit-scrollbar]:hidden"
+        className={cn(
+          "overflow-x-auto scroll-smooth [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
+          overflowOnStack,
+        )}
       >
         {children}
       </div>
@@ -95,7 +108,8 @@ export function HorizontalScrollWithHints({
       <span
         aria-hidden
         className={cn(
-          "pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-linear-to-l from-muted/40 via-muted/30 to-transparent transition-opacity lg:hidden",
+          "pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-linear-to-l from-muted/40 via-muted/30 to-transparent transition-opacity",
+          hideOnStack,
           canScrollRight ? "opacity-100" : "opacity-0",
         )}
       />
@@ -106,7 +120,8 @@ export function HorizontalScrollWithHints({
         aria-hidden={!canScrollRight}
         tabIndex={canScrollRight ? 0 : -1}
         className={cn(
-          "absolute right-1 top-1/2 z-20 flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-background text-foreground shadow-sm ring-1 ring-border transition-opacity hover:bg-accent lg:hidden",
+          "absolute right-1 top-1/2 z-20 flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-background text-foreground shadow-sm ring-1 ring-border transition-opacity hover:bg-accent",
+          hideOnStack,
           canScrollRight ? "opacity-100" : "opacity-0",
         )}
       >

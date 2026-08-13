@@ -2,7 +2,7 @@
 
 import "@testing-library/jest-dom/vitest";
 import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Operations } from "./Operations";
 import type { BentoSlide } from "./BentoCarousel";
 import { OPERATIONS_SLIDES } from "@/lib/utils";
@@ -48,9 +48,17 @@ function makeCmsSection(count: number) {
 }
 
 describe("public Operations", () => {
+  beforeEach(() => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => new Response(null, { status: 200 })),
+    );
+  });
+
   afterEach(() => {
     cleanup();
     slidesState.value = null;
+    vi.unstubAllGlobals();
   });
 
   it("renders published CMS images in order, grouped for the bento carousel", async () => {
@@ -81,6 +89,26 @@ describe("public Operations", () => {
     expect(images[0]).toHaveAttribute(
       "data-caption-key",
       OPERATIONS_SLIDES[0].images[0].captionKey,
+    );
+  });
+
+  it("falls back to static content when published CMS images are unreachable", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: RequestInfo | URL) => {
+        const url = String(input);
+        const status = url.includes("image-0.webp") ? 200 : 404;
+        return new Response(null, { status });
+      }),
+    );
+
+    render(await Operations({ operationSection: makeCmsSection(6) }));
+
+    const images = screen.getAllByTestId("operations-image");
+    expect(images).toHaveLength(8);
+    expect(images[0]).toHaveAttribute(
+      "data-src",
+      OPERATIONS_SLIDES[0].images[0].src,
     );
   });
 

@@ -72,6 +72,20 @@ export interface FooterSection {
   newsletterSub: string;
 }
 
+export interface CompanyPhoneContact {
+  phone: string;
+}
+
+export interface CompanyInformation {
+  name: string;
+  cnpj: string;
+  address: string;
+  zipCode: string;
+  email: string;
+  whatsapp?: string;
+  phoneContacts: CompanyPhoneContact[];
+}
+
 export interface ServicesPageImage {
   imgUrl: string;
 }
@@ -140,6 +154,7 @@ export interface PublicContentResponse {
     representantsBase?: PublicRepresentative[];
     categories?: BlogCategory[];
     headingImages?: HeadingImages;
+    companyInformation?: CompanyInformation;
     [key: string]: unknown;
   };
   publishedAt: string | null;

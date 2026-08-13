@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   groupOperationSlides,
+  keepReachableOperationImages,
   resolveOperationSection,
 } from "./operations-content";
 
@@ -103,6 +104,50 @@ describe("operations content", () => {
       { images: images.slice(4, 8) },
       { images: images.slice(8, 10) },
     ]);
+  });
+
+  it("drops unreachable remote images and keeps the gallery when six or more remain", async () => {
+    const images = makeSection(8).images.map((image) => ({
+      src: image.url,
+      alt: image.alt,
+    }));
+    const unreachable = new Set([images[2]?.src, images[3]?.src]);
+
+    await expect(
+      keepReachableOperationImages(images, async (src) => !unreachable.has(src)),
+    ).resolves.toEqual([
+      images[0],
+      images[1],
+      images[4],
+      images[5],
+      images[6],
+      images[7],
+    ]);
+  });
+
+  it("returns null when too few remote images are reachable so the static gallery can activate", async () => {
+    const images = makeSection(6).images.map((image) => ({
+      src: image.url,
+      alt: image.alt,
+    }));
+
+    await expect(
+      keepReachableOperationImages(images, async (src) => src.endsWith("image-0.webp")),
+    ).resolves.toBeNull();
+  });
+
+  it("keeps local gallery assets without probing them", async () => {
+    const images = Array.from({ length: 6 }, (_, index) => ({
+      src: `/operations-gallery/galeria_tessa_0${String(index + 1)}.webp`,
+      alt: `Alt ${index}`,
+    }));
+    const probe = async () => {
+      throw new Error("local assets must not be probed");
+    };
+
+    await expect(keepReachableOperationImages(images, probe)).resolves.toEqual(
+      images,
+    );
   });
 
   it("omits empty captions so the caption panel can stay hidden", () => {

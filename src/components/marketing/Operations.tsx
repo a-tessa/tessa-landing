@@ -3,6 +3,7 @@ import { BentoCarousel } from "./BentoCarousel";
 import type { OperationSection } from "@/lib/api/types";
 import {
   groupOperationSlides,
+  keepReachableOperationImages,
   resolveOperationSection,
 } from "@/lib/operations-content";
 import { cn, OPERATIONS_SLIDES, sectionCardShellSpacing } from "@/lib/utils";
@@ -14,8 +15,11 @@ interface OperationsProps {
 export async function Operations({ operationSection }: OperationsProps = {}) {
   const t = await getTranslations("operations");
   const cmsImages = resolveOperationSection(operationSection);
-  const slides = cmsImages
-    ? groupOperationSlides(cmsImages)
+  const reachableImages = cmsImages
+    ? await keepReachableOperationImages(cmsImages)
+    : null;
+  const slides = reachableImages
+    ? groupOperationSlides(reachableImages)
     : OPERATIONS_SLIDES;
 
   return (

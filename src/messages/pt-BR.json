@@ -128,8 +128,8 @@
     "close": "Fechar"
   },
   "newsAndSocial": {
-    "newsTitle": "No centro das\nnovidades",
-    "socialTitle": "Redes\nsociais",
+    "newsTitle": "Blog",
+    "socialTitle": "Redes sociais",
     "goToBlog": "Ir para o blog",
     "goToInstagram": "Ir para o Instagram",
     "instagramEmptyTitle": "Publicações em breve",
@@ -167,6 +167,7 @@
   "contact": {
     "whereWeAre": "Onde\nestamos",
     "expandMap": "Ampliar mapa",
+    "whatsappLabel": "Conversar no WhatsApp: {phone}",
     "fullName": "Nome completo*",
     "email": "E-mail*",
     "phone": "Celular / WhatsApp*",
@@ -241,6 +242,9 @@
         "productsSection": {
           "title": "Força, Leveza e Resistência",
           "subtitle": "Revolucione seus projetos de telhados com as estruturas metálicas Tessa, sinônimo de eficiência e durabilidade.",
+          "scrollLabel": "Produtos de estruturas metálicas para telhado",
+          "scrollLeft": "Rolar produtos para a esquerda",
+          "scrollRight": "Rolar produtos para a direita",
           "items": {
             "caibro-aberto": "Caibro Aberto",
             "caibro-fechado": "Caibro Fechado",
@@ -687,6 +691,8 @@
     "menuTitle": "Menu",
     "menuLabel": "Menu do rodapé",
     "contactTitle": "Contato/\nLocalização",
+    "cnpjLabel": "CNPJ {cnpj}",
+    "whatsappLabel": "Conversar no WhatsApp: {phone}",
     "allRightsReserved": "Todos os direitos reservados.",
     "legalLabel": "Links legais",
     "links": {

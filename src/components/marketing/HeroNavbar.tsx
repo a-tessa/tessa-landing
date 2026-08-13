@@ -20,7 +20,7 @@ interface HeroNavbarProps {
   description: string;
   titleAs?: "h1" | "p";
   imageSrc?: string | null;
-  /** Override the active link color. Defaults to brand orange. */
+  /** Active nav link color. Defaults to brand orange. */
   activeClassName?: string;
 }
 
@@ -84,21 +84,31 @@ const css = /* css */ `
 .hero-nav__background {
   contain: paint;
   border-radius: 1.5rem;
-  background-color: oklch(0.8853 0 0);
+  background-color: oklch(0.9249 0 0);
 }
 
 .hero-nav__overlay {
-  background-color: rgb(0 0 0 / 0.08);
-  will-change: background-color;
+  background-color: transparent;
+  background-image: linear-gradient(
+    to top,
+    rgb(0 0 0 / 0.20) 0%,
+    rgb(0 0 0 / 0.10) 30%,
+    rgb(0 0 0 / 0.00) 70%,
+    rgb(0 0 0 / 0.00) 100%
+  );
 }
 
 .hero-nav__overlay--image {
-  background-color: transparent;
   background-image: linear-gradient(
-    to bottom,
-    rgb(0 0 0 / 0.72) 0%,
-    rgb(0 0 0 / 0.28) 42%,
-    rgb(0 0 0 / 0.00) 100%
+    to top,
+    rgb(0 0 0 / 0.40) 0%,
+    rgb(0 0 0 / 0.10) 30%,
+    rgb(0 0 0 / 0.00) 50%,
+    rgb(0 0 0 / 0.00) 60%,
+    rgb(0 0 0 / 0.05) 70%,
+    rgb(0 0 0 / 0.10) 80%,
+    rgb(0 0 0 / 0.20) 90%,
+    rgb(0 0 0 / 0.35) 100%
   );
 }
 
@@ -120,9 +130,6 @@ const css = /* css */ `
     opacity: 0;
     border-radius: 1.5rem;
   }
-}
-@keyframes hero-overlay-darken {
-  to { background-color: rgb(0 0 0 / 0.2); }
 }
 @keyframes hero-title-collapse {
   to {
@@ -148,11 +155,6 @@ const css = /* css */ `
 @supports (animation-timeline: scroll()) {
   .hero-nav__shell {
     animation: hero-shell-collapse linear forwards;
-    animation-timeline: scroll(root block);
-    animation-range: 0 ${String(HERO_NAV_COLLAPSE_RANGE_PX)}px;
-  }
-  .hero-nav__overlay:not(.hero-nav__overlay--image) {
-    animation: hero-overlay-darken linear forwards;
     animation-timeline: scroll(root block);
     animation-range: 0 ${String(HERO_NAV_COLLAPSE_RANGE_PX)}px;
   }
@@ -196,10 +198,7 @@ export function HeroNavbar({
   const navRowRef = useRef<HTMLDivElement>(null);
   const { expanded: collapsed } = useScrollProgress(HERO_NAV_COLLAPSE_RANGE_PX);
   const hasImage = typeof imageSrc === "string" && imageSrc.trim().length > 0;
-  const navTone = hasImage ? "white" : "black";
-  const titleActiveClassName = hasImage
-    ? "text-white"
-    : activeClassName;
+  const navTone = "black" as const;
 
   useEffect(() => {
     if (collapsed) setMenuOpen(false);
@@ -239,8 +238,7 @@ export function HeroNavbar({
         <div
           ref={shellRef}
           className={cn(
-            "hero-nav__shell relative w-full",
-            hasImage ? "text-white" : "text-foreground",
+            "hero-nav__shell relative w-full text-white",
           )}
         >
           <div className="hero-nav__background pointer-events-none absolute inset-0 overflow-hidden">
@@ -278,7 +276,7 @@ export function HeroNavbar({
 
               <div className="flex items-center gap-4 sm:gap-6">
                 <DesktopLinks
-                  activeClassName={titleActiveClassName}
+                  activeClassName={activeClassName}
                   tone={navTone}
                 />
                 <LanguageSwitcher tone={navTone} />
@@ -294,16 +292,14 @@ export function HeroNavbar({
           <div
             className={cn(
               "absolute inset-x-0 bottom-0 pb-6 sm:pb-12",
-              !hasImage && "[text-shadow:0_1px_3px_rgba(0,0,0,0.4)]",
+              hasImage && "[text-shadow:0_1px_3px_rgba(0,0,0,0.45)]",
               insideCardSpacing,
             )}
           >
             <TitleTag
               className={cn(
                 "hero-nav__title text-32xl font-bold uppercase sm:text-5xl md:text-6xl lg:text-6xl",
-                hasImage
-                  ? "inline-block max-w-full rounded-2xl bg-black/55 px-4 py-2 text-white sm:px-5 sm:py-3"
-                  : "text-[#252525]",
+                hasImage ? "text-white" : "text-[#252525]",
               )}
             >
               {title}
@@ -317,7 +313,7 @@ export function HeroNavbar({
                         "hero-nav__subtitle mt-3 max-w-2xl cursor-help text-xxs font-semibold uppercase sm:mt-4 sm:text-xs outline-offset-2 focus-visible:outline-2",
                         hasImage
                           ? "text-white focus-visible:outline-white/70"
-                          : "focus-visible:outline-white/70",
+                          : "text-[#252525] focus-visible:outline-foreground/40",
                       )}
                       tabIndex={0}
                     >
@@ -353,7 +349,7 @@ export function HeroNavbar({
           <MobileDrawer
             open={menuOpen}
             onClose={() => setMenuOpen(false)}
-            activeClassName={titleActiveClassName}
+            activeClassName={activeClassName}
             portalAnchorRef={navRowRef}
             portalBoundsRef={shellRef}
             containerClassName="px-4 py-4 rounded-b-3xl"

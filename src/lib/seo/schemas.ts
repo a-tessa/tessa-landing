@@ -75,20 +75,32 @@ export const SITE = {
   ],
 } as const;
 
-export function organizationJsonLd() {
+export function organizationJsonLd(contact?: {
+  name: string;
+  email: string;
+  phones: readonly string[];
+  address: string;
+  zipCode: string;
+  cnpj: string | null;
+} | null) {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: SITE.name,
+    name: contact?.name ?? SITE.name,
     alternateName: SITE.shortName,
     url: SITE.domain,
     logo: `${SITE.domain}/tessa-logo.svg`,
     description: SITE.description,
-    email: SITE.email,
-    telephone: SITE.phones[0],
+    email: contact?.email ?? SITE.email,
+    telephone: contact?.phones[0] ?? SITE.phones[0],
+    ...(contact?.cnpj ? { taxID: contact.cnpj } : {}),
     address: {
       "@type": "PostalAddress",
-      ...SITE.address,
+      streetAddress: contact?.address ?? SITE.address.streetAddress,
+      addressLocality: SITE.address.addressLocality,
+      addressRegion: SITE.address.addressRegion,
+      postalCode: contact?.zipCode ?? SITE.address.postalCode,
+      addressCountry: SITE.address.addressCountry,
     },
     sameAs: Object.values(SITE.socials),
   };

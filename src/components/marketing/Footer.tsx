@@ -1,8 +1,15 @@
-import { Instagram, Linkedin, MapPin, Phone, Youtube } from "lucide-react";
+import { Instagram, Linkedin, Mail, MapPin, Phone, Youtube } from "lucide-react";
+import { IconBrandWhatsapp } from "@tabler/icons-react";
 import Image from "next/image";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getFooterSection } from "@/lib/api/content";
+import { getCompanyInformation, getFooterSection } from "@/lib/api/content";
+import {
+  resolveCompanyInformation,
+  telephoneHref,
+  toPublicCompanyContact,
+  whatsappHref,
+} from "@/lib/company-information";
 import { resolveFooterSection } from "@/lib/footer-content";
 import { SITE } from "@/lib/seo/schemas";
 import { cn, insideCardSpacing } from "@/lib/utils";
@@ -36,7 +43,12 @@ export async function Footer() {
     getTranslations("footer"),
     getLocale(),
   ]);
-  const cmsFooter = resolveFooterSection(await getFooterSection(locale));
+  const [cmsFooter, companyContact] = await Promise.all([
+    getFooterSection(locale).then(resolveFooterSection),
+    getCompanyInformation(locale).then((section) =>
+      toPublicCompanyContact(resolveCompanyInformation(section)),
+    ),
+  ]);
   const newsletterTitle = cmsFooter?.newsletterTitle ?? t("newsletterTitle");
   const newsletterSub = cmsFooter?.newsletterSub ?? t("newsletterSub");
 
@@ -145,16 +157,11 @@ export async function Footer() {
                     {t("contactTitle")}
                   </h2>
 
-                  <address
-                    className="mt-6 space-y-4 not-italic"
-                    itemProp="address"
-                    itemScope
-                    itemType="https://schema.org/PostalAddress"
-                  >
-                    {SITE.phones.map((phone) => (
+                  <address className="mt-6 space-y-4 not-italic">
+                    {companyContact.phones.map((phone) => (
                       <a
                         key={phone}
-                        href={`tel:${phone.replace(/\s/g, "")}`}
+                        href={telephoneHref(phone)}
                         className="flex items-center gap-2.5 text-sm font-medium text-white/95 transition-colors hover:text-primary"
                         itemProp="telephone"
                       >
@@ -167,22 +174,58 @@ export async function Footer() {
                       </a>
                     ))}
 
-                    <div className="flex items-start gap-2.5 text-sm font-medium uppercase leading-snug text-white/95">
+                    {companyContact.whatsapp ? (
+                      <a
+                        href={whatsappHref(companyContact.whatsapp)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2.5 text-sm font-medium text-white/95 transition-colors hover:text-primary"
+                        aria-label={t("whatsappLabel", {
+                          phone: companyContact.whatsapp,
+                        })}
+                      >
+                        <IconBrandWhatsapp
+                          className="size-4 shrink-0 text-primary"
+                          aria-hidden
+                        />
+                        {companyContact.whatsapp}
+                      </a>
+                    ) : null}
+
+                    <a
+                      href={`mailto:${companyContact.email}`}
+                      className="flex items-center gap-2.5 text-sm font-medium text-white/95 transition-colors hover:text-primary"
+                      itemProp="email"
+                    >
+                      <Mail
+                        className="size-4 shrink-0 text-primary"
+                        strokeWidth={2}
+                        aria-hidden
+                      />
+                      {companyContact.email}
+                    </a>
+
+                    <div
+                      className="flex items-start gap-2.5 text-sm font-medium uppercase leading-snug text-white/95"
+                      itemProp="address"
+                      itemScope
+                      itemType="https://schema.org/PostalAddress"
+                    >
                       <MapPin
                         className="mt-0.5 size-4 shrink-0 text-primary"
                         strokeWidth={2}
                         aria-hidden
                       />
                       <span className="max-w-4/6">
-                        <span itemProp="streetAddress">
-                          {SITE.address.streetAddress}
+                        <span
+                          className="whitespace-pre-line"
+                          itemProp="streetAddress"
+                        >
+                          {companyContact.address}
                         </span>
                         {", "}
-                        <span itemProp="addressLocality">
-                          {SITE.address.addressLocality}
-                        </span>{" "}
                         <span itemProp="postalCode">
-                          {SITE.address.postalCode.replace(/-/g, "")}
+                          {companyContact.zipCode}
                         </span>
                       </span>
                     </div>
@@ -205,7 +248,15 @@ export async function Footer() {
           <div className={insideCardSpacing}>
             <div className="flex py-6 md:items-center lg:py-7 flex-col lg:flex-row gap-y-5">
               <p className="text-center lg:w-1/2 w-full text-xs text-white/50 lg:text-left">
-                © {currentYear} {SITE.name}. {t("allRightsReserved")}
+                © {currentYear}{" "}
+                <span itemProp="legalName">{companyContact.name}</span>
+                {companyContact.cnpj ? (
+                  <>
+                    . {t("cnpjLabel", { cnpj: companyContact.cnpj })}
+                    <meta itemProp="taxID" content={companyContact.cnpj} />
+                  </>
+                ) : null}
+                . {t("allRightsReserved")}
               </p>
 
               <div className="lg:w-1/2 w-full flex flex-wrap justify-center xl:justify-between items-center gap-3">
