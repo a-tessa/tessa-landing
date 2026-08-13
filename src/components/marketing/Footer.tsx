@@ -1,7 +1,9 @@
 import { Instagram, Linkedin, MapPin, Phone, Youtube } from "lucide-react";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { getFooterSection } from "@/lib/api/content";
+import { resolveFooterSection } from "@/lib/footer-content";
 import { SITE } from "@/lib/seo/schemas";
 import { cn, insideCardSpacing } from "@/lib/utils";
 
@@ -28,13 +30,19 @@ const SOCIAL_LINKS = [
   { href: SITE.socials.instagram, key: "instagram", icon: Instagram },
 ] as const;
 
-export function Footer() {
+export async function Footer() {
   const currentYear = new Date().getFullYear();
-  const t = useTranslations("footer");
+  const [t, locale] = await Promise.all([
+    getTranslations("footer"),
+    getLocale(),
+  ]);
+  const cmsFooter = resolveFooterSection(await getFooterSection(locale));
+  const newsletterTitle = cmsFooter?.newsletterTitle ?? t("newsletterTitle");
+  const newsletterSub = cmsFooter?.newsletterSub ?? t("newsletterSub");
 
   return (
     <footer
-      className="w-full mb-20 mx-auto pb-6 max-w-[1920px] px-4"
+      className="w-full mb-20 mx-auto pb-6 max-w-480 px-4"
       role="contentinfo"
       aria-label={t("siteLabel")}
       itemScope
@@ -68,10 +76,10 @@ export function Footer() {
 
               <div className="mt-10">
                 <h2 className="font-barlow text-sm font-bold uppercase leading-snug tracking-[0.12em] text-primary sm:text-base">
-                  {t("newsletterTitle")}
+                  {newsletterTitle}
                 </h2>
                 <p className="mt-2 font-barlow text-[0.65rem] font-semibold uppercase leading-relaxed tracking-[0.14em] text-white sm:text-xs">
-                  {t("newsletterSub")}
+                  {newsletterSub}
                 </p>
               </div>
 
@@ -124,7 +132,7 @@ export function Footer() {
               </nav>
 
               {/* Contato / mapa */}
-              <div className="relative min-h-[240px] lg:w-2/3 flex py-14 px-10">
+              <div className="relative min-h-60 lg:w-2/3 flex py-14 px-10">
                 <div
                   className="pointer-events-none absolute inset-0"
                   aria-hidden

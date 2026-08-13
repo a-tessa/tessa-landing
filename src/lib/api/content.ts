@@ -3,6 +3,7 @@ import type {
   AboutSection,
   BlogCategory,
   ClientLogo,
+  FooterSection,
   HeadingImagePageKey,
   HeadingImages,
   HeroTopic,
@@ -56,6 +57,13 @@ export async function getAboutSection(
 ): Promise<AboutSection | null> {
   const data = await getPublicContent(locale);
   return data?.content.aboutSection ?? null;
+}
+
+export async function getFooterSection(
+  locale?: string,
+): Promise<FooterSection | null> {
+  const data = await getPublicContent(locale);
+  return data?.content.footerSection ?? null;
 }
 
 export async function getScenerySection(
@@ -162,6 +170,7 @@ export async function getLandingContent(locale?: string) {
     industrySection: data?.content.industrySection ?? null,
     operationSection: data?.content.operationSection ?? null,
     resultsSection: data?.content.resultsSection ?? null,
+    footerSection: data?.content.footerSection ?? null,
     scenerySection: data?.content.scenerySection ?? null,
     headingImages: data?.content.headingImages ?? null,
     clients: clients ?? data?.content.clients ?? null,

@@ -67,6 +67,11 @@ export interface ResultsSection {
   values: [number, number, number];
 }
 
+export interface FooterSection {
+  newsletterTitle: string;
+  newsletterSub: string;
+}
+
 export interface ServicesPageImage {
   imgUrl: string;
 }
@@ -128,6 +133,7 @@ export interface PublicContentResponse {
     aboutSection?: AboutSection;
     operationSection?: OperationSection;
     resultsSection?: ResultsSection;
+    footerSection?: FooterSection;
     scenerySection?: SceneryItem[];
     servicesPages?: ServicesPageItem[];
     clients?: ClientLogo[];
