@@ -126,7 +126,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   if (!article) notFound();
 
   const post = toBlogPostFromArticle(article);
-  const sanitizedContent = sanitizeArticleHtml(post.contentHtml ?? "");
+  const sanitizedContent = sanitizeArticleHtml(post.contentHtml ?? "", {
+    siteOrigin: SITE.domain,
+  });
 
   const [relatedDtos, categories, blogHeadingImageUrl] = await Promise.all([
     fetchRelatedBlogArticles(post.category, post.slug, 2, locale),
