@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run src/lib/industry-content.test.ts src/lib/operations-image.test.ts src/lib/operations-content.test.ts src/lib/company-information.test.ts src/components/marketing/IndustrySection.test.tsx src/components/marketing/BentoCarousel.test.tsx src/components/marketing/OperationsGalleryImage.test.tsx src/components/marketing/Operations.test.tsx src/components/marketing/homepage-sections.test.tsx"
+    "test": "vitest run src/lib/industry-content.test.ts src/lib/operations-image.test.ts src/lib/operations-content.test.ts src/lib/company-information.test.ts src/lib/api/create-testimonial-request.test.ts src/components/marketing/IndustrySection.test.tsx src/components/marketing/BentoCarousel.test.tsx src/components/marketing/OperationsGalleryImage.test.tsx src/components/marketing/Operations.test.tsx src/components/marketing/homepage-sections.test.tsx"
   },
   "dependencies": {
     "@next/third-parties": "^16.2.4",

@@ -1,5 +1,7 @@
 "use server";
 
+import { buildCreateTestimonialFetchInit } from "@/lib/api/create-testimonial-request";
+
 export interface TestimonialActionState {
   status: "idle" | "success" | "error";
   message?: string;
@@ -23,6 +25,21 @@ const ALLOWED_IMAGE_MIME_TYPES = [
 ] as const;
 const ALLOWED_IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp"] as const;
 
+function isNonEmptyImageFile(value: FormDataEntryValue | null): value is File {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+
+  const file = value as File;
+  return (
+    typeof file.size === "number" &&
+    file.size > 0 &&
+    typeof file.name === "string" &&
+    file.name.length > 0 &&
+    typeof file.arrayBuffer === "function"
+  );
+}
+
 function isAllowedImage(file: File): boolean {
   if (file.type && ALLOWED_IMAGE_MIME_TYPES.includes(file.type as (typeof ALLOWED_IMAGE_MIME_TYPES)[number])) {
     return true;
@@ -42,7 +59,7 @@ function getImageField(
 ): File | null {
   const value = formData.get(field);
 
-  if (!(value instanceof File) || value.size === 0) {
+  if (!isNonEmptyImageFile(value)) {
     return null;
   }
 
@@ -130,25 +147,16 @@ export async function submitTestimonial(
     };
   }
 
-  const apiFormData = new FormData();
-  apiFormData.set("authorName", name);
-  apiFormData.set("companyName", company);
-  apiFormData.set("rating", String(rating));
-  apiFormData.set("comment", text);
-
-  if (profileImage) {
-    apiFormData.set("profileImage", profileImage, profileImage.name);
-  }
-
-  if (reviewImage) {
-    apiFormData.set("reviewImage", reviewImage, reviewImage.name);
-  }
-
   try {
-    const res = await fetch(`${apiBaseUrl}/api/testimonials`, {
-      method: "POST",
-      body: apiFormData,
+    const init = await buildCreateTestimonialFetchInit({
+      authorName: name,
+      companyName: company,
+      rating,
+      comment: text,
+      profileImage,
+      reviewImage,
     });
+    const res = await fetch(`${apiBaseUrl}/api/testimonials`, init);
 
     if (!res.ok) {
       if (res.status === 429) {
