@@ -63,8 +63,15 @@ export interface OperationSection {
   images: OperationImage[];
 }
 
+export interface ResultsStat {
+  value: number;
+  suffix?: string;
+  label: string;
+}
+
 export interface ResultsSection {
-  values: [number, number, number];
+  stats?: ResultsStat[];
+  values?: [number, number, number];
 }
 
 export interface FooterSection {
