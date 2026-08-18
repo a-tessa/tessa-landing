@@ -11,3 +11,28 @@ export const HERO_NAV_COLLAPSED_SECONDARY_TOP = {
   md: "7.5rem",
   lg: "7.5rem",
 } as const;
+
+/**
+ * Applied by `SecondaryNavFollow` when the heading has collapsed.
+ * Parks the bar at `--nav-top-to` when the scroll-driven animation is off
+ * (`prefers-reduced-motion` or no `animation-timeline` support).
+ */
+export const HERO_NAV_COLLAPSED_CLASS = "is-hero-collapsed";
+
+/** End-state + reduced-motion rules shared by secondary navs. */
+export function secondaryNavParkedCss(
+  selector: string,
+  top = "var(--nav-top-to)",
+): string {
+  return `
+${selector}.${HERO_NAV_COLLAPSED_CLASS} {
+  top: ${top};
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ${selector} {
+    animation-name: none;
+  }
+}
+`;
+}

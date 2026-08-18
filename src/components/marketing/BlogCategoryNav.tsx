@@ -5,9 +5,11 @@ import type { BlogCategory } from "@/lib/api/types";
 import { buildBlogListHref } from "@/lib/blog/posts";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 import { BlogCategoryNavScroller } from "@/components/marketing/BlogCategoryNavScroller";
+import { SecondaryNavFollow } from "@/components/marketing/nav/SecondaryNavFollow";
 import {
   HERO_NAV_COLLAPSE_RANGE_PX,
   HERO_NAV_COLLAPSED_SECONDARY_TOP,
+  secondaryNavParkedCss,
 } from "@/components/marketing/nav/hero-collapse";
 
 /**
@@ -53,9 +55,7 @@ const CATEGORY_NAV_CSS = /* css */ `
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .blog-category-nav { animation-name: none; }
-}
+${secondaryNavParkedCss(".blog-category-nav")}
 
 .blog-category-scroller {
   scrollbar-width: none;
@@ -170,7 +170,7 @@ export function BlogCategoryNav({
       <style href="blog-category-nav" precedence="component">
         {CATEGORY_NAV_CSS}
       </style>
-      <div
+      <SecondaryNavFollow
         className={cn(
           "blog-category-nav w-full max-w-[1920px]",
           freeSectionShellSpacing,
@@ -215,7 +215,7 @@ export function BlogCategoryNav({
             />
           </div>
         ) : null}
-      </div>
+      </SecondaryNavFollow>
     </>
   );
 }

@@ -2,9 +2,11 @@
 
 import { useTranslations } from "next-intl";
 import { BlogCategoryNavScroller } from "@/components/marketing/BlogCategoryNavScroller";
+import { SecondaryNavFollow } from "@/components/marketing/nav/SecondaryNavFollow";
 import {
   HERO_NAV_COLLAPSE_RANGE_PX,
   HERO_NAV_COLLAPSED_SECONDARY_TOP,
+  secondaryNavParkedCss,
 } from "@/components/marketing/nav/hero-collapse";
 import { Link } from "@/i18n/navigation";
 import type { BlogCategory } from "@/lib/api/types";
@@ -50,9 +52,7 @@ const CATEGORY_NAV_CSS = /* css */ `
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .downloads-category-nav { animation-name: none; }
-}
+${secondaryNavParkedCss(".downloads-category-nav")}
 
 .downloads-category-nav .blog-category-scroller {
   scrollbar-width: none;
@@ -110,7 +110,7 @@ export function DownloadsCategoryNav({
       <style href="downloads-category-nav" precedence="component">
         {CATEGORY_NAV_CSS}
       </style>
-      <div
+      <SecondaryNavFollow
         className={cn(
           "downloads-category-nav w-full max-w-[1920px]",
           freeSectionShellSpacing,
@@ -133,7 +133,7 @@ export function DownloadsCategoryNav({
             ))}
           </BlogCategoryNavScroller>
         </div>
-      </div>
+      </SecondaryNavFollow>
     </>
   );
 }

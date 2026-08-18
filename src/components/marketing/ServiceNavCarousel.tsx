@@ -4,8 +4,11 @@ import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import {
   HERO_NAV_COLLAPSE_RANGE_PX,
+  HERO_NAV_COLLAPSED_CLASS,
   HERO_NAV_COLLAPSED_SECONDARY_TOP,
+  secondaryNavParkedCss,
 } from "@/components/marketing/nav/hero-collapse";
+import { useScrollProgress } from "@/components/marketing/nav/use-scroll-progress";
 import { Link } from "@/i18n/navigation";
 import type { ServiceNavItem } from "@/lib/servicos/nav";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
@@ -32,11 +35,7 @@ const serviceCarouselCss = /* css */ `
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .service-heading-carousel {
-    animation-name: none;
-  }
-}
+${secondaryNavParkedCss(".service-heading-carousel", HERO_NAV_COLLAPSED_SECONDARY_TOP.md)}
 `;
 
 interface ServiceNavCarouselProps {
@@ -50,6 +49,7 @@ export function ServiceNavCarousel({
   activeSlug,
 }: ServiceNavCarouselProps) {
   const t = useTranslations("pages.servicoDetail");
+  const { expanded: collapsed } = useScrollProgress(HERO_NAV_COLLAPSE_RANGE_PX);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const activeItemRef = useRef<HTMLDivElement>(null);
 
@@ -82,7 +82,11 @@ export function ServiceNavCarousel({
       <div className="relative h-auto w-fit">
         <nav
           aria-label={t("serviceNav")}
-          className={cn("service-heading-carousel z-50", freeSectionShellSpacing)}
+          className={cn(
+            "service-heading-carousel z-50",
+            collapsed && HERO_NAV_COLLAPSED_CLASS,
+            freeSectionShellSpacing,
+          )}
         >
           <div className="relative flex overflow-hidden rounded-full bg-muted">
             <div
