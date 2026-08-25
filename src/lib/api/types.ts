@@ -166,7 +166,11 @@ export interface PageSeoEntry {
   metaDescription: string;
   focusKeyword?: string;
   ogImageUrl?: string;
+  socialTitle?: string;
+  socialDescription?: string;
+  canonicalUrl?: string;
   noIndex?: boolean;
+  noFollow?: boolean;
   changeFrequency?: "daily" | "weekly" | "monthly" | "yearly";
   priority?: number;
 }
@@ -181,6 +185,7 @@ export interface SeoDefaults {
   defaultOgImageUrl?: string;
   googleSiteVerification?: string;
   bingSiteVerification?: string;
+  twitterSite?: string;
   allowIndexing?: boolean;
 }
 

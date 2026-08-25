@@ -7,7 +7,7 @@ import type {
   SeoDefaults,
   SeoPageKey,
 } from "@/lib/api/types";
-import { buildPageMetadata, type BuildPageMetadataInput } from "./metadata";
+import { buildPageMetadata, parseCanonicalOverride, type BuildPageMetadataInput } from "./metadata";
 import { SITE } from "./schemas";
 
 export interface ResolvedSiteSeo {
@@ -19,6 +19,7 @@ export interface ResolvedSiteSeo {
   defaultOgImageUrl: string | null;
   googleSiteVerification: string | null;
   bingSiteVerification: string | null;
+  twitterSite: string | null;
   allowIndexing: boolean;
 }
 
@@ -63,6 +64,7 @@ export function resolveSiteSeoFromContent(
     defaultOgImageUrl: asNonEmpty(raw?.defaultOgImageUrl),
     googleSiteVerification: asNonEmpty(raw?.googleSiteVerification),
     bingSiteVerification: asNonEmpty(raw?.bingSiteVerification),
+    twitterSite: asNonEmpty(raw?.twitterSite),
     allowIndexing: asBoolean(raw?.allowIndexing, true),
   };
 }
@@ -100,7 +102,11 @@ export function resolvePageSeoEntryFromContent(
     metaDescription,
     focusKeyword: asNonEmpty(entry.focusKeyword) ?? undefined,
     ogImageUrl: asNonEmpty(entry.ogImageUrl) ?? undefined,
+    socialTitle: asNonEmpty(entry.socialTitle) ?? undefined,
+    socialDescription: asNonEmpty(entry.socialDescription) ?? undefined,
+    canonicalUrl: parseCanonicalOverride(asNonEmpty(entry.canonicalUrl) ?? undefined),
     noIndex: asBoolean(entry.noIndex, false),
+    noFollow: asBoolean(entry.noFollow, false),
     changeFrequency: validFrequency,
     priority,
   };
@@ -154,11 +160,16 @@ export async function buildManagedPageMetadata(
     description,
     keywords,
     noIndex,
+    noFollow: Boolean(page?.noFollow),
     appendSiteName: input.appendSiteName,
     siteName: site.siteName,
     shortName: site.shortName,
     globalKeywords: site.keywords,
     allowIndexing: site.allowIndexing,
+    ...(page?.socialTitle ? { socialTitle: page.socialTitle } : {}),
+    ...(page?.socialDescription ? { socialDescription: page.socialDescription } : {}),
+    ...(page?.canonicalUrl ? { canonicalOverride: page.canonicalUrl } : {}),
+    ...(site.twitterSite ? { twitterSite: site.twitterSite } : {}),
   };
 
   if (imageUrl) {

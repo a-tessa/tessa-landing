@@ -23,6 +23,7 @@ import { sanitizeArticleHtml } from "@/lib/blog/sanitize-article-html";
 import { resolveHeadingImageUrl } from "@/lib/heading-image";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { redirectIfNeeded } from "@/lib/seo/apply-redirect";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 import { localePath, routing } from "@/i18n/routing";
 
@@ -78,6 +79,7 @@ export async function generateMetadata({
   const article = await fetchBlogArticleBySlug(slug, locale);
 
   if (!article) {
+    await redirectIfNeeded(locale, `/blog/${slug}`);
     return buildPageMetadata({
       locale,
       path: `/blog/${slug}`,
@@ -123,7 +125,10 @@ function formatPublishedDate(iso: string, locale: string): string {
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { locale, slug } = await params;
   const article = await fetchBlogArticleBySlug(slug, locale);
-  if (!article) notFound();
+  if (!article) {
+    await redirectIfNeeded(locale, `/blog/${slug}`);
+    notFound();
+  }
 
   const post = toBlogPostFromArticle(article);
   const sanitizedContent = sanitizeArticleHtml(post.contentHtml ?? "", {

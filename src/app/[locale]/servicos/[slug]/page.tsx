@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { redirectIfNeeded } from "@/lib/seo/apply-redirect";
 import { fetchBlogArticles } from "@/lib/api/blog";
 import { fetchInstagramPosts } from "@/lib/api/instagram";
 import { getApprovedTestimonials } from "@/lib/api/testimonials";
@@ -120,6 +121,7 @@ export async function generateMetadata({
   const service = await getServicePageBySlug(slug, locale);
 
   if (!service) {
+    await redirectIfNeeded(locale, `/servicos/${slug}`);
     return buildPageMetadata({
       locale,
       path: `/servicos/${slug}`,
@@ -168,7 +170,10 @@ export default async function ServiceDetailPage({
       getHeadingImageUrl("servicos", locale),
     ]);
 
-  if (!service) notFound();
+  if (!service) {
+    await redirectIfNeeded(locale, `/servicos/${slug}`);
+    notFound();
+  }
 
   const headingImageUrl = resolveHeadingImageUrl(
     service.backgroundImageUrl,
