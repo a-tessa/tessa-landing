@@ -8,7 +8,7 @@ import { RouteHeading } from "@/components/marketing/RouteHeading";
 import { getBlogCategories, getHeadingImageUrl } from "@/lib/api/content";
 import { getDocuments } from "@/lib/api/documents";
 import { JsonLd } from "@/lib/seo/jsonld";
-import { buildPageMetadata } from "@/lib/seo/metadata";
+import { buildManagedPageMetadata } from "@/lib/seo/page-seo";
 import { breadcrumbJsonLd } from "@/lib/seo/schemas";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 
@@ -25,11 +25,12 @@ export async function generateMetadata({
   const sp = await searchParams;
   const t = await getTranslations({ locale, namespace: "pages.downloads" });
 
-  return buildPageMetadata({
+  return buildManagedPageMetadata({
     locale,
+    pageKey: "downloads",
     path: "/downloads",
-    title: t("title"),
-    description: t("description"),
+    fallbackTitle: t("title"),
+    fallbackDescription: t("description"),
     keywords: [
       "Downloads Tessa",
       "Manuais Tessa",

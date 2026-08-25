@@ -10,7 +10,7 @@ import { Testimonials } from "@/components/marketing/Testimonials";
 import { Results } from "@/components/marketing/Results";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { breadcrumbJsonLd } from "@/lib/seo/schemas";
-import { buildPageMetadata } from "@/lib/seo/metadata";
+import { buildManagedPageMetadata } from "@/lib/seo/page-seo";
 import { fetchBlogArticles } from "@/lib/api/blog";
 import { fetchInstagramPosts } from "@/lib/api/instagram";
 import { getLandingContent } from "@/lib/api/content";
@@ -28,11 +28,12 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "metadata" });
 
-  return buildPageMetadata({
+  return buildManagedPageMetadata({
     locale,
+    pageKey: "home",
     path: "/",
-    title: t("homeTitle"),
-    description: t("homeDescription"),
+    fallbackTitle: t("homeTitle"),
+    fallbackDescription: t("homeDescription"),
     keywords: ["Energia solar para empresas", "Perfis sob medida"],
     appendSiteName: true,
   });

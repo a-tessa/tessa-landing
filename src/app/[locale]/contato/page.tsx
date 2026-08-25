@@ -15,7 +15,7 @@ import {
 import { getMergedServiceNavItems } from "@/lib/servicos/nav";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
-import { buildPageMetadata } from "@/lib/seo/metadata";
+import { buildManagedPageMetadata } from "@/lib/seo/page-seo";
 import { localePath } from "@/i18n/routing";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 
@@ -29,11 +29,12 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "pages.contato" });
 
-  return buildPageMetadata({
+  return buildManagedPageMetadata({
     locale,
+    pageKey: "contato",
     path: "/contato",
-    title: t("title"),
-    description: t("description"),
+    fallbackTitle: t("title"),
+    fallbackDescription: t("description"),
     keywords: [
       "Contato Tessa",
       "Orçamento estruturas metálicas",

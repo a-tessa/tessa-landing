@@ -12,6 +12,7 @@ import {
   SITE,
   websiteJsonLd,
 } from "@/lib/seo/schemas";
+import { resolveSiteSeo } from "@/lib/seo/page-seo";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { localePath, routing } from "@/i18n/routing";
 import type { Locale } from "@/i18n/routing";
@@ -59,7 +60,8 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const shouldIndex = isSearchIndexingEnabled();
+  const site = await resolveSiteSeo(locale);
+  const shouldIndex = isSearchIndexingEnabled() && site.allowIndexing;
 
   const languages = Object.fromEntries([
     ...routing.locales.map((l) => [l, localePath(l)] as const),
@@ -69,16 +71,16 @@ export async function generateMetadata({
   return {
     metadataBase: new URL(SITE.domain),
     title: {
-      template: `%s | ${SITE.shortName}`,
-      default: `${SITE.shortName} — ${SITE.tagline}`,
+      template: site.titleTemplate,
+      default: `${site.shortName} — ${SITE.tagline}`,
     },
-    description: SITE.description,
-    applicationName: SITE.shortName,
-    authors: [{ name: SITE.name, url: SITE.domain }],
-    creator: SITE.name,
-    publisher: SITE.name,
+    description: site.description,
+    applicationName: site.shortName,
+    authors: [{ name: site.siteName, url: SITE.domain }],
+    creator: site.siteName,
+    publisher: site.siteName,
     category: "business",
-    keywords: [...SITE.keywords],
+    keywords: [...site.keywords],
     alternates: {
       canonical: localePath(locale),
       ...(shouldIndex ? { languages } : {}),
@@ -87,14 +89,14 @@ export async function generateMetadata({
       type: "website",
       locale,
       url: `${SITE.domain}${localePath(locale)}`,
-      title: `${SITE.shortName} — ${SITE.tagline}`,
-      description: SITE.description,
-      siteName: SITE.name,
+      title: `${site.shortName} — ${SITE.tagline}`,
+      description: site.description,
+      siteName: site.siteName,
     },
     twitter: {
       card: "summary_large_image",
-      title: `${SITE.shortName} — ${SITE.tagline}`,
-      description: SITE.description,
+      title: `${site.shortName} — ${SITE.tagline}`,
+      description: site.description,
     },
     robots: {
       index: shouldIndex,
@@ -107,6 +109,18 @@ export async function generateMetadata({
         "max-video-preview": -1,
       },
     },
+    ...(site.googleSiteVerification || site.bingSiteVerification
+      ? {
+          verification: {
+            ...(site.googleSiteVerification
+              ? { google: site.googleSiteVerification }
+              : {}),
+            ...(site.bingSiteVerification
+              ? { other: { "msvalidate.01": site.bingSiteVerification } }
+              : {}),
+          },
+        }
+      : {}),
     formatDetection: {
       email: false,
       telephone: false,
@@ -127,12 +141,13 @@ export default async function LocaleLayout({
 
   setRequestLocale(locale);
 
-  const [messages, servicesPages, organizationContact] = await Promise.all([
+  const [messages, servicesPages, organizationContact, site] = await Promise.all([
     getMessages(),
     getServicesPages(locale),
     getCompanyInformation(locale).then((section) =>
       toPublicCompanyContact(resolveCompanyInformation(section)),
     ),
+    resolveSiteSeo(locale),
   ]);
   const serviceNavItems = await getMergedServiceNavItems(locale, servicesPages);
 
@@ -150,8 +165,14 @@ export default async function LocaleLayout({
           "max-w-480 mx-auto",
         )}
       >
-        <JsonLd id="jsonld-organization" data={organizationJsonLd(organizationContact)} />
-        <JsonLd id="jsonld-website" data={websiteJsonLd(locale)} />
+        <JsonLd
+          id="jsonld-organization"
+          data={organizationJsonLd(organizationContact, {
+            siteName: site.siteName,
+            description: site.description,
+          })}
+        />
+        <JsonLd id="jsonld-website" data={websiteJsonLd(locale, site.siteName)} />
         <NextIntlClientProvider messages={messages}>
           <NavServicesProvider items={serviceNavItems}>
             <ScrollToTop />

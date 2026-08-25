@@ -75,22 +75,28 @@ export const SITE = {
   ],
 } as const;
 
-export function organizationJsonLd(contact?: {
-  name: string;
-  email: string;
-  phones: readonly string[];
-  address: string;
-  zipCode: string;
-  cnpj: string | null;
-} | null) {
+export function organizationJsonLd(
+  contact?: {
+    name: string;
+    email: string;
+    phones: readonly string[];
+    address: string;
+    zipCode: string;
+    cnpj: string | null;
+  } | null,
+  seo?: {
+    siteName?: string;
+    description?: string;
+  } | null,
+) {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: contact?.name ?? SITE.name,
+    name: contact?.name ?? seo?.siteName ?? SITE.name,
     alternateName: SITE.shortName,
     url: SITE.domain,
     logo: `${SITE.domain}/tessa-logo.svg`,
-    description: SITE.description,
+    description: seo?.description ?? SITE.description,
     email: contact?.email ?? SITE.email,
     telephone: contact?.phones[0] ?? SITE.phones[0],
     ...(contact?.cnpj ? { taxID: contact.cnpj } : {}),
@@ -106,11 +112,14 @@ export function organizationJsonLd(contact?: {
   };
 }
 
-export function websiteJsonLd(locale: string = routing.defaultLocale) {
+export function websiteJsonLd(
+  locale: string = routing.defaultLocale,
+  siteName: string = SITE.name,
+) {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: SITE.name,
+    name: siteName,
     url: `${SITE.domain}${localePath(locale)}`,
     inLanguage: [...routing.locales],
     potentialAction: {

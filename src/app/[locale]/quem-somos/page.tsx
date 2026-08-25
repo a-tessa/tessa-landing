@@ -13,7 +13,7 @@ import {
 } from "@/lib/about-content";
 import { getAboutSection, getHeadingImageUrl } from "@/lib/api/content";
 import { JsonLd } from "@/lib/seo/jsonld";
-import { buildPageMetadata } from "@/lib/seo/metadata";
+import { buildManagedPageMetadata } from "@/lib/seo/page-seo";
 import { breadcrumbJsonLd } from "@/lib/seo/schemas";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 
@@ -27,11 +27,12 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "pages.quemSomos" });
 
-  return buildPageMetadata({
+  return buildManagedPageMetadata({
     locale,
+    pageKey: "quem-somos",
     path: "/quem-somos",
-    title: t("title"),
-    description: t("description"),
+    fallbackTitle: t("title"),
+    fallbackDescription: t("description"),
     keywords: [
       "Quem Somos Tessa",
       "Tessa Engenharia",

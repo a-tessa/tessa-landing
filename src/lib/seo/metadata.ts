@@ -42,6 +42,14 @@ export interface BuildPageMetadataInput {
    * match the rest of the site.
    */
   appendSiteName?: boolean;
+  /** Overrides `SITE.name` in Open Graph `siteName`. */
+  siteName?: string;
+  /** Overrides `SITE.shortName` when appending the brand to the document title. */
+  shortName?: string;
+  /** Replaces the global keyword set merged into the page keywords. */
+  globalKeywords?: readonly string[];
+  /** When false, the page is opted out of indexing even if `noIndex` is unset. */
+  allowIndexing?: boolean;
 }
 
 /**
@@ -65,15 +73,24 @@ export function buildPageMetadata(input: BuildPageMetadataInput): Metadata {
     noIndex = false,
     alternateLanguages,
     appendSiteName = false,
+    siteName,
+    shortName,
+    globalKeywords,
+    allowIndexing = true,
   } = input;
 
+  const resolvedShortName = shortName ?? SITE.shortName;
+  const resolvedSiteName = siteName ?? SITE.name;
+  const resolvedKeywords = globalKeywords ?? SITE.keywords;
+
   const documentTitle = appendSiteName
-    ? { absolute: `${title} | ${SITE.shortName}` }
+    ? { absolute: `${title} | ${resolvedShortName}` }
     : title;
 
   const canonical = localePath(locale, path);
   const absoluteUrl = `${SITE.domain}${canonical}`;
-  const shouldIndex = !noIndex && isSearchIndexingEnabled();
+  const shouldIndex =
+    !noIndex && allowIndexing && isSearchIndexingEnabled();
 
   const languages =
     alternateLanguages ??
@@ -83,8 +100,8 @@ export function buildPageMetadata(input: BuildPageMetadataInput): Metadata {
     ]);
 
   const mergedKeywords = keywords
-    ? Array.from(new Set<string>([...SITE.keywords, ...keywords]))
-    : [...SITE.keywords];
+    ? Array.from(new Set<string>([...resolvedKeywords, ...keywords]))
+    : [...resolvedKeywords];
 
   const images = image
     ? [
@@ -98,7 +115,7 @@ export function buildPageMetadata(input: BuildPageMetadataInput): Metadata {
     : [
         {
           url: `${SITE.domain}${TESSA_SHORT_LOGO.path}`,
-          alt: SITE.name,
+          alt: resolvedSiteName,
           width: TESSA_SHORT_LOGO.width,
           height: TESSA_SHORT_LOGO.height,
         },
@@ -118,7 +135,7 @@ export function buildPageMetadata(input: BuildPageMetadataInput): Metadata {
       url: absoluteUrl,
       title,
       description,
-      siteName: SITE.name,
+      siteName: resolvedSiteName,
       images,
       ...(publishedAt ? { publishedTime: publishedAt } : {}),
       ...(modifiedAt ? { modifiedTime: modifiedAt } : {}),

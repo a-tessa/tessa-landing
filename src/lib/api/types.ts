@@ -147,6 +147,66 @@ export type HeadingImages = Partial<
   Record<HeadingImagePageKey, HeadingImageEntry>
 >;
 
+export const SEO_PAGE_KEYS = [
+  "home",
+  "quem-somos",
+  "servicos",
+  "representantes",
+  "blog",
+  "downloads",
+  "galeria",
+  "contato",
+  "nao-encontrada",
+] as const;
+
+export type SeoPageKey = (typeof SEO_PAGE_KEYS)[number];
+
+export interface PageSeoEntry {
+  metaTitle: string;
+  metaDescription: string;
+  focusKeyword?: string;
+  ogImageUrl?: string;
+  noIndex?: boolean;
+  changeFrequency?: "daily" | "weekly" | "monthly" | "yearly";
+  priority?: number;
+}
+
+export type PageSeo = Partial<Record<SeoPageKey, PageSeoEntry>>;
+
+export interface SeoDefaults {
+  siteName: string;
+  titleTemplate: string;
+  defaultMetaDescription: string;
+  keywords?: string[];
+  defaultOgImageUrl?: string;
+  googleSiteVerification?: string;
+  bingSiteVerification?: string;
+  allowIndexing?: boolean;
+}
+
+export const SEO_PAGE_PATHS: Record<SeoPageKey, string> = {
+  home: "/",
+  "quem-somos": "/quem-somos",
+  servicos: "/servicos",
+  representantes: "/representantes",
+  blog: "/blog",
+  downloads: "/downloads",
+  galeria: "/galeria",
+  contato: "/contato",
+  "nao-encontrada": "/404",
+};
+
+export const SITEMAP_PAGE_KEYS = [
+  "home",
+  "quem-somos",
+  "servicos",
+  "representantes",
+  "blog",
+  "downloads",
+  "galeria",
+  "contato",
+] as const satisfies readonly SeoPageKey[];
+
 export interface PublicContentResponse {
   content: {
     heroSection?: HeroTopic[];
@@ -162,6 +222,8 @@ export interface PublicContentResponse {
     categories?: BlogCategory[];
     headingImages?: HeadingImages;
     companyInformation?: CompanyInformation;
+    seoDefaults?: SeoDefaults;
+    pageSeo?: PageSeo;
     [key: string]: unknown;
   };
   publishedAt: string | null;

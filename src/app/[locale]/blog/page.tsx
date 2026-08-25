@@ -10,7 +10,7 @@ import { getBlogCategories, getHeadingImageUrl } from "@/lib/api/content";
 import { toBlogPostFromListItem } from "@/lib/blog/mappers";
 import { BLOG_LIST_PAGE_SIZE } from "@/lib/blog/posts";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
-import { buildPageMetadata } from "@/lib/seo/metadata";
+import { buildManagedPageMetadata } from "@/lib/seo/page-seo";
 import { localePath } from "@/i18n/routing";
 
 export const revalidate = 60;
@@ -39,11 +39,12 @@ export async function generateMetadata({
       sp.pagina?.trim(),
   );
 
-  return buildPageMetadata({
+  return buildManagedPageMetadata({
     locale,
+    pageKey: "blog",
     path: "/blog",
-    title: t("title"),
-    description: t("description"),
+    fallbackTitle: t("title"),
+    fallbackDescription: t("description"),
     keywords: [
       "Blog Tessa",
       "Artigos técnicos",

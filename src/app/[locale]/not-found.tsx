@@ -4,18 +4,19 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Footer } from "@/components/marketing/Footer";
 import { NavbarPage } from "@/components/marketing/NavbarPage";
-import { buildPageMetadata } from "@/lib/seo/metadata";
+import { buildManagedPageMetadata } from "@/lib/seo/page-seo";
 import { insideCardSpacing } from "@/lib/utils";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const t = await getTranslations("notFound");
 
-  return buildPageMetadata({
+  return buildManagedPageMetadata({
     locale,
+    pageKey: "nao-encontrada",
     path: "/404",
-    title: t("metaTitle"),
-    description: t("metaDescription"),
+    fallbackTitle: t("metaTitle"),
+    fallbackDescription: t("metaDescription"),
     noIndex: true,
   });
 }

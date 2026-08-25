@@ -1,21 +1,26 @@
 import type { MetadataRoute } from "next";
 import { fetchBlogArticles } from "@/lib/api/blog";
 import type { BlogArticleListItemDto } from "@/lib/api/blog.types";
-import { getServicesPagesWithMeta } from "@/lib/api/content";
+import { fetchPublicContent, getServicesPagesWithMeta } from "@/lib/api/content";
+import { SITEMAP_PAGE_KEYS, SEO_PAGE_PATHS } from "@/lib/api/types";
 import { STATIC_SERVICE_SLUGS } from "@/lib/servicos/static-pages";
 import { isSearchIndexingEnabled, SITE } from "@/lib/seo/schemas";
+import {
+  resolvePageSeoEntryFromContent,
+  resolveSiteSeoFromContent,
+} from "@/lib/seo/page-seo";
 import { localePath, routing } from "@/i18n/routing";
 
-const STATIC_PATHS = [
-  "/",
-  "/quem-somos",
-  "/servicos",
-  "/representantes",
-  "/blog",
-  "/downloads",
-  "/galeria",
-  "/contato",
-];
+const DEFAULT_SITEMAP_META = {
+  home: { changeFrequency: "weekly" as const, priority: 1 },
+  "quem-somos": { changeFrequency: "monthly" as const, priority: 0.8 },
+  servicos: { changeFrequency: "monthly" as const, priority: 0.8 },
+  representantes: { changeFrequency: "monthly" as const, priority: 0.8 },
+  blog: { changeFrequency: "daily" as const, priority: 0.8 },
+  downloads: { changeFrequency: "monthly" as const, priority: 0.8 },
+  galeria: { changeFrequency: "monthly" as const, priority: 0.8 },
+  contato: { changeFrequency: "monthly" as const, priority: 0.8 },
+} as const;
 
 const BLOG_FETCH_CONCURRENCY = 4;
 
@@ -141,22 +146,38 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return [];
   }
 
+  const publicContent = await fetchPublicContent();
+  const site = resolveSiteSeoFromContent(publicContent?.content);
+  if (!site.allowIndexing) {
+    return [];
+  }
+
   const { locales } = routing;
 
-  const staticEntries = STATIC_PATHS.flatMap((path) =>
-    locales.map((locale) => ({
+  const staticEntries = SITEMAP_PAGE_KEYS.flatMap((pageKey) => {
+    const pageSeo = resolvePageSeoEntryFromContent(
+      publicContent?.content,
+      pageKey,
+    );
+    if (pageSeo?.noIndex) {
+      return [];
+    }
+
+    const path = SEO_PAGE_PATHS[pageKey];
+    const defaults = DEFAULT_SITEMAP_META[pageKey];
+    const changeFrequency =
+      pageSeo?.changeFrequency ?? defaults.changeFrequency;
+    const priority = pageSeo?.priority ?? defaults.priority;
+
+    return locales.map((locale) => ({
       url: absoluteUrl(locale, path),
-      changeFrequency: (path === "/"
-        ? "weekly"
-        : path === "/blog"
-          ? "daily"
-          : "monthly") as MetadataRoute.Sitemap[number]["changeFrequency"],
-      priority: path === "/" ? 1 : 0.8,
+      changeFrequency,
+      priority,
       alternates: {
         languages: buildLanguages(path),
       },
-    })),
-  );
+    }));
+  });
 
   const staticSlugSet = new Set<string>(STATIC_SERVICE_SLUGS);
   const servicesByLocale = await Promise.all(

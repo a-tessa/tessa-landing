@@ -7,7 +7,7 @@ import { RouteHeading } from "@/components/marketing/RouteHeading";
 import { Testimonials } from "@/components/marketing/Testimonials";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { breadcrumbJsonLd } from "@/lib/seo/schemas";
-import { buildPageMetadata } from "@/lib/seo/metadata";
+import { buildManagedPageMetadata } from "@/lib/seo/page-seo";
 import { getApprovedTestimonials } from "@/lib/api/testimonials";
 import { getHeadingImageUrl, getRepresentatives } from "@/lib/api/content";
 import { mapApiRepresentatives } from "@/lib/representatives";
@@ -59,11 +59,12 @@ export async function generateMetadata({
     namespace: "pages.representantes",
   });
 
-  return buildPageMetadata({
+  return buildManagedPageMetadata({
     locale,
+    pageKey: "representantes",
     path: "/representantes",
-    title: t("title"),
-    description: t("description"),
+    fallbackTitle: t("title"),
+    fallbackDescription: t("description"),
     keywords: ["Representantes Tessa", "Distribuidores Tessa"],
   });
 }

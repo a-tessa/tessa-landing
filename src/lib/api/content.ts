@@ -167,6 +167,12 @@ export async function getHeadingImageUrl(
   return url && url.length > 0 ? url : null;
 }
 
+export async function fetchPublicContent(
+  locale?: string,
+): Promise<PublicContentResponse | null> {
+  return getPublicContent(locale);
+}
+
 export async function getLandingContent(locale?: string) {
   const [data, clients] = await Promise.all([
     getPublicContent(locale),

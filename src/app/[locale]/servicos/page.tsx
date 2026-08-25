@@ -7,7 +7,7 @@ import { ServicosIntro } from "@/components/marketing/ServicosIntro";
 import { Testimonials } from "@/components/marketing/Testimonials";
 import { JsonLd } from "@/lib/seo/jsonld";
 import { breadcrumbJsonLd } from "@/lib/seo/schemas";
-import { buildPageMetadata } from "@/lib/seo/metadata";
+import { buildManagedPageMetadata } from "@/lib/seo/page-seo";
 import { getHeadingImageUrl, getLandingContent } from "@/lib/api/content";
 import { getApprovedTestimonials } from "@/lib/api/testimonials";
 import { getScenariosCarouselItems } from "@/lib/servicos/carousel";
@@ -22,11 +22,12 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "pages.servicos" });
 
-  return buildPageMetadata({
+  return buildManagedPageMetadata({
     locale,
+    pageKey: "servicos",
     path: "/servicos",
-    title: t("title"),
-    description: t("description"),
+    fallbackTitle: t("title"),
+    fallbackDescription: t("description"),
     keywords: [
       "Serviços Tessa",
       "Estruturas metálicas",

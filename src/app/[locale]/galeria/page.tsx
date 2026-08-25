@@ -12,7 +12,7 @@ import {
   splitGalleryItemsByKind,
 } from "@/lib/gallery/filter";
 import { JsonLd } from "@/lib/seo/jsonld";
-import { buildPageMetadata } from "@/lib/seo/metadata";
+import { buildManagedPageMetadata } from "@/lib/seo/page-seo";
 import { breadcrumbJsonLd } from "@/lib/seo/schemas";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 
@@ -29,11 +29,12 @@ export async function generateMetadata({
   const sp = await searchParams;
   const t = await getTranslations({ locale, namespace: "pages.gallery" });
 
-  return buildPageMetadata({
+  return buildManagedPageMetadata({
     locale,
+    pageKey: "galeria",
     path: "/galeria",
-    title: t("title"),
-    description: t("description"),
+    fallbackTitle: t("title"),
+    fallbackDescription: t("description"),
     keywords: [
       "Galeria Tessa",
       "Fotos Tessa",
