@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import { localePath, routing } from "@/i18n/routing";
-import { TESSA_SHORT_LOGO } from "@/lib/brand/og-image-layout";
 import { isSearchIndexingEnabled, SITE } from "./schemas";
+
+const DEFAULT_OG_IMAGE = {
+  path: "/opengraph-image",
+  width: 1200,
+  height: 630,
+} as const;
 
 export type OpenGraphType = "website" | "article" | "profile" | "book";
 
@@ -20,7 +25,7 @@ export interface BuildPageMetadataInput {
   keywords?: readonly string[];
   /** Open Graph type — defaults to `"website"`. */
   type?: OpenGraphType;
-  /** Optional OG/Twitter image. Defaults to `/tessa-short-logo.png`. */
+  /** Optional OG/Twitter image. Defaults to `/opengraph-image` (1200×630). */
   image?: {
     url: string;
     alt?: string;
@@ -62,6 +67,8 @@ export interface BuildPageMetadataInput {
   canonicalOverride?: string;
   /** Handle used as `twitter:site`, e.g. `@tessaeng`. */
   twitterSite?: string;
+  /** Locales advertised in hreflang. Empty inherits every routed locale. */
+  availableLocales?: readonly string[];
 }
 
 export function parseCanonicalOverride(value: string | undefined): string | undefined {
@@ -104,60 +111,82 @@ function toInternalCanonicalPath(path: string): string {
   return normalized.length === 0 ? "/" : normalized;
 }
 
+export function isSamePublicHost(url: URL, siteOrigin: string): boolean {
+  try {
+    return url.hostname.toLowerCase() === new URL(siteOrigin).hostname.toLowerCase();
+  } catch {
+    return false;
+  }
+}
+
+export function languagesForPath(
+  path: string,
+  availableLocales: readonly string[] = routing.locales,
+): Record<string, string> {
+  const locales = availableLocales.length > 0 ? availableLocales : routing.locales;
+  const languages = Object.fromEntries(
+    locales.map((locale) => [locale, localePath(locale, path)] as const),
+  );
+  const xDefaultLocale = locales.includes(routing.defaultLocale)
+    ? routing.defaultLocale
+    : locales[0];
+  if (xDefaultLocale) {
+    languages["x-default"] = localePath(xDefaultLocale, path);
+  }
+  return languages;
+}
+
 export function resolveCanonicalAndLanguages(input: {
   locale: string;
   path: string;
   canonicalOverride?: string;
   siteOrigin: string;
   alternateLanguages?: Record<string, string>;
+  availableLocales?: readonly string[];
 }): {
   canonical: string;
   languages: Record<string, string> | undefined;
   isExternalCanonical: boolean;
 } {
   const override = parseCanonicalOverride(input.canonicalOverride);
-  const defaultLanguages =
+  const languagesOf = (path: string): Record<string, string> =>
     input.alternateLanguages ??
-    Object.fromEntries([
-      ...routing.locales.map((locale) => [locale, localePath(locale, input.path)] as const),
-      ["x-default", localePath(routing.defaultLocale, input.path)] as const,
-    ]);
+    languagesForPath(path, input.availableLocales ?? routing.locales);
 
   if (!override) {
     return {
       canonical: localePath(input.locale, input.path),
-      languages: defaultLanguages,
+      languages: languagesOf(input.path),
       isExternalCanonical: false,
     };
   }
 
+  let internalPath: string | undefined;
+
   if (/^https?:\/\//i.test(override)) {
     try {
       const url = new URL(override);
-      const origin = new URL(input.siteOrigin).origin;
-      if (url.origin === origin) {
-        const internalPath = toInternalCanonicalPath(url.pathname);
-        return {
-          canonical: localePath(input.locale, internalPath),
-          languages: defaultLanguages,
-          isExternalCanonical: false,
-        };
+      if (isSamePublicHost(url, input.siteOrigin)) {
+        internalPath = toInternalCanonicalPath(url.pathname);
       }
     } catch {
       // Fall through to the external-literal behaviour.
     }
 
-    return {
-      canonical: override,
-      languages: undefined,
-      isExternalCanonical: true,
-    };
+    if (internalPath === undefined) {
+      return {
+        canonical: override,
+        languages: undefined,
+        isExternalCanonical: true,
+      };
+    }
+  } else {
+    internalPath = toInternalCanonicalPath(override);
   }
 
-  const internalPath = toInternalCanonicalPath(override);
   return {
     canonical: localePath(input.locale, internalPath),
-    languages: defaultLanguages,
+    languages: languagesOf(internalPath),
     isExternalCanonical: false,
   };
 }
@@ -225,6 +254,7 @@ export function buildPageMetadata(input: BuildPageMetadataInput): Metadata {
     socialDescription,
     canonicalOverride,
     twitterSite,
+    availableLocales,
   } = input;
 
   const resolvedShortName = shortName ?? SITE.shortName;
@@ -243,6 +273,7 @@ export function buildPageMetadata(input: BuildPageMetadataInput): Metadata {
     canonicalOverride,
     siteOrigin: SITE.domain,
     alternateLanguages,
+    availableLocales,
   });
   const absoluteUrl = /^https?:\/\//i.test(canonical)
     ? canonical
@@ -265,10 +296,10 @@ export function buildPageMetadata(input: BuildPageMetadataInput): Metadata {
       ]
     : [
         {
-          url: `${SITE.domain}${TESSA_SHORT_LOGO.path}`,
+          url: `${SITE.domain}${DEFAULT_OG_IMAGE.path}`,
           alt: resolvedSiteName,
-          width: TESSA_SHORT_LOGO.width,
-          height: TESSA_SHORT_LOGO.height,
+          width: DEFAULT_OG_IMAGE.width,
+          height: DEFAULT_OG_IMAGE.height,
         },
       ];
 

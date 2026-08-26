@@ -105,6 +105,7 @@ export interface ServicesPageItem {
   exampleVideoUrl: string;
   backgroundImageUrl: string;
   images: ServicesPageImage[];
+  updatedAt?: string;
 }
 
 export interface ClientLogo {
@@ -233,6 +234,7 @@ export interface PublicContentResponse {
   };
   publishedAt: string | null;
   updatedAt: string | null;
+  availableLocales?: string[];
 }
 
 export interface PublicClientsResponse {

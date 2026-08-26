@@ -19,6 +19,7 @@ export interface BlogArticleListItemDto {
   createdAt: string;
   updatedAt: string;
   author: BlogArticleAuthorDto;
+  availableLocales?: string[];
 }
 
 export type BlogArticleDto = BlogArticleListItemDto;

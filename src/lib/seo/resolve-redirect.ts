@@ -18,11 +18,30 @@ export function resolveRedirect(
   path: string,
   redirects: readonly PublicRedirect[],
 ): ResolvedRedirect | null {
-  const normalized =
+  const byFrom = new Map(
+    redirects.map((entry) => [entry.fromPath, entry] as const),
+  );
+  const seen = new Set<string>();
+  let current =
     pathWithoutLocalePrefix(path).replace(/\/+$/, "").toLowerCase() || "/";
-  const match = redirects.find((entry) => entry.fromPath === normalized);
-  if (!match) return null;
-  return { toPath: match.toPath, statusCode: match.statusCode };
+  let last: PublicRedirect | undefined;
+  const maxHops = 5;
+
+  for (let hop = 0; hop < maxHops; hop += 1) {
+    const match = byFrom.get(current);
+    if (!match) break;
+    if (seen.has(current)) return null;
+    seen.add(current);
+    last = match;
+    if (/^https?:\/\//i.test(match.toPath)) {
+      return { toPath: match.toPath, statusCode: last.statusCode };
+    }
+    current = match.toPath.replace(/\/+$/, "").toLowerCase() || "/";
+  }
+
+  if (!last) return null;
+  if (byFrom.has(current)) return null;
+  return { toPath: last.toPath, statusCode: last.statusCode };
 }
 
 /**

@@ -22,7 +22,8 @@ import {
 import { sanitizeArticleHtml } from "@/lib/blog/sanitize-article-html";
 import { resolveHeadingImageUrl } from "@/lib/heading-image";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
-import { buildPageMetadata } from "@/lib/seo/metadata";
+import { buildPageMetadata, languagesForPath } from "@/lib/seo/metadata";
+import { resolveSiteSeo, siteSeoMetadataDefaults } from "@/lib/seo/page-seo";
 import { redirectIfNeeded } from "@/lib/seo/apply-redirect";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 import { localePath, routing } from "@/i18n/routing";
@@ -48,6 +49,11 @@ async function getBlogAlternateLanguages(
   currentLocale: string,
   currentArticle: Awaited<ReturnType<typeof fetchBlogArticleBySlug>>,
 ): Promise<Record<string, string>> {
+  const advertised = currentArticle?.availableLocales;
+  if (advertised && advertised.length > 0) {
+    return languagesForPath(`/blog/${slug}`, advertised);
+  }
+
   const entries = await Promise.all(
     routing.locales.map(async (locale) => {
       const article =
@@ -76,11 +82,16 @@ export async function generateMetadata({
   params,
 }: BlogPostPageProps): Promise<Metadata> {
   const { locale, slug } = await params;
-  const article = await fetchBlogArticleBySlug(slug, locale);
+  const [article, site] = await Promise.all([
+    fetchBlogArticleBySlug(slug, locale),
+    resolveSiteSeo(locale),
+  ]);
+  const defaults = siteSeoMetadataDefaults(site);
 
   if (!article) {
     await redirectIfNeeded(locale, `/blog/${slug}`);
     return buildPageMetadata({
+      ...defaults,
       locale,
       path: `/blog/${slug}`,
       title: "404",
@@ -97,12 +108,14 @@ export async function generateMetadata({
   );
 
   return buildPageMetadata({
+    ...defaults,
     locale,
     path: `/blog/${slug}`,
     title: post.title,
     description: post.description,
     type: "article",
     publishedAt: post.publishedAt,
+    modifiedAt: post.modifiedAt,
     image: {
       url: absoluteImageUrl(post.imageSrc),
       alt: post.imageAlt,
@@ -155,6 +168,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     headline: post.title,
     description: post.description,
     datePublished: post.publishedAt,
+    dateModified: post.modifiedAt ?? post.publishedAt,
     inLanguage: locale,
     author: {
       "@type": "Person",

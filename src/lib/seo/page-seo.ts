@@ -1,3 +1,4 @@
+import { localePath, routing } from "@/i18n/routing";
 import type { Metadata } from "next";
 import { fetchPublicContent } from "@/lib/api/content";
 import type {
@@ -7,7 +8,12 @@ import type {
   SeoDefaults,
   SeoPageKey,
 } from "@/lib/api/types";
-import { buildPageMetadata, parseCanonicalOverride, type BuildPageMetadataInput } from "./metadata";
+import {
+  buildPageMetadata,
+  parseCanonicalOverride,
+  resolveCanonicalAndLanguages,
+  type BuildPageMetadataInput,
+} from "./metadata";
 import { SITE } from "./schemas";
 
 export interface ResolvedSiteSeo {
@@ -21,6 +27,7 @@ export interface ResolvedSiteSeo {
   bingSiteVerification: string | null;
   twitterSite: string | null;
   allowIndexing: boolean;
+  availableLocales: readonly string[];
 }
 
 function asNonEmpty(value: unknown): string | null {
@@ -44,6 +51,7 @@ function parseKeywords(value: unknown): string[] | null {
 
 export function resolveSiteSeoFromContent(
   content: PublicContentResponse["content"] | null | undefined,
+  availableLocales?: readonly string[] | null,
 ): ResolvedSiteSeo {
   const raw = content?.seoDefaults as SeoDefaults | undefined;
   const siteName = asNonEmpty(raw?.siteName) ?? SITE.name;
@@ -66,6 +74,10 @@ export function resolveSiteSeoFromContent(
     bingSiteVerification: asNonEmpty(raw?.bingSiteVerification),
     twitterSite: asNonEmpty(raw?.twitterSite),
     allowIndexing: asBoolean(raw?.allowIndexing, true),
+    availableLocales:
+      availableLocales && availableLocales.length > 0
+        ? availableLocales
+        : routing.locales,
   };
 }
 
@@ -114,7 +126,7 @@ export function resolvePageSeoEntryFromContent(
 
 export async function resolveSiteSeo(locale?: string): Promise<ResolvedSiteSeo> {
   const data = await fetchPublicContent(locale);
-  return resolveSiteSeoFromContent(data?.content);
+  return resolveSiteSeoFromContent(data?.content, data?.availableLocales);
 }
 
 export async function resolvePageSeoEntry(
@@ -123,6 +135,48 @@ export async function resolvePageSeoEntry(
 ): Promise<PageSeoEntry | null> {
   const data = await fetchPublicContent(locale);
   return resolvePageSeoEntryFromContent(data?.content, pageKey);
+}
+
+export function siteSeoMetadataDefaults(
+  site: ResolvedSiteSeo,
+): Pick<
+  BuildPageMetadataInput,
+  | "allowIndexing"
+  | "twitterSite"
+  | "siteName"
+  | "shortName"
+  | "globalKeywords"
+  | "availableLocales"
+  | "image"
+> {
+  return {
+    allowIndexing: site.allowIndexing,
+    twitterSite: site.twitterSite ?? undefined,
+    siteName: site.siteName,
+    shortName: site.shortName,
+    globalKeywords: site.keywords,
+    availableLocales: site.availableLocales,
+    ...(site.defaultOgImageUrl ? { image: { url: site.defaultOgImageUrl } } : {}),
+  };
+}
+
+export function shouldIncludeManagedPageInSitemap(
+  pagePath: string,
+  canonicalOverride: string | undefined,
+  siteOrigin: string,
+): boolean {
+  const override = parseCanonicalOverride(canonicalOverride);
+  if (!override) return true;
+
+  const resolved = resolveCanonicalAndLanguages({
+    locale: routing.defaultLocale,
+    path: pagePath,
+    canonicalOverride: override,
+    siteOrigin,
+  });
+
+  if (resolved.isExternalCanonical) return false;
+  return resolved.canonical === localePath(routing.defaultLocale, pagePath);
 }
 
 export interface ManagedPageMetadataInput {
@@ -166,6 +220,7 @@ export async function buildManagedPageMetadata(
     shortName: site.shortName,
     globalKeywords: site.keywords,
     allowIndexing: site.allowIndexing,
+    availableLocales: site.availableLocales,
     ...(page?.socialTitle ? { socialTitle: page.socialTitle } : {}),
     ...(page?.socialDescription ? { socialDescription: page.socialDescription } : {}),
     ...(page?.canonicalUrl ? { canonicalOverride: page.canonicalUrl } : {}),

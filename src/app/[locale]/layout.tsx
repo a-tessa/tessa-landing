@@ -14,6 +14,7 @@ import {
 } from "@/lib/seo/schemas";
 import { resolveSiteSeo } from "@/lib/seo/page-seo";
 import { JsonLd } from "@/lib/seo/jsonld";
+import { languagesForPath } from "@/lib/seo/metadata";
 import { localePath, routing } from "@/i18n/routing";
 import type { Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
@@ -26,6 +27,7 @@ import {
   resolveCompanyInformation,
   toPublicCompanyContact,
 } from "@/lib/company-information";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -63,10 +65,7 @@ export async function generateMetadata({
   const site = await resolveSiteSeo(locale);
   const shouldIndex = isSearchIndexingEnabled() && site.allowIndexing;
 
-  const languages = Object.fromEntries([
-    ...routing.locales.map((l) => [l, localePath(l)] as const),
-    ["x-default", localePath(routing.defaultLocale)] as const,
-  ]);
+  const languages = languagesForPath("/", site.availableLocales);
 
   return {
     metadataBase: new URL(SITE.domain),
@@ -153,6 +152,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} suppressHydrationWarning>
+      <SpeedInsights />
       <GoogleTagManager gtmId="GTM-MW6Q3VL" />
       <body
         className={cn(

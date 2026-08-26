@@ -1,14 +1,19 @@
 import type { MetadataRoute } from "next";
-import { fetchBlogArticles } from "@/lib/api/blog";
 import type { BlogArticleListItemDto } from "@/lib/api/blog.types";
-import { fetchPublicContent, getServicesPagesWithMeta } from "@/lib/api/content";
+import {
+  fetchSeoIndexBlogArticles,
+  fetchSeoIndexContent,
+  fetchSeoIndexServices,
+} from "@/lib/api/seo-index";
 import { SITEMAP_PAGE_KEYS, SEO_PAGE_PATHS } from "@/lib/api/types";
 import { STATIC_SERVICE_SLUGS } from "@/lib/servicos/static-pages";
 import { isSearchIndexingEnabled, SITE } from "@/lib/seo/schemas";
 import {
   resolvePageSeoEntryFromContent,
   resolveSiteSeoFromContent,
+  shouldIncludeManagedPageInSitemap,
 } from "@/lib/seo/page-seo";
+import { resolveSitemapLastModified } from "@/lib/seo/sitemap-last-modified";
 import { localePath, routing } from "@/i18n/routing";
 
 const DEFAULT_SITEMAP_META = {
@@ -82,7 +87,7 @@ async function fetchAllBlogArticles(
   locale: string,
 ): Promise<BlogArticleListItemDto[]> {
   const perPage = 100;
-  const firstPage = await fetchBlogArticles({
+  const firstPage = await fetchSeoIndexBlogArticles({
     page: 1,
     perPage,
     order: "desc",
@@ -107,7 +112,8 @@ async function fetchAllBlogArticles(
   const remainingPages = await mapWithConcurrency(
     remainingPageNumbers,
     BLOG_FETCH_CONCURRENCY,
-    (page) => fetchBlogArticles({ page, perPage, order: "desc", locale }),
+    (page) =>
+      fetchSeoIndexBlogArticles({ page, perPage, order: "desc", locale }),
   );
 
   const articles = [...firstPage.articles];
@@ -146,13 +152,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return [];
   }
 
-  const publicContent = await fetchPublicContent();
-  const site = resolveSiteSeoFromContent(publicContent?.content);
+  const publicContent = await fetchSeoIndexContent();
+  const site = resolveSiteSeoFromContent(
+    publicContent?.content,
+    publicContent?.availableLocales,
+  );
   if (!site.allowIndexing) {
     return [];
   }
 
-  const { locales } = routing;
+  const locales = routing.locales.filter((locale) =>
+    site.availableLocales.includes(locale),
+  );
+  const advertisedLocales = locales.length > 0 ? locales : routing.locales;
+  const siteLastModified = resolveSitemapLastModified(
+    publicContent?.publishedAt,
+  );
 
   const staticEntries = SITEMAP_PAGE_KEYS.flatMap((pageKey) => {
     const pageSeo = resolvePageSeoEntryFromContent(
@@ -164,28 +179,40 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
 
     const path = SEO_PAGE_PATHS[pageKey];
+    if (
+      !shouldIncludeManagedPageInSitemap(
+        path,
+        pageSeo?.canonicalUrl,
+        SITE.domain,
+      )
+    ) {
+      return [];
+    }
+
     const defaults = DEFAULT_SITEMAP_META[pageKey];
     const changeFrequency =
       pageSeo?.changeFrequency ?? defaults.changeFrequency;
     const priority = pageSeo?.priority ?? defaults.priority;
 
-    return locales.map((locale) => ({
+    return advertisedLocales.map((locale) => ({
       url: absoluteUrl(locale, path),
+      ...(siteLastModified ? { lastModified: siteLastModified } : {}),
       changeFrequency,
       priority,
       alternates: {
-        languages: buildLanguages(path),
+        languages: buildLanguages(path, advertisedLocales),
       },
     }));
   });
 
   const staticSlugSet = new Set<string>(STATIC_SERVICE_SLUGS);
   const servicesByLocale = await Promise.all(
-    locales.map(async (locale) => {
-      const { pages, updatedAt } = await getServicesPagesWithMeta(locale);
+    advertisedLocales.map(async (locale) => {
+      const { pages, publishedAt } = await fetchSeoIndexServices(locale);
       return {
         locale,
-        updatedAt,
+        publishedAt,
+        pages,
         slugs: [
           ...STATIC_SERVICE_SLUGS,
           ...pages
@@ -197,26 +224,43 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   );
   const serviceSlugLocales = mapSlugLocales(servicesByLocale);
 
-  const serviceEntries = servicesByLocale.flatMap(({ locale, slugs, updatedAt }) =>
-    slugs.map((slug) => ({
-      url: absoluteUrl(locale, `/servicos/${slug}`),
-      ...(updatedAt ? { lastModified: new Date(updatedAt) } : {}),
-      changeFrequency: "monthly" as const,
-      priority: 0.75,
-      alternates: {
-        languages: buildSlugLanguages(
-          serviceSlugLocales,
-          slug,
-          (s) => `/servicos/${s}`,
-        ),
-      },
-    })),
+  const serviceEntries = servicesByLocale.flatMap(
+    ({ locale, slugs, pages, publishedAt }) => {
+      const updatedAtBySlug = new Map(
+        pages.map((page) => [page.slug, page.updatedAt]),
+      );
+
+      return slugs.map((slug) => {
+        const lastModified = resolveSitemapLastModified(
+          updatedAtBySlug.get(slug),
+          publishedAt,
+        );
+
+        return {
+          url: absoluteUrl(locale, `/servicos/${slug}`),
+          ...(lastModified ? { lastModified } : {}),
+          changeFrequency: "monthly" as const,
+          priority: 0.75,
+          alternates: {
+            languages: buildSlugLanguages(
+              serviceSlugLocales,
+              slug,
+              (s) => `/servicos/${s}`,
+            ),
+          },
+        };
+      });
+    },
   );
 
   const blogByLocale = await Promise.all(
-    locales.map(async (locale) => ({
+    advertisedLocales.map(async (locale) => ({
       locale,
-      articles: await fetchAllBlogArticles(locale),
+      articles: (await fetchAllBlogArticles(locale)).filter(
+        (article) =>
+          !article.availableLocales ||
+          article.availableLocales.includes(locale),
+      ),
     })),
   );
   const blogSlugLocales = mapSlugLocales(

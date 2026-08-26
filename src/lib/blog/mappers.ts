@@ -68,6 +68,7 @@ export function toBlogPostFromListItem(dto: BlogArticleListItemDto): BlogPost {
     description: excerpt,
     body: [],
     publishedAt: toPublishedDate(dto),
+    modifiedAt: dto.updatedAt,
     author: {
       name: dto.author.name,
       initials: buildInitials(dto.author.name),

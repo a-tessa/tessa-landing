@@ -1,26 +1,19 @@
 import type { MetadataRoute } from "next";
-import { fetchPublicContent } from "@/lib/api/content";
+import { fetchSeoIndexContent } from "@/lib/api/seo-index";
 import { isSearchIndexingEnabled, SITE } from "@/lib/seo/schemas";
 import { resolveSiteSeoFromContent } from "@/lib/seo/page-seo";
+import { buildRobotsDocument } from "@/lib/seo/robots-document";
 
 export default async function robots(): Promise<MetadataRoute.Robots> {
-  if (!isSearchIndexingEnabled()) {
-    return {
-      rules: { userAgent: "*", disallow: "/" },
-    };
-  }
+  const publicContent = await fetchSeoIndexContent();
+  const site = resolveSiteSeoFromContent(
+    publicContent?.content,
+    publicContent?.availableLocales,
+  );
 
-  const publicContent = await fetchPublicContent();
-  const site = resolveSiteSeoFromContent(publicContent?.content);
-
-  if (!site.allowIndexing) {
-    return {
-      rules: { userAgent: "*", disallow: "/" },
-    };
-  }
-
-  return {
-    rules: { userAgent: "*", allow: "/" },
-    sitemap: `${SITE.domain}/sitemap.xml`,
-  };
+  return buildRobotsDocument({
+    searchIndexingEnabled: isSearchIndexingEnabled(),
+    allowIndexing: site.allowIndexing,
+    sitemapUrl: `${SITE.domain}/sitemap.xml`,
+  });
 }

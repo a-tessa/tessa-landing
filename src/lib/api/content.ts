@@ -99,12 +99,12 @@ export async function getBlogCategories(
 
 export async function getServicesPagesWithMeta(
   locale?: string,
-): Promise<{ pages: ServicesPageItem[]; updatedAt: string | null }> {
+): Promise<{ pages: ServicesPageItem[]; publishedAt: string | null }> {
   const data = await getPublicContent(locale);
   const list = data?.content.servicesPages;
   return {
     pages: Array.isArray(list) ? list : [],
-    updatedAt: data?.updatedAt ?? null,
+    publishedAt: data?.publishedAt ?? null,
   };
 }
 
@@ -171,6 +171,11 @@ export async function fetchPublicContent(
   locale?: string,
 ): Promise<PublicContentResponse | null> {
   return getPublicContent(locale);
+}
+
+export async function getSitePublishedAt(locale?: string): Promise<string | null> {
+  const data = await getPublicContent(locale);
+  return data?.publishedAt ?? null;
 }
 
 export async function getLandingContent(locale?: string) {

@@ -56,6 +56,24 @@ describe("resolveRedirect", () => {
     });
     expect(resolveRedirect("/pagina-que-nunca-existiu", redirects)).toBeNull();
   });
+
+  it("follows leftover hops to the terminal destination", () => {
+    expect(
+      resolveRedirect("/a", [
+        { fromPath: "/a", toPath: "/b", statusCode: 301 },
+        { fromPath: "/b", toPath: "/c", statusCode: 301 },
+      ]),
+    ).toEqual({ toPath: "/c", statusCode: 301 });
+  });
+
+  it("returns null when leftover hops form a cycle", () => {
+    expect(
+      resolveRedirect("/a", [
+        { fromPath: "/a", toPath: "/b", statusCode: 301 },
+        { fromPath: "/b", toPath: "/a", statusCode: 301 },
+      ]),
+    ).toBeNull();
+  });
 });
 
 describe("localizeRedirectTarget", () => {

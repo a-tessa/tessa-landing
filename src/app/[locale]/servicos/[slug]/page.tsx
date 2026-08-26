@@ -13,14 +13,16 @@ import { ServiceVideoPlayer } from "@/components/marketing/ServiceVideoPlayer";
 import { StaticServicePage } from "@/components/marketing/StaticServicePage";
 import { Testimonials } from "@/components/marketing/Testimonials";
 import { Button } from "@/components/ui/button";
-import { JsonLd } from "@/lib/seo/jsonld";
+import { JsonLd, buildVideoObjectJsonLd } from "@/lib/seo/jsonld";
 import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
-import { buildPageMetadata } from "@/lib/seo/metadata";
+import { buildPageMetadata, languagesForPath } from "@/lib/seo/metadata";
+import { resolveSiteSeo, siteSeoMetadataDefaults } from "@/lib/seo/page-seo";
 import { redirectIfNeeded } from "@/lib/seo/apply-redirect";
 import { fetchBlogArticles } from "@/lib/api/blog";
 import { fetchInstagramPosts } from "@/lib/api/instagram";
 import { getApprovedTestimonials } from "@/lib/api/testimonials";
 import {
+  fetchPublicContent,
   getHeadingImageUrl,
   getServicePageBySlug,
   getServicesPages,
@@ -35,9 +37,7 @@ import {
 import { cn, freeSectionShellSpacing, OPERATIONS_IMAGES } from "@/lib/utils";
 import { localePath, routing } from "@/i18n/routing";
 import {
-  getYouTubeThumbnail,
   getYouTubeVideoId,
-  getYouTubeWatchUrl,
 } from "@/lib/youtube";
 
 interface ServiceDetailPageProps {
@@ -65,7 +65,12 @@ async function getServiceAlternateLanguages(
   slug: string,
   currentLocale: string,
   currentService: Awaited<ReturnType<typeof getServicePageBySlug>>,
+  availableLocales?: readonly string[],
 ): Promise<Record<string, string>> {
+  if (availableLocales && availableLocales.length > 0) {
+    return languagesForPath(`/servicos/${slug}`, availableLocales);
+  }
+
   const entries = await Promise.all(
     routing.locales.map(async (locale) => {
       const service =
@@ -94,6 +99,8 @@ export async function generateMetadata({
   params,
 }: ServiceDetailPageProps): Promise<Metadata> {
   const { locale, slug } = await params;
+  const site = await resolveSiteSeo(locale);
+  const defaults = siteSeoMetadataDefaults(site);
 
   if (isStaticServiceSlug(slug)) {
     const t = await getTranslations({
@@ -110,6 +117,7 @@ export async function generateMetadata({
       : [];
 
     return buildPageMetadata({
+      ...defaults,
       locale,
       path: `/servicos/${slug}`,
       title,
@@ -123,6 +131,7 @@ export async function generateMetadata({
   if (!service) {
     await redirectIfNeeded(locale, `/servicos/${slug}`);
     return buildPageMetadata({
+      ...defaults,
       locale,
       path: `/servicos/${slug}`,
       title: "404",
@@ -135,9 +144,11 @@ export async function generateMetadata({
     slug,
     locale,
     service,
+    site.availableLocales,
   );
 
   return buildPageMetadata({
+    ...defaults,
     locale,
     path: `/servicos/${service.slug}`,
     title: service.title,
@@ -160,7 +171,7 @@ export default async function ServiceDetailPage({
     return <StaticServicePage locale={locale} slug={slug} />;
   }
 
-  const [service, servicesPages, t, ts, testimonials, servicesHeadingImageUrl] =
+  const [service, servicesPages, t, ts, testimonials, servicesHeadingImageUrl, publicContent] =
     await Promise.all([
       getServicePageBySlug(slug, locale),
       getServicesPages(locale),
@@ -168,6 +179,7 @@ export default async function ServiceDetailPage({
       getTranslations({ locale, namespace: "pages.servicos" }),
       getApprovedTestimonials(),
       getHeadingImageUrl("servicos", locale),
+      fetchPublicContent(locale),
     ]);
 
   if (!service) {
@@ -232,20 +244,12 @@ export default async function ServiceDetailPage({
 
   const videoId = getYouTubeVideoId(service.exampleVideoUrl);
   const videoJsonLd = videoId
-    ? {
-      "@context": "https://schema.org",
-      "@type": "VideoObject",
-      name: `${service.title} — ${t("whatHappens").replace(/\n/g, " ")}`,
-      description: service.subtitle,
-      thumbnailUrl: [getYouTubeThumbnail(videoId)],
-      contentUrl: getYouTubeWatchUrl(videoId),
-      embedUrl: `https://www.youtube-nocookie.com/embed/${videoId}`,
-      publisher: {
-        "@type": "Organization",
-        name: SITE.name,
-        url: SITE.domain,
-      },
-    }
+    ? buildVideoObjectJsonLd({
+        name: `${service.title} — ${t("whatHappens").replace(/\n/g, " ")}`,
+        description: service.subtitle,
+        videoId,
+        uploadDate: publicContent?.publishedAt ?? null,
+      })
     : null;
 
   return (

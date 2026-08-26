@@ -3,8 +3,8 @@ import { StaticServiceCenteredVideoSection } from "@/components/marketing/Static
 import { StaticServiceInfoColumnsSection } from "@/components/marketing/StaticServiceInfoColumnsSection";
 import { StaticServiceIntroSection } from "@/components/marketing/StaticServiceIntroSection";
 import { StaticServiceWhatIsSection } from "@/components/marketing/StaticServiceWhatIsSection";
-import { JsonLd } from "@/lib/seo/jsonld";
-import { SITE } from "@/lib/seo/schemas";
+import { JsonLd, buildVideoObjectJsonLd } from "@/lib/seo/jsonld";
+import { fetchPublicContent } from "@/lib/api/content";
 import { StaticServiceSegmentsSection } from "@/components/marketing/StaticServiceSegmentsSection";
 import { StaticServiceSplitFeatureSection } from "@/components/marketing/StaticServiceSplitFeatureSection";
 import {
@@ -15,11 +15,7 @@ import {
   getEstruturaDeSoloClampPatentImage,
 } from "@/lib/servicos/estrutura-de-solo-content";
 import { getStaticServiceVideoUrl } from "@/lib/servicos/static-content";
-import {
-  getYouTubeThumbnail,
-  getYouTubeVideoId,
-  getYouTubeWatchUrl,
-} from "@/lib/youtube";
+import { getYouTubeVideoId } from "@/lib/youtube";
 
 const SLUG = "estrutura-de-solo" as const;
 
@@ -34,6 +30,7 @@ export async function EstruturaDeSoloSections({
     locale,
     namespace: "pages.staticServices",
   });
+  const uploadDate = (await fetchPublicContent(locale))?.publishedAt ?? null;
 
   const videoUrl = getStaticServiceVideoUrl(SLUG, locale);
   const videoId = videoUrl ? getYouTubeVideoId(videoUrl) : null;
@@ -52,20 +49,12 @@ export async function EstruturaDeSoloSections({
   }));
 
   const videoJsonLd = videoId
-    ? {
-        "@context": "https://schema.org",
-        "@type": "VideoObject",
+    ? buildVideoObjectJsonLd({
         name: videoTitle,
         description: videoSubtitle,
-        thumbnailUrl: [getYouTubeThumbnail(videoId)],
-        contentUrl: getYouTubeWatchUrl(videoId),
-        embedUrl: `https://www.youtube-nocookie.com/embed/${videoId}`,
-        publisher: {
-          "@type": "Organization",
-          name: SITE.name,
-          url: SITE.domain,
-        },
-      }
+        videoId,
+        uploadDate,
+      })
     : null;
 
   return (

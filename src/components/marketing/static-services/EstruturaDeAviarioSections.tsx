@@ -3,18 +3,14 @@ import { StaticServiceBenefitsChecklistSection } from "@/components/marketing/St
 import { StaticServiceVideoSection } from "@/components/marketing/StaticServiceVideoSection";
 import { StaticServiceIntroSection } from "@/components/marketing/StaticServiceIntroSection";
 import { StaticServiceSideBackgroundSection } from "@/components/marketing/StaticServiceSideBackgroundSection";
-import { JsonLd } from "@/lib/seo/jsonld";
-import { SITE } from "@/lib/seo/schemas";
+import { JsonLd, buildVideoObjectJsonLd } from "@/lib/seo/jsonld";
+import { fetchPublicContent } from "@/lib/api/content";
 import {
   ESTRUTURA_DE_AVIARIO_CHECKLIST_ITEM_IDS,
   ESTRUTURA_DE_AVIARIO_QUALITY_BACKGROUND_SRC,
 } from "@/lib/servicos/estrutura-de-aviario-content";
 import { getStaticServiceVideoUrl } from "@/lib/servicos/static-content";
-import {
-  getYouTubeThumbnail,
-  getYouTubeVideoId,
-  getYouTubeWatchUrl,
-} from "@/lib/youtube";
+import { getYouTubeVideoId } from "@/lib/youtube";
 
 const SLUG = "estrutura-de-aviario" as const;
 
@@ -29,6 +25,7 @@ export async function EstruturaDeAviarioSections({
     locale,
     namespace: "pages.staticServices",
   });
+  const uploadDate = (await fetchPublicContent(locale))?.publishedAt ?? null;
 
   const videoUrl = getStaticServiceVideoUrl(SLUG, locale);
   const videoId = videoUrl ? getYouTubeVideoId(videoUrl) : null;
@@ -40,20 +37,12 @@ export async function EstruturaDeAviarioSections({
   }));
 
   const videoJsonLd = videoId
-    ? {
-        "@context": "https://schema.org",
-        "@type": "VideoObject",
+    ? buildVideoObjectJsonLd({
         name: videoTitle,
         description: videoSubtitle,
-        thumbnailUrl: [getYouTubeThumbnail(videoId)],
-        contentUrl: getYouTubeWatchUrl(videoId),
-        embedUrl: `https://www.youtube-nocookie.com/embed/${videoId}`,
-        publisher: {
-          "@type": "Organization",
-          name: SITE.name,
-          url: SITE.domain,
-        },
-      }
+        videoId,
+        uploadDate,
+      })
     : null;
 
   return (

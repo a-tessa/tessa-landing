@@ -3,18 +3,14 @@ import { StaticServiceBenefitsChecklistSection } from "@/components/marketing/St
 import { StaticServiceImageSplitSection } from "@/components/marketing/StaticServiceImageSplitSection";
 import { StaticServiceIntroSection } from "@/components/marketing/StaticServiceIntroSection";
 import { StaticServiceVideoSection } from "@/components/marketing/StaticServiceVideoSection";
-import { JsonLd } from "@/lib/seo/jsonld";
-import { SITE } from "@/lib/seo/schemas";
+import { JsonLd, buildVideoObjectJsonLd } from "@/lib/seo/jsonld";
+import { fetchPublicContent } from "@/lib/api/content";
 import {
   CRECHES_CHECKLIST_ITEM_IDS,
   CRECHES_FEATURE_IMAGE_SRC,
 } from "@/lib/servicos/estruturas-para-creches-content";
 import { getStaticServiceVideoUrl } from "@/lib/servicos/static-content";
-import {
-  getYouTubeThumbnail,
-  getYouTubeVideoId,
-  getYouTubeWatchUrl,
-} from "@/lib/youtube";
+import { getYouTubeVideoId } from "@/lib/youtube";
 
 const SLUG = "estruturas-para-creches" as const;
 
@@ -29,6 +25,7 @@ export async function EstruturasParaCrechesSections({
     locale,
     namespace: "pages.staticServices",
   });
+  const uploadDate = (await fetchPublicContent(locale))?.publishedAt ?? null;
 
   const videoUrl = getStaticServiceVideoUrl(SLUG, locale);
   const videoId = videoUrl ? getYouTubeVideoId(videoUrl) : null;
@@ -40,20 +37,12 @@ export async function EstruturasParaCrechesSections({
   }));
 
   const videoJsonLd = videoId
-    ? {
-        "@context": "https://schema.org",
-        "@type": "VideoObject",
+    ? buildVideoObjectJsonLd({
         name: videoTitle,
         description: videoSubtitle,
-        thumbnailUrl: [getYouTubeThumbnail(videoId)],
-        contentUrl: getYouTubeWatchUrl(videoId),
-        embedUrl: `https://www.youtube-nocookie.com/embed/${videoId}`,
-        publisher: {
-          "@type": "Organization",
-          name: SITE.name,
-          url: SITE.domain,
-        },
-      }
+        videoId,
+        uploadDate,
+      })
     : null;
 
   return (

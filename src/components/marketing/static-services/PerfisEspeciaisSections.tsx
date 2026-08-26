@@ -7,8 +7,8 @@ import { StaticServiceComparisonTableSection } from "@/components/marketing/Stat
 import { StaticServiceProcessStepsSection } from "@/components/marketing/StaticServiceProcessStepsSection";
 import { StaticServiceSegmentsSection } from "@/components/marketing/StaticServiceSegmentsSection";
 import { StaticServiceWhatIsSection } from "@/components/marketing/StaticServiceWhatIsSection";
-import { JsonLd } from "@/lib/seo/jsonld";
-import { SITE } from "@/lib/seo/schemas";
+import { JsonLd, buildVideoObjectJsonLd } from "@/lib/seo/jsonld";
+import { fetchPublicContent } from "@/lib/api/content";
 import {
   PERFIS_ESPECIAIS_INFO_CARD_IDS,
   PERFIS_ESPECIAIS_CLIENT_LOGOS,
@@ -26,11 +26,7 @@ import {
   PERFIS_ESPECIAIS_SEGMENT_IDS,
 } from "@/lib/servicos/perfis-especiais-content";
 import { getStaticServiceVideoUrl } from "@/lib/servicos/static-content";
-import {
-  getYouTubeThumbnail,
-  getYouTubeVideoId,
-  getYouTubeWatchUrl,
-} from "@/lib/youtube";
+import { getYouTubeVideoId } from "@/lib/youtube";
 
 const SLUG = "perfis-especiais" as const;
 
@@ -45,6 +41,7 @@ export async function PerfisEspeciaisSections({
     locale,
     namespace: "pages.staticServices",
   });
+  const uploadDate = (await fetchPublicContent(locale))?.publishedAt ?? null;
 
   const videoUrl = getStaticServiceVideoUrl(SLUG, locale);
   const videoId = videoUrl ? getYouTubeVideoId(videoUrl) : null;
@@ -83,20 +80,12 @@ export async function PerfisEspeciaisSections({
   }));
 
   const videoJsonLd = videoId
-    ? {
-        "@context": "https://schema.org",
-        "@type": "VideoObject",
+    ? buildVideoObjectJsonLd({
         name: videoTitle,
         description: videoSubtitle,
-        thumbnailUrl: [getYouTubeThumbnail(videoId)],
-        contentUrl: getYouTubeWatchUrl(videoId),
-        embedUrl: `https://www.youtube-nocookie.com/embed/${videoId}`,
-        publisher: {
-          "@type": "Organization",
-          name: SITE.name,
-          url: SITE.domain,
-        },
-      }
+        videoId,
+        uploadDate,
+      })
     : null;
 
   return (

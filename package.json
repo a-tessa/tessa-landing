@@ -7,13 +7,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run src/lib/industry-content.test.ts src/lib/operations-image.test.ts src/lib/operations-content.test.ts src/lib/company-information.test.ts src/lib/results-content.test.ts src/lib/api/create-testimonial-request.test.ts src/lib/seo/page-seo.test.ts src/lib/seo/resolve-redirect.test.ts src/components/marketing/IndustrySection.test.tsx src/components/marketing/BentoCarousel.test.tsx src/components/marketing/OperationsGalleryImage.test.tsx src/components/marketing/Operations.test.tsx src/components/marketing/homepage-sections.test.tsx src/components/marketing/Results.test.tsx"
+    "test": "vitest run src/lib/industry-content.test.ts src/lib/operations-image.test.ts src/lib/operations-content.test.ts src/lib/company-information.test.ts src/lib/results-content.test.ts src/lib/api/create-testimonial-request.test.ts src/lib/seo/page-seo.test.ts src/lib/seo/resolve-redirect.test.ts src/lib/seo/jsonld.test.ts src/lib/seo/sitemap-last-modified.test.ts src/lib/seo/authorize-seo-index-revalidation.test.ts src/app/api/revalidate-seo-index/route.test.ts src/components/marketing/IndustrySection.test.tsx src/components/marketing/BentoCarousel.test.tsx src/components/marketing/OperationsGalleryImage.test.tsx src/components/marketing/Operations.test.tsx src/components/marketing/homepage-sections.test.tsx src/components/marketing/Results.test.tsx"
   },
   "dependencies": {
     "@next/third-parties": "^16.2.4",
     "@radix-ui/react-slot": "^1.2.4",
     "@tabler/icons-react": "^3.40.0",
     "@tailwindcss/cli": "^4.2.1",
+    "@vercel/speed-insights": "^2.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.6.0",
