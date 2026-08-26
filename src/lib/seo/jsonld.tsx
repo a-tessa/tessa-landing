@@ -49,3 +49,54 @@ export function buildVideoObjectJsonLd(input: {
     },
   };
 }
+
+function absoluteSeoAssetUrl(src: string): string {
+  return src.startsWith("http") ? src : `${SITE.domain}${src}`;
+}
+
+export interface BlogPostingJsonLdInput {
+  headline: string;
+  description: string;
+  datePublished: string;
+  dateModified: string;
+  inLanguage: string;
+  authorName: string;
+  authorImageUrl?: string | null;
+  pageUrl: string;
+  imageUrl: string;
+}
+
+export function buildBlogPostingJsonLd(
+  input: BlogPostingJsonLdInput,
+): Record<string, unknown> {
+  const authorImage = input.authorImageUrl?.trim();
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: input.headline,
+    description: input.description,
+    datePublished: input.datePublished,
+    dateModified: input.dateModified,
+    inLanguage: input.inLanguage,
+    author: {
+      "@type": "Person",
+      name: input.authorName,
+      ...(authorImage ? { image: absoluteSeoAssetUrl(authorImage) } : {}),
+    },
+    publisher: {
+      "@type": "Organization",
+      name: SITE.name,
+      url: SITE.domain,
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE.domain}/tessa-logo.svg`,
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": input.pageUrl,
+    },
+    image: absoluteSeoAssetUrl(input.imageUrl),
+  };
+}

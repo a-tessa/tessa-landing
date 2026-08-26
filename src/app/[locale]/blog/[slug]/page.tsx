@@ -8,7 +8,7 @@ import { BlogAuthorAvatar } from "@/components/marketing/BlogAuthorAvatar";
 import { BlogFeatureCard } from "@/components/marketing/BlogFeatureCard";
 import { Footer } from "@/components/marketing/Footer";
 import { Heading } from "@/components/marketing/Heading";
-import { JsonLd } from "@/lib/seo/jsonld";
+import { JsonLd, buildBlogPostingJsonLd } from "@/lib/seo/jsonld";
 import {
   fetchBlogArticleBySlug,
   fetchBlogArticles,
@@ -162,33 +162,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const t = await getTranslations({ locale, namespace: "pages.blog" });
   const bt = await getTranslations({ locale, namespace: "blog" });
 
-  const postJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
+  const postJsonLd = buildBlogPostingJsonLd({
     headline: post.title,
     description: post.description,
     datePublished: post.publishedAt,
     dateModified: post.modifiedAt ?? post.publishedAt,
     inLanguage: locale,
-    author: {
-      "@type": "Person",
-      name: post.author.name,
-    },
-    publisher: {
-      "@type": "Organization",
-      name: SITE.name,
-      url: SITE.domain,
-      logo: {
-        "@type": "ImageObject",
-        url: `${SITE.domain}/tessa-logo.svg`,
-      },
-    },
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": `${SITE.domain}${localePath(locale, `/blog/${slug}`)}`,
-    },
-    image: absoluteImageUrl(post.imageSrc),
-  };
+    authorName: post.author.name,
+    authorImageUrl: post.author.avatarUrl,
+    pageUrl: `${SITE.domain}${localePath(locale, `/blog/${slug}`)}`,
+    imageUrl: post.imageSrc,
+  });
 
   return (
     <>
