@@ -95,6 +95,7 @@ export interface CompanyInformation {
 
 export interface ServicesPageImage {
   imgUrl: string;
+  alt?: string;
 }
 
 export interface ServicesPageItem {
@@ -104,6 +105,7 @@ export interface ServicesPageItem {
   subtitle: string;
   exampleVideoUrl: string;
   backgroundImageUrl: string;
+  backgroundImageAlt?: string;
   images: ServicesPageImage[];
   updatedAt?: string;
 }

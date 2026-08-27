@@ -20,7 +20,10 @@ import { EstruturasParaCrechesSections } from "@/components/marketing/static-ser
 import { PerfisEspeciaisSections } from "@/components/marketing/static-services/PerfisEspeciaisSections";
 import { getMergedServiceNavItems } from "@/lib/servicos/nav";
 import type { StaticServiceSlug } from "@/lib/servicos/static-pages";
-import { getStaticServiceCardImage } from "@/lib/servicos/static-pages";
+import {
+  getStaticServiceCardImage,
+  getStaticServiceShareImage,
+} from "@/lib/servicos/static-pages";
 import { resolveHeadingImageUrl } from "@/lib/heading-image";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 import { localePath } from "@/i18n/routing";
@@ -83,6 +86,7 @@ export async function StaticServicePage({ locale, slug }: StaticServicePageProps
     getStaticServiceCardImage(slug),
     servicesHeadingImageUrl,
   );
+  const shareImage = await getStaticServiceShareImage(locale, slug);
   const navItems = await getMergedServiceNavItems(locale, servicesPages);
   const latestPost = latestBlogResp?.articles[0]
     ? toBlogPostFromListItem(latestBlogResp.articles[0])
@@ -94,6 +98,11 @@ export async function StaticServicePage({ locale, slug }: StaticServicePageProps
     "@type": "Service",
     name: title,
     description: description || undefined,
+    image: {
+      "@type": "ImageObject",
+      url: shareImage.url,
+      caption: shareImage.alt,
+    },
     provider: {
       "@type": "Organization",
       name: SITE.name,

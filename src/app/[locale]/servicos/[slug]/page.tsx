@@ -31,6 +31,7 @@ import { toBlogPostFromListItem } from "@/lib/blog/mappers";
 import { resolveHeadingImageUrl } from "@/lib/heading-image";
 import { getMergedServiceNavItems } from "@/lib/servicos/nav";
 import {
+  getStaticServiceShareImage,
   isStaticServiceSlug,
   STATIC_SERVICE_SLUGS,
 } from "@/lib/servicos/static-pages";
@@ -115,6 +116,7 @@ export async function generateMetadata({
         .map((keyword) => keyword.trim())
         .filter(Boolean)
       : [];
+    const shareImage = await getStaticServiceShareImage(locale, slug);
 
     return buildPageMetadata({
       ...defaults,
@@ -123,6 +125,7 @@ export async function generateMetadata({
       title,
       description: description || SITE.description,
       keywords: [title, ...metaKeywords],
+      image: shareImage,
     });
   }
 
@@ -156,7 +159,7 @@ export async function generateMetadata({
     keywords: [service.title],
     image: {
       url: absoluteImageUrl(service.backgroundImageUrl),
-      alt: service.title,
+      alt: service.backgroundImageAlt?.trim() || service.title,
     },
     alternateLanguages,
   });
@@ -220,7 +223,7 @@ export default async function ServiceDetailPage({
     service.images.length > 0
       ? service.images.map((image) => ({
         src: image.imgUrl,
-        alt: service.title,
+        alt: image.alt?.trim() || service.title,
       }))
       : OPERATIONS_IMAGES;
 

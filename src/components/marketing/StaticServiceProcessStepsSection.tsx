@@ -81,10 +81,11 @@ export function StaticServiceProcessStepsSection({
                 >
                   <Image
                     src={arrowIconSrc}
-                    alt="arrow icon"
+                    alt=""
                     width={50}
                     height={108}
                     className="h-12 w-auto opacity-70 xl:h-14"
+                    aria-hidden
                   />
                 </div>
               ) : null}

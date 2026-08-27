@@ -1,3 +1,6 @@
+import { getTranslations } from "next-intl/server";
+import { SITE } from "@/lib/seo/schemas";
+
 /** Slugs das páginas de serviço fixas no código (não vêm do CMS/API). */
 export const STATIC_SERVICE_SLUGS = [
   "estruturas-metalicas-para-telhado",
@@ -36,4 +39,55 @@ export const STATIC_SERVICE_CARD_IMAGES: Partial<
 
 export function getStaticServiceCardImage(slug: StaticServiceSlug): string {
   return STATIC_SERVICE_CARD_IMAGES[slug] ?? STATIC_SERVICE_PLACEHOLDER_IMAGE;
+}
+
+function absoluteShareImageUrl(path: string): string {
+  return path.startsWith("http") ? path : `${SITE.domain}${path}`;
+}
+
+/** Foto representativa da página, com alt já traduzido, para Open Graph e JSON-LD. */
+export async function getStaticServiceShareImage(
+  locale: string,
+  slug: StaticServiceSlug,
+): Promise<{ url: string; alt: string }> {
+  const url = absoluteShareImageUrl(getStaticServiceCardImage(slug));
+
+  switch (slug) {
+    case "estruturas-metalicas-para-telhado": {
+      const t = await getTranslations({
+        locale,
+        namespace: "pages.staticServices",
+      });
+      return {
+        url,
+        alt: t(`${slug}.carouselSection.items.estrutura-01`),
+      };
+    }
+    case "carport": {
+      const t = await getTranslations({ locale, namespace: "operations" });
+      return { url, alt: t("captions.galeria_tessa_01") };
+    }
+    case "estrutura-de-solo": {
+      const t = await getTranslations({ locale, namespace: "operations" });
+      return { url, alt: t("captions.galeria_tessa_03") };
+    }
+    case "estrutura-de-aviario": {
+      const t = await getTranslations({ locale, namespace: "operations" });
+      return { url, alt: t("captions.galeria_tessa_06") };
+    }
+    case "estruturas-para-creches": {
+      const t = await getTranslations({
+        locale,
+        namespace: "pages.staticServices",
+      });
+      return { url, alt: t(`${slug}.featureSection.imageAlt`) };
+    }
+    case "perfis-especiais": {
+      const t = await getTranslations({
+        locale,
+        namespace: "pages.staticServices",
+      });
+      return { url, alt: t(`${slug}.whatIsSection.imageAlt`) };
+    }
+  }
 }
