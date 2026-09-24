@@ -3,14 +3,13 @@ import { IconBrandWhatsapp } from "@tabler/icons-react";
 import Image from "next/image";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getCompanyInformation, getFooterSection } from "@/lib/api/content";
+import { getCompanyInformation } from "@/lib/api/content";
 import {
   resolveCompanyInformation,
   telephoneHref,
   toPublicCompanyContact,
   whatsappHref,
 } from "@/lib/company-information";
-import { resolveFooterSection } from "@/lib/footer-content";
 import { SITE } from "@/lib/seo/schemas";
 import { cn, insideCardSpacing } from "@/lib/utils";
 
@@ -43,14 +42,9 @@ export async function Footer() {
     getTranslations("footer"),
     getLocale(),
   ]);
-  const [cmsFooter, companyContact] = await Promise.all([
-    getFooterSection(locale).then(resolveFooterSection),
-    getCompanyInformation(locale).then((section) =>
-      toPublicCompanyContact(resolveCompanyInformation(section)),
-    ),
-  ]);
-  const newsletterTitle = cmsFooter?.newsletterTitle ?? t("newsletterTitle");
-  const newsletterSub = cmsFooter?.newsletterSub ?? t("newsletterSub");
+  const companyContact = await getCompanyInformation(locale).then((section) =>
+    toPublicCompanyContact(resolveCompanyInformation(section)),
+  );
 
   return (
     <footer
@@ -70,8 +64,7 @@ export async function Footer() {
               insideCardSpacing,
             )}
           >
-            {/* Newsletter */}
-            <div className="lg:w-1/2 pt-14 pb-14 text">
+            <div className="lg:w-1/2 pt-14 pb-14">
               <Link
                 href="/"
                 aria-label={t("homeLabel")}
@@ -86,50 +79,11 @@ export async function Footer() {
                 />
               </Link>
 
-              <div className="mt-10">
-                <h2 className="font-barlow text-sm font-bold uppercase leading-snug tracking-[0.12em] text-primary sm:text-base">
-                  {newsletterTitle}
-                </h2>
-                <p className="mt-2 font-barlow text-[0.65rem] font-semibold uppercase leading-relaxed tracking-[0.14em] text-white sm:text-xs">
-                  {newsletterSub}
-                </p>
-              </div>
-
-              <form
-                className="mt-6 flex max-w-sm flex-col gap-3 sm:flex-row sm:items-stretch sm:gap-0"
-                aria-label={t("formLabel")}
-              >
-                <label htmlFor="footer-email" className="sr-only">
-                  {t("emailLabel")}
-                </label>
-                <input
-                  id="footer-email"
-                  type="email"
-                  name="email"
-                  autoComplete="email"
-                  required
-                  placeholder={t("emailPlaceholder")}
-                  className="min-h-12 min-w-0 flex-1 rounded-xl border border-white/20 bg-black/35 px-4 py-3 text-sm text-white placeholder:text-white/45 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:rounded-r-none sm:rounded-l-xl"
-                />
-                <button
-                  type="submit"
-                  className="min-h-12 shrink-0 rounded-xl bg-secondary px-5 py-3 text-xs xl:text-sm font-semibold text-secondary-foreground transition-colors hover:bg-secondary/90 sm:rounded-l-none sm:rounded-r-xl"
-                >
-                  {t("subscribe")}
-                </button>
-              </form>
-            </div>
-
-            <div className="lg:w-1/2 flex flex-col sm:flex-row gap-x-6 lg:gap-x-0">
-              {/* Menu */}
-              <nav
-                className="lg:w-1/3 lg:pt-14 pb-14 text-xs"
-                aria-label={t("menuLabel")}
-              >
+              <nav className="mt-10 text-xs" aria-label={t("menuLabel")}>
                 <h2 className="font-barlow font-bold uppercase tracking-[0.14em] text-primary sm:text-base">
                   {t("menuTitle")}
                 </h2>
-                <ul className="mt-6 space-y-3">
+                <ul className="mt-6 grid grid-cols-2 grid-flow-col grid-rows-4 gap-x-8 gap-y-3">
                   {MENU_KEYS.map(({ href, key }) => (
                     <li key={href}>
                       <Link
@@ -142,9 +96,9 @@ export async function Footer() {
                   ))}
                 </ul>
               </nav>
+            </div>
 
-              {/* Contato / mapa */}
-              <div className="relative min-h-60 lg:w-2/3 flex py-14 px-10">
+            <div className="relative min-h-60 lg:w-1/2 flex py-14 px-10">
                 <div
                   className="pointer-events-none absolute inset-0"
                   aria-hidden
@@ -241,7 +195,6 @@ export async function Footer() {
               </div>
             </div>
           </div>
-        </div>
 
         {/* Barra inferior */}
         <div className="border-t border-white/10 bg-[oklch(0.22_0_0)] text-white rounded-b-3xl">
