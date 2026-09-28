@@ -1,6 +1,7 @@
 import { withNextVideo } from "next-video/process";
 import createNextIntlPlugin from "next-intl/plugin";
 import type { NextConfig } from "next";
+import { MAX_TESTIMONIAL_REQUEST_BYTES } from "./src/lib/testimonials/image-limit";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
@@ -56,11 +57,12 @@ const nextConfig: NextConfig = {
       dynamic: 30,
       static: 180,
     },
-    // Default is 1 MB. A larger photo throws before the 4 MB field check and
-    // crashes the page. 10 MB fits two optional images plus the form body.
+    // Default action body is 1 MB and the proxy clone stops at 10 MB.
+    // Each testimonial photo is capped at 4 MB; the request must fit both.
     serverActions: {
-      bodySizeLimit: "10mb",
+      bodySizeLimit: MAX_TESTIMONIAL_REQUEST_BYTES,
     },
+    proxyClientMaxBodySize: MAX_TESTIMONIAL_REQUEST_BYTES,
   },
 };
 
