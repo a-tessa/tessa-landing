@@ -120,6 +120,8 @@
     "profileImageLabel": "Foto de perfil (opcional)",
     "reviewImageLabel": "Foto de la reseña del servicio (opcional)",
     "imageHint": "JPG, PNG o WebP de hasta {size} MB.",
+    "profileImageTooLarge": "La foto de perfil debe tener como máximo {size} MB.",
+    "reviewImageTooLarge": "La foto de la reseña debe tener como máximo {size} MB.",
     "imageSelect": "Seleccionar foto",
     "imageReplace": "Cambiar foto",
     "imageRemove": "Eliminar",

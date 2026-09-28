@@ -2,6 +2,10 @@
 
 import { useTranslations } from "next-intl";
 import { submitTestimonial } from "@/app/actions/testimonial";
+import {
+  isOversizedTestimonialImage,
+  MAX_TESTIMONIAL_IMAGE_BYTES,
+} from "@/lib/testimonials/image-limit";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -24,6 +28,7 @@ import {
 } from "@tabler/icons-react";
 import {
   type ChangeEvent,
+  type FormEvent,
   type ReactNode,
   useActionState,
   useCallback,
@@ -35,8 +40,8 @@ import {
 
 const MAX_TEXT = 500;
 const MAX_NAME = 120;
-const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
 const ACCEPTED_IMAGE_TYPES = "image/jpeg,image/png,image/webp";
+const IMAGE_SIZE_MB = MAX_TESTIMONIAL_IMAGE_BYTES / 1024 / 1024;
 
 interface ImagePickerProps {
   fieldName: "profileImage" | "reviewImage";
@@ -46,6 +51,8 @@ interface ImagePickerProps {
   replaceLabel: string;
   removeLabel: string;
   error?: string;
+  tooLargeMessage: string;
+  onRejectedChange: (rejected: boolean) => void;
   inputId: string;
   previewShape?: "circle" | "rect";
 }
@@ -58,40 +65,64 @@ function ImagePicker({
   replaceLabel,
   removeLabel,
   error,
+  tooLargeMessage,
+  onRejectedChange,
   inputId,
   previewShape = "rect",
 }: ImagePickerProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [sizeError, setSizeError] = useState<string | null>(null);
+  const displayedError = sizeError ?? error;
 
-  const handleChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0] ?? null;
-
-    if (!file) {
-      setPreviewUrl(null);
-      setFileName(null);
-      return;
-    }
-
-    const url = URL.createObjectURL(file);
+  const clearPreview = useCallback(() => {
     setPreviewUrl((previous) => {
       if (previous) URL.revokeObjectURL(previous);
-      return url;
+      return null;
     });
-    setFileName(file.name);
   }, []);
+
+  const handleChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0] ?? null;
+
+      if (!file) {
+        clearPreview();
+        setFileName(null);
+        return;
+      }
+
+      if (isOversizedTestimonialImage(file)) {
+        event.target.value = "";
+        clearPreview();
+        setFileName(file.name);
+        setSizeError(tooLargeMessage);
+        onRejectedChange(true);
+        return;
+      }
+
+      const url = URL.createObjectURL(file);
+      setPreviewUrl((previous) => {
+        if (previous) URL.revokeObjectURL(previous);
+        return url;
+      });
+      setFileName(file.name);
+      setSizeError(null);
+      onRejectedChange(false);
+    },
+    [clearPreview, onRejectedChange, tooLargeMessage],
+  );
 
   const handleRemove = useCallback(() => {
     if (inputRef.current) {
       inputRef.current.value = "";
     }
-    setPreviewUrl((previous) => {
-      if (previous) URL.revokeObjectURL(previous);
-      return null;
-    });
+    clearPreview();
     setFileName(null);
-  }, []);
+    setSizeError(null);
+    onRejectedChange(false);
+  }, [clearPreview, onRejectedChange]);
 
   useEffect(() => {
     return () => {
@@ -144,7 +175,7 @@ function ImagePicker({
             >
               {previewUrl ? replaceLabel : selectLabel}
             </Button>
-            {previewUrl ? (
+            {previewUrl || sizeError ? (
               <Button
                 type="button"
                 variant="ghost"
@@ -171,13 +202,13 @@ function ImagePicker({
         type="file"
         accept={ACCEPTED_IMAGE_TYPES}
         className="sr-only"
-        aria-invalid={Boolean(error)}
-        aria-describedby={error ? errorId : hintId}
+        aria-invalid={Boolean(displayedError)}
+        aria-describedby={displayedError ? errorId : hintId}
         onChange={handleChange}
       />
-      {error ? (
+      {displayedError ? (
         <p id={errorId} className="text-sm text-destructive">
-          {error}
+          {displayedError}
         </p>
       ) : (
         <p id={hintId} className="text-xs text-muted-foreground">
@@ -199,6 +230,48 @@ function TestimonialForm({ onSuccessClose }: TestimonialFormProps) {
   });
   const [rating, setRating] = useState<number>(0);
   const [textLen, setTextLen] = useState(0);
+  const [rejectedImages, setRejectedImages] = useState({
+    profileImage: false,
+    reviewImage: false,
+  });
+  const imageSize = { size: IMAGE_SIZE_MB };
+  const profileImageTooLarge = t("profileImageTooLarge", imageSize);
+  const reviewImageTooLarge = t("reviewImageTooLarge", imageSize);
+
+  const handleProfileRejected = useCallback((rejected: boolean) => {
+    setRejectedImages((current) =>
+      current.profileImage === rejected
+        ? current
+        : { ...current, profileImage: rejected },
+    );
+  }, []);
+
+  const handleReviewRejected = useCallback((rejected: boolean) => {
+    setRejectedImages((current) =>
+      current.reviewImage === rejected
+        ? current
+        : { ...current, reviewImage: rejected },
+    );
+  }, []);
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const formData = new FormData(event.currentTarget);
+    const profileImage = formData.get("profileImage");
+    const reviewImage = formData.get("reviewImage");
+    const profileTooLarge =
+      profileImage instanceof File && isOversizedTestimonialImage(profileImage);
+    const reviewTooLarge =
+      reviewImage instanceof File && isOversizedTestimonialImage(reviewImage);
+
+    if (
+      rejectedImages.profileImage ||
+      rejectedImages.reviewImage ||
+      profileTooLarge ||
+      reviewTooLarge
+    ) {
+      event.preventDefault();
+    }
+  };
 
   const nameId = useId();
   const companyId = useId();
@@ -230,6 +303,7 @@ function TestimonialForm({ onSuccessClose }: TestimonialFormProps) {
       action={formAction}
       encType="multipart/form-data"
       className="flex flex-col gap-4"
+      onSubmit={handleSubmit}
     >
       {state.status === "error" && state.message ? (
         <p
@@ -357,11 +431,13 @@ function TestimonialForm({ onSuccessClose }: TestimonialFormProps) {
         fieldName="profileImage"
         inputId={profileImageId}
         label={t("profileImageLabel")}
-        helpText={t("imageHint", { size: MAX_IMAGE_BYTES / 1024 / 1024 })}
+        helpText={t("imageHint", imageSize)}
         selectLabel={t("imageSelect")}
         replaceLabel={t("imageReplace")}
         removeLabel={t("imageRemove")}
         error={state.fieldErrors?.profileImage}
+        tooLargeMessage={profileImageTooLarge}
+        onRejectedChange={handleProfileRejected}
         previewShape="circle"
       />
 
@@ -369,11 +445,13 @@ function TestimonialForm({ onSuccessClose }: TestimonialFormProps) {
         fieldName="reviewImage"
         inputId={reviewImageId}
         label={t("reviewImageLabel")}
-        helpText={t("imageHint", { size: MAX_IMAGE_BYTES / 1024 / 1024 })}
+        helpText={t("imageHint", imageSize)}
         selectLabel={t("imageSelect")}
         replaceLabel={t("imageReplace")}
         removeLabel={t("imageRemove")}
         error={state.fieldErrors?.reviewImage}
+        tooLargeMessage={reviewImageTooLarge}
+        onRejectedChange={handleReviewRejected}
         previewShape="rect"
       />
 

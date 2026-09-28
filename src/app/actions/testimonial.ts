@@ -1,6 +1,7 @@
 "use server";
 
 import { buildCreateTestimonialFetchInit } from "@/lib/api/create-testimonial-request";
+import { MAX_TESTIMONIAL_IMAGE_BYTES } from "@/lib/testimonials/image-limit";
 
 export interface TestimonialActionState {
   status: "idle" | "success" | "error";
@@ -17,7 +18,6 @@ const MAX_TEXT = 500;
 const MIN_TEXT = 10;
 const MAX_NAME = 120;
 const MIN_NAME = 2;
-const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
 const ALLOWED_IMAGE_MIME_TYPES = [
   "image/jpeg",
   "image/png",
@@ -63,7 +63,7 @@ function getImageField(
     return null;
   }
 
-  if (value.size > MAX_IMAGE_BYTES) {
+  if (value.size > MAX_TESTIMONIAL_IMAGE_BYTES) {
     fieldErrors[field] = sizeError;
     return null;
   }

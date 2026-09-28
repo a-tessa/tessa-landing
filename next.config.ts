@@ -56,6 +56,11 @@ const nextConfig: NextConfig = {
       dynamic: 30,
       static: 180,
     },
+    // Default is 1 MB. A larger photo throws before the 4 MB field check and
+    // crashes the page. 10 MB fits two optional images plus the form body.
+    serverActions: {
+      bodySizeLimit: "10mb",
+    },
   },
 };
 
