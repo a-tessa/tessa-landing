@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { BackNavLink } from "@/components/marketing/BackNavLink";
 import { BlogCategoryNav } from "@/components/marketing/BlogCategoryNav";
 import { BlogAuthorAvatar } from "@/components/marketing/BlogAuthorAvatar";
@@ -82,6 +82,7 @@ export async function generateMetadata({
   params,
 }: BlogPostPageProps): Promise<Metadata> {
   const { locale, slug } = await params;
+  setRequestLocale(locale);
   const [article, site] = await Promise.all([
     fetchBlogArticleBySlug(slug, locale),
     resolveSiteSeo(locale),
@@ -90,14 +91,7 @@ export async function generateMetadata({
 
   if (!article) {
     await redirectIfNeeded(locale, `/blog/${slug}`);
-    return buildPageMetadata({
-      ...defaults,
-      locale,
-      path: `/blog/${slug}`,
-      title: "404",
-      description: SITE.description,
-      noIndex: true,
-    });
+    notFound();
   }
 
   const post = toBlogPostFromArticle(article);
@@ -137,6 +131,7 @@ function formatPublishedDate(iso: string, locale: string): string {
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { locale, slug } = await params;
+  setRequestLocale(locale);
   const article = await fetchBlogArticleBySlug(slug, locale);
   if (!article) {
     await redirectIfNeeded(locale, `/blog/${slug}`);

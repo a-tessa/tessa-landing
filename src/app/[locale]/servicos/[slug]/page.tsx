@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { setRequestLocale } from "next-intl/server";
 import { IconArrowRight } from "@tabler/icons-react";
 import { getTranslations } from "next-intl/server";
 import { BackNavLink } from "@/components/marketing/BackNavLink";
@@ -100,6 +101,7 @@ export async function generateMetadata({
   params,
 }: ServiceDetailPageProps): Promise<Metadata> {
   const { locale, slug } = await params;
+  setRequestLocale(locale);
   const site = await resolveSiteSeo(locale);
   const defaults = siteSeoMetadataDefaults(site);
 
@@ -133,14 +135,7 @@ export async function generateMetadata({
 
   if (!service) {
     await redirectIfNeeded(locale, `/servicos/${slug}`);
-    return buildPageMetadata({
-      ...defaults,
-      locale,
-      path: `/servicos/${slug}`,
-      title: "404",
-      description: SITE.description,
-      noIndex: true,
-    });
+    notFound();
   }
 
   const alternateLanguages = await getServiceAlternateLanguages(
@@ -169,6 +164,7 @@ export default async function ServiceDetailPage({
   params,
 }: ServiceDetailPageProps) {
   const { locale, slug } = await params;
+  setRequestLocale(locale);
 
   if (isStaticServiceSlug(slug)) {
     return <StaticServicePage locale={locale} slug={slug} />;

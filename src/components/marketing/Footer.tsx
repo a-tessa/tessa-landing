@@ -1,8 +1,10 @@
 import { Instagram, Linkedin, Mail, MapPin, Phone, Youtube } from "lucide-react";
 import { IconBrandWhatsapp } from "@tabler/icons-react";
 import Image from "next/image";
+import NextLink from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { localePath, type Locale } from "@/i18n/routing";
 import { getCompanyInformation } from "@/lib/api/content";
 import {
   resolveCompanyInformation,
@@ -36,12 +38,52 @@ const SOCIAL_LINKS = [
   { href: SITE.socials.instagram, key: "instagram", icon: Instagram },
 ] as const;
 
-export async function Footer() {
+interface FooterLinkProps {
+  href: string;
+  locale?: Locale;
+  className?: string;
+  children: React.ReactNode;
+  "aria-label"?: string;
+}
+
+function FooterLink({
+  href,
+  locale,
+  className,
+  children,
+  "aria-label": ariaLabel,
+}: FooterLinkProps) {
+  if (locale) {
+    return (
+      <NextLink
+        href={localePath(locale, href)}
+        className={className}
+        aria-label={ariaLabel}
+      >
+        {children}
+      </NextLink>
+    );
+  }
+
+  return (
+    <Link href={href} className={className} aria-label={ariaLabel}>
+      {children}
+    </Link>
+  );
+}
+
+interface FooterProps {
+  /**
+   * Skips `getLocale()` so a statically rendered 404 can pass the locale
+   * without reading request headers.
+   */
+  locale?: Locale;
+}
+
+export async function Footer({ locale: localeOverride }: FooterProps = {}) {
   const currentYear = new Date().getFullYear();
-  const [t, locale] = await Promise.all([
-    getTranslations("footer"),
-    getLocale(),
-  ]);
+  const locale = localeOverride ?? (await getLocale());
+  const t = await getTranslations({ locale, namespace: "footer" });
   const companyContact = await getCompanyInformation(locale).then((section) =>
     toPublicCompanyContact(resolveCompanyInformation(section)),
   );
@@ -65,8 +107,9 @@ export async function Footer() {
             )}
           >
             <div className="lg:w-1/2 pt-14 pb-14">
-              <Link
+              <FooterLink
                 href="/"
+                locale={localeOverride}
                 aria-label={t("homeLabel")}
                 className="inline-block"
               >
@@ -77,7 +120,7 @@ export async function Footer() {
                   height={52}
                   className="h-11 w-auto sm:h-12"
                 />
-              </Link>
+              </FooterLink>
 
               <nav className="mt-10 text-xs" aria-label={t("menuLabel")}>
                 <h2 className="font-barlow font-bold uppercase tracking-[0.14em] text-primary sm:text-base">
@@ -86,12 +129,13 @@ export async function Footer() {
                 <ul className="mt-6 grid grid-cols-2 grid-flow-col grid-rows-4 gap-x-8 gap-y-3">
                   {MENU_KEYS.map(({ href, key }) => (
                     <li key={href}>
-                      <Link
+                      <FooterLink
                         href={href}
+                        locale={localeOverride}
                         className="font-barlow font-semibold uppercase tracking-[0.06em] text-white transition-colors hover:text-primary"
                       >
                         {t(`links.${key}`)}
-                      </Link>
+                      </FooterLink>
                     </li>
                   ))}
                 </ul>
@@ -228,12 +272,13 @@ export async function Footer() {
                             •
                           </span>
                         )}
-                        <Link
+                        <FooterLink
                           href={href}
+                          locale={localeOverride}
                           className="font-barlow text-xxs xl:text-xs font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:text-primary sm:text-xs"
                         >
                           {t(`legal.${key}`)}
-                        </Link>
+                        </FooterLink>
                       </span>
                     ))}
                   </nav>

@@ -1,18 +1,30 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import { getLocale, getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
+import { getTranslations } from "next-intl/server";
 import { Footer } from "@/components/marketing/Footer";
-import { NavbarPage } from "@/components/marketing/NavbarPage";
 import { buildManagedPageMetadata } from "@/lib/seo/page-seo";
-import { insideCardSpacing } from "@/lib/utils";
+import { routing, type Locale } from "@/i18n/routing";
+import { NotFoundScreen, type NotFoundCopy } from "./not-found-screen";
+
+async function loadNotFoundCopy(locale: Locale): Promise<NotFoundCopy> {
+  const t = await getTranslations({ locale, namespace: "notFound" });
+  return {
+    locale,
+    title: t("title"),
+    description: t("description"),
+    cta: t("cta"),
+  };
+}
 
 export async function generateMetadata(): Promise<Metadata> {
-  const locale = await getLocale();
-  const t = await getTranslations("notFound");
+  // Unknown slugs stay on a static route. getLocale() reads headers() and
+  // Next.js turns that into a 500 instead of this page.
+  const t = await getTranslations({
+    locale: routing.defaultLocale,
+    namespace: "notFound",
+  });
 
   return buildManagedPageMetadata({
-    locale,
+    locale: routing.defaultLocale,
     pageKey: "nao-encontrada",
     path: "/404",
     fallbackTitle: t("metaTitle"),
@@ -22,49 +34,16 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function NotFound() {
-  const t = await getTranslations("notFound");
+  const copies = await Promise.all(routing.locales.map(loadNotFoundCopy));
 
   return (
-    <>
-      <main className="flex flex-col items-center justify-center">
-        <div className="relative min-h-[80vh] w-full">
-          <div className="fixed top-6 z-40 flex min-h-[80vh] w-[calc(100%-2.5rem)] translate-x-1/2 right-1/2 flex-col rounded-3xl bg-black/80 saturate-30 text-white">
-            <div className={insideCardSpacing}>
-              <NavbarPage />
-            </div>
-
-            <div
-              className={`${insideCardSpacing} flex flex-1 flex-col items-center justify-center gap-8 text-center`}
-            >
-              <Image
-                src="/tessa-logo.svg"
-                alt="Tessa"
-                width={240}
-                height={78}
-                className="h-16 w-auto sm:h-20"
-                priority
-              />
-
-              <h1 className="text-2xl font-bold uppercase text-foreground sm:text-4xl">
-                {t("title")}
-              </h1>
-
-              <p className="max-w-lg text-sm font-semibold uppercase tracking-wide text-white/60 sm:text-base">
-                {t("description")}
-              </p>
-
-              <Link
-                href="/"
-                className="mt-2 inline-flex items-center gap-2 rounded-lg bg-secondary px-8 py-3.5 text-sm font-semibold text-white uppercase tracking-wide transition-transform hover:-translate-y-0.5"
-              >
-                {t("cta")}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </main>
-
-      <Footer />
-    </>
+    <NotFoundScreen
+      copies={copies}
+      footers={{
+        "pt-BR": <Footer locale="pt-BR" />,
+        en: <Footer locale="en" />,
+        es: <Footer locale="es" />,
+      }}
+    />
   );
 }
