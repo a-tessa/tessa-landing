@@ -215,6 +215,10 @@
       "downloadTitle": "Baixe agora as apresentações, folders e manuais",
       "downloadSub": "deste produto",
       "downloadCta": "Baixar materiais",
+      "expandImage": "Expandir imagem",
+      "closeImage": "Fechar imagem",
+      "prevImage": "Imagem anterior",
+      "nextImage": "Próxima imagem",
       "materials": {
         "apresentacao-estruturas-para-telhado": "Apresentação — Estruturas para Telhado",
         "folder-estruturas-energia-solar": "Folder — Estruturas para Energia Solar",

@@ -8,7 +8,7 @@ import type {
 } from "./blog.types";
 
 const API_BASE_URL = process.env.API_BASE_URL ?? "";
-const REVALIDATE_SECONDS = 60;
+const REVALIDATE_SECONDS = 3600;
 const FETCH_TIMEOUT_MS = 5_000;
 
 function buildBlogListUrl(params: FetchBlogArticlesParams): string {

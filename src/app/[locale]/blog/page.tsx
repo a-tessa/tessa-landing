@@ -13,7 +13,7 @@ import { breadcrumbJsonLd, SITE } from "@/lib/seo/schemas";
 import { buildManagedPageMetadata } from "@/lib/seo/page-seo";
 import { localePath } from "@/i18n/routing";
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 interface BlogPageProps {
   params: Promise<{ locale: string }>;

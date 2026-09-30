@@ -28,7 +28,7 @@ import { redirectIfNeeded } from "@/lib/seo/apply-redirect";
 import { cn, freeSectionShellSpacing } from "@/lib/utils";
 import { localePath, routing } from "@/i18n/routing";
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 interface BlogPostPageProps {
   params: Promise<{ locale: string; slug: string }>;

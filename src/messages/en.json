@@ -215,6 +215,10 @@
       "downloadTitle": "Download presentations, brochures and manuals now",
       "downloadSub": "for this product",
       "downloadCta": "Download materials",
+      "expandImage": "Expand image",
+      "closeImage": "Close image",
+      "prevImage": "Previous image",
+      "nextImage": "Next image",
       "materials": {
         "apresentacao-estruturas-para-telhado": "Presentation — Roof Metal Structures",
         "folder-estruturas-energia-solar": "Brochure — Solar Energy Structures",

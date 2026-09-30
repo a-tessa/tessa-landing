@@ -215,6 +215,10 @@
       "downloadTitle": "Descargue ahora las presentaciones, folletos y manuales",
       "downloadSub": "de este producto",
       "downloadCta": "Descargar materiales",
+      "expandImage": "Expandir imagen",
+      "closeImage": "Cerrar imagen",
+      "prevImage": "Imagen anterior",
+      "nextImage": "Siguiente imagen",
       "materials": {
         "apresentacao-estruturas-para-telhado": "Presentación — Estructuras para Tejado",
         "folder-estruturas-energia-solar": "Folleto — Estructuras para Energía Solar",

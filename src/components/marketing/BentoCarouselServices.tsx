@@ -2,11 +2,19 @@
 
 import React, { useCallback, useRef, useState, useEffect } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import {
   IconArrowNarrowLeft,
   IconArrowNarrowRight,
+  IconX,
 } from "@tabler/icons-react";
 import { motion } from "motion/react";
+import { VisuallyHidden } from "radix-ui";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
 interface BentoImage {
@@ -54,15 +62,41 @@ export function BentoCarouselServices({
   images,
   className,
 }: BentoCarouselServicesProps) {
+  const t = useTranslations("pages.servicoDetail");
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+
   return (
     <div className={cn("relative w-full", className)}>
-      <MobileCarousel images={images} />
-      <DesktopBento images={images} className={className} />
+      <MobileCarousel
+        images={images}
+        expandLabel={t("expandImage")}
+        onExpand={setExpandedIndex}
+      />
+      <DesktopBento
+        images={images}
+        className={className}
+        expandLabel={t("expandImage")}
+        onExpand={setExpandedIndex}
+      />
+      <ServiceImageLightbox
+        images={images}
+        index={expandedIndex}
+        onIndexChange={setExpandedIndex}
+        onClose={() => setExpandedIndex(null)}
+      />
     </div>
   );
 }
 
-function MobileCarousel({ images }: { images: BentoImage[] }) {
+function MobileCarousel({
+  images,
+  expandLabel,
+  onExpand,
+}: {
+  images: BentoImage[];
+  expandLabel: string;
+  onExpand: (index: number) => void;
+}) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -99,12 +133,15 @@ function MobileCarousel({ images }: { images: BentoImage[] }) {
           className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth [scrollbar-width:none]"
         >
           {images.map((img, i) => (
-            <motion.div
+            <motion.button
               key={`mobile-svc-${i}`}
+              type="button"
+              onClick={() => onExpand(i)}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4, delay: 0.05 * Math.min(i, 3) }}
-              className="relative aspect-4/3 w-full shrink-0 snap-center overflow-hidden rounded-2xl"
+              className="relative aspect-4/3 w-full shrink-0 cursor-pointer snap-center overflow-hidden rounded-2xl border-0 bg-transparent p-0 text-left"
+              aria-label={expandLabel}
             >
               <Image
                 src={img.src}
@@ -113,7 +150,7 @@ function MobileCarousel({ images }: { images: BentoImage[] }) {
                 sizes="90vw"
                 className="object-cover"
               />
-            </motion.div>
+            </motion.button>
           ))}
         </div>
 
@@ -158,9 +195,13 @@ function MobileCarousel({ images }: { images: BentoImage[] }) {
 function DesktopBento({
   images,
   className,
+  expandLabel,
+  onExpand,
 }: {
   images: BentoImage[];
   className?: string;
+  expandLabel: string;
+  onExpand: (index: number) => void;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -206,8 +247,10 @@ function DesktopBento({
               {group.map((img, imgIndex) => {
                 const globalIndex = groupIndex * GROUP_SIZE + imgIndex;
                 return (
-                  <motion.div
+                  <motion.button
                     key={`img-${globalIndex}`}
+                    type="button"
+                    onClick={() => onExpand(globalIndex)}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{
                       opacity: 1,
@@ -219,18 +262,19 @@ function DesktopBento({
                       },
                     }}
                     className={cn(
-                      "group relative overflow-hidden rounded-2xl",
+                      "group relative cursor-pointer overflow-hidden rounded-2xl border-0 bg-transparent p-0 text-left",
                       getGroupSpan(imgIndex),
                     )}
+                    aria-label={expandLabel}
                   >
                     <Image
                       src={img.src}
                       alt={img.alt}
                       fill
                       sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                      className="object-cover transition-transform duration-500 hover:scale-105"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                  </motion.div>
+                  </motion.button>
                 );
               })}
             </div>
@@ -257,5 +301,105 @@ function DesktopBento({
         <IconArrowNarrowRight className="size-5 lg:size-6" />
       </button>
     </div>
+  );
+}
+
+function ServiceImageLightbox({
+  images,
+  index,
+  onIndexChange,
+  onClose,
+}: {
+  images: BentoImage[];
+  index: number | null;
+  onIndexChange: (index: number) => void;
+  onClose: () => void;
+}) {
+  const t = useTranslations("pages.servicoDetail");
+  const image = index === null ? null : images[index] ?? null;
+  const hasPrevious = index !== null && index > 0;
+  const hasNext = index !== null && index < images.length - 1;
+
+  useEffect(() => {
+    if (index === null) return;
+
+    const handleKey = (event: KeyboardEvent): void => {
+      if (event.key === "ArrowLeft" && index > 0) {
+        event.preventDefault();
+        onIndexChange(index - 1);
+      }
+      if (event.key === "ArrowRight" && index < images.length - 1) {
+        event.preventDefault();
+        onIndexChange(index + 1);
+      }
+    };
+
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [images.length, index, onIndexChange]);
+
+  return (
+    <Dialog
+      open={image !== null}
+      onOpenChange={(open) => {
+        if (!open) onClose();
+      }}
+    >
+      <DialogContent
+        showCloseButton={false}
+        className="grid max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden border-0 bg-black p-0 sm:max-w-5xl"
+      >
+        <VisuallyHidden.Root>
+          <DialogTitle>{image?.alt ?? t("expandImage")}</DialogTitle>
+        </VisuallyHidden.Root>
+
+        {image ? (
+          <div className="relative h-[min(80vh,760px)] w-full bg-black">
+            <Image
+              src={image.src}
+              alt={image.alt}
+              fill
+              sizes="(max-width: 768px) 100vw, 64rem"
+              className="object-contain"
+              priority
+            />
+            <button
+              type="button"
+              onClick={onClose}
+              className="absolute top-3 right-3 z-10 flex size-10 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition-colors hover:bg-black/80"
+              aria-label={t("closeImage")}
+            >
+              <IconX className="size-5" />
+            </button>
+            {images.length > 1 ? (
+              <>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (index !== null && hasPrevious) onIndexChange(index - 1);
+                  }}
+                  disabled={!hasPrevious}
+                  className="absolute top-1/2 left-3 z-10 flex size-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition-colors hover:bg-black/80 disabled:pointer-events-none disabled:opacity-0"
+                  aria-label={t("prevImage")}
+                >
+                  <IconArrowNarrowLeft className="size-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (index !== null && hasNext) onIndexChange(index + 1);
+                  }}
+                  disabled={!hasNext}
+                  className="absolute top-1/2 right-3 z-10 flex size-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition-colors hover:bg-black/80 disabled:pointer-events-none disabled:opacity-0"
+                  aria-label={t("nextImage")}
+                >
+                  <IconArrowNarrowRight className="size-5" />
+                </button>
+              </>
+            ) : null}
+          </div>
+        ) : null}
+      </DialogContent>
+    </Dialog>
   );
 }
