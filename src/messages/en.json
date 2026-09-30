@@ -119,7 +119,7 @@
     "textHint": "Maximum of {max} characters.",
     "profileImageLabel": "Profile photo (optional)",
     "reviewImageLabel": "Service review photo (optional)",
-    "imageHint": "JPG, PNG or WebP up to {size} MB.",
+    "imageHint": "JPG, PNG or WebP up to {size} MB. Large photos are reduced before sending.",
     "profileImageTooLarge": "The profile photo must be at most {size} MB.",
     "reviewImageTooLarge": "The review photo must be at most {size} MB.",
     "imageSelect": "Select photo",
@@ -127,7 +127,9 @@
     "imageRemove": "Remove",
     "submitting": "Submitting…",
     "submit": "Submit testimonial",
-    "close": "Close"
+    "close": "Close",
+    "imagePreparing": "Reducing the photo…",
+    "imageReduceFailed": "This photo could not be reduced. Choose a smaller image."
   },
   "newsAndSocial": {
     "newsTitle": "Blog",

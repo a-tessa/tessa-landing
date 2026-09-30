@@ -3,6 +3,11 @@
 import { useTranslations } from "next-intl";
 import { submitTestimonial } from "@/app/actions/testimonial";
 import {
+  downscaleTestimonialImage,
+  needsDownscale,
+  replaceInputFile,
+} from "@/lib/testimonials/downscale-testimonial-image";
+import {
   isOversizedTestimonialImage,
   MAX_TESTIMONIAL_IMAGE_BYTES,
 } from "@/lib/testimonials/image-limit";
@@ -52,7 +57,10 @@ interface ImagePickerProps {
   removeLabel: string;
   error?: string;
   tooLargeMessage: string;
+  reduceFailedMessage: string;
+  preparingMessage: string;
   onRejectedChange: (rejected: boolean) => void;
+  onPreparingChange: (preparing: boolean) => void;
   inputId: string;
   previewShape?: "circle" | "rect";
 }
@@ -66,14 +74,19 @@ function ImagePicker({
   removeLabel,
   error,
   tooLargeMessage,
+  reduceFailedMessage,
+  preparingMessage,
   onRejectedChange,
+  onPreparingChange,
   inputId,
   previewShape = "rect",
 }: ImagePickerProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const selectionId = useRef(0);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [sizeError, setSizeError] = useState<string | null>(null);
+  const [isPreparing, setIsPreparing] = useState(false);
   const displayedError = sizeError ?? error;
 
   const clearPreview = useCallback(() => {
@@ -83,25 +96,19 @@ function ImagePicker({
     });
   }, []);
 
-  const handleChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0] ?? null;
+  const rejectFile = useCallback(
+    (input: HTMLInputElement, name: string, message: string) => {
+      input.value = "";
+      clearPreview();
+      setFileName(name);
+      setSizeError(message);
+      onRejectedChange(true);
+    },
+    [clearPreview, onRejectedChange],
+  );
 
-      if (!file) {
-        clearPreview();
-        setFileName(null);
-        return;
-      }
-
-      if (isOversizedTestimonialImage(file)) {
-        event.target.value = "";
-        clearPreview();
-        setFileName(file.name);
-        setSizeError(tooLargeMessage);
-        onRejectedChange(true);
-        return;
-      }
-
+  const acceptFile = useCallback(
+    (file: File) => {
       const url = URL.createObjectURL(file);
       setPreviewUrl((previous) => {
         if (previous) URL.revokeObjectURL(previous);
@@ -111,18 +118,84 @@ function ImagePicker({
       setSizeError(null);
       onRejectedChange(false);
     },
-    [clearPreview, onRejectedChange, tooLargeMessage],
+    [onRejectedChange],
+  );
+
+  const handleChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const input = event.target;
+      const file = input.files?.[0] ?? null;
+      const selection = ++selectionId.current;
+
+      if (!file) {
+        clearPreview();
+        setFileName(null);
+        setIsPreparing(false);
+        onPreparingChange(false);
+        return;
+      }
+
+      if (!needsDownscale(file)) {
+        setIsPreparing(false);
+        onPreparingChange(false);
+        acceptFile(file);
+        return;
+      }
+
+      setIsPreparing(true);
+      onPreparingChange(true);
+      setSizeError(null);
+
+      void downscaleTestimonialImage(file).then((prepared) => {
+        if (selection !== selectionId.current) return;
+
+        setIsPreparing(false);
+        onPreparingChange(false);
+
+        if (needsDownscale(prepared) || isOversizedTestimonialImage(prepared)) {
+          rejectFile(
+            input,
+            file.name,
+            isOversizedTestimonialImage(file) ? tooLargeMessage : reduceFailedMessage,
+          );
+          return;
+        }
+
+        if (prepared !== file && !replaceInputFile(input, prepared)) {
+          rejectFile(input, file.name, reduceFailedMessage);
+          return;
+        }
+
+        acceptFile(prepared);
+      }).catch(() => {
+        if (selection !== selectionId.current) return;
+        setIsPreparing(false);
+        onPreparingChange(false);
+        rejectFile(input, file.name, reduceFailedMessage);
+      });
+    },
+    [
+      acceptFile,
+      clearPreview,
+      onPreparingChange,
+      reduceFailedMessage,
+      rejectFile,
+      tooLargeMessage,
+    ],
   );
 
   const handleRemove = useCallback(() => {
+    selectionId.current += 1;
     if (inputRef.current) {
       inputRef.current.value = "";
     }
     clearPreview();
     setFileName(null);
     setSizeError(null);
+    setIsPreparing(false);
+    onPreparingChange(false);
     onRejectedChange(false);
-  }, [clearPreview, onRejectedChange]);
+  }, [clearPreview, onPreparingChange, onRejectedChange]);
 
   useEffect(() => {
     return () => {
@@ -206,7 +279,11 @@ function ImagePicker({
         aria-describedby={displayedError ? errorId : hintId}
         onChange={handleChange}
       />
-      {displayedError ? (
+      {isPreparing ? (
+        <p className="text-xs text-muted-foreground" role="status">
+          {preparingMessage}
+        </p>
+      ) : displayedError ? (
         <p id={errorId} className="text-sm text-destructive">
           {displayedError}
         </p>
@@ -234,6 +311,10 @@ function TestimonialForm({ onSuccessClose }: TestimonialFormProps) {
     profileImage: false,
     reviewImage: false,
   });
+  const [preparingImages, setPreparingImages] = useState({
+    profileImage: false,
+    reviewImage: false,
+  });
   const imageSize = { size: IMAGE_SIZE_MB };
   const profileImageTooLarge = t("profileImageTooLarge", imageSize);
   const reviewImageTooLarge = t("reviewImageTooLarge", imageSize);
@@ -254,6 +335,25 @@ function TestimonialForm({ onSuccessClose }: TestimonialFormProps) {
     );
   }, []);
 
+  const handleProfilePreparing = useCallback((preparing: boolean) => {
+    setPreparingImages((current) =>
+      current.profileImage === preparing
+        ? current
+        : { ...current, profileImage: preparing },
+    );
+  }, []);
+
+  const handleReviewPreparing = useCallback((preparing: boolean) => {
+    setPreparingImages((current) =>
+      current.reviewImage === preparing
+        ? current
+        : { ...current, reviewImage: preparing },
+    );
+  }, []);
+
+  const isPreparingImage =
+    preparingImages.profileImage || preparingImages.reviewImage;
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     const formData = new FormData(event.currentTarget);
     const profileImage = formData.get("profileImage");
@@ -264,6 +364,7 @@ function TestimonialForm({ onSuccessClose }: TestimonialFormProps) {
       reviewImage instanceof File && isOversizedTestimonialImage(reviewImage);
 
     if (
+      isPreparingImage ||
       rejectedImages.profileImage ||
       rejectedImages.reviewImage ||
       profileTooLarge ||
@@ -437,7 +538,10 @@ function TestimonialForm({ onSuccessClose }: TestimonialFormProps) {
         removeLabel={t("imageRemove")}
         error={state.fieldErrors?.profileImage}
         tooLargeMessage={profileImageTooLarge}
+        reduceFailedMessage={t("imageReduceFailed")}
+        preparingMessage={t("imagePreparing")}
         onRejectedChange={handleProfileRejected}
+        onPreparingChange={handleProfilePreparing}
         previewShape="circle"
       />
 
@@ -451,12 +555,19 @@ function TestimonialForm({ onSuccessClose }: TestimonialFormProps) {
         removeLabel={t("imageRemove")}
         error={state.fieldErrors?.reviewImage}
         tooLargeMessage={reviewImageTooLarge}
+        reduceFailedMessage={t("imageReduceFailed")}
+        preparingMessage={t("imagePreparing")}
         onRejectedChange={handleReviewRejected}
+        onPreparingChange={handleReviewPreparing}
         previewShape="rect"
       />
 
       <DialogFooter className="gap-2 sm:gap-0">
-        <Button type="submit" disabled={isPending} className="w-full sm:w-auto">
+        <Button
+          type="submit"
+          disabled={isPending || isPreparingImage}
+          className="w-full sm:w-auto"
+        >
           {isPending ? t("submitting") : t("submit")}
         </Button>
       </DialogFooter>

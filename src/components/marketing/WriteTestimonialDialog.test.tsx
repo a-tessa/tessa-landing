@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import "@testing-library/jest-dom/vitest";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { MAX_TESTIMONIAL_IMAGE_BYTES } from "@/lib/testimonials/image-limit";
 import { WriteTestimonialDialog } from "./WriteTestimonialDialog";
@@ -52,7 +52,7 @@ function imageFile(name: string, size: number): File {
 }
 
 describe("WriteTestimonialDialog image size", () => {
-  it("keeps an oversized photo out of the server action and shows the limit", () => {
+  it("keeps an oversized photo out of the server action and shows the limit", async () => {
     renderDialog();
     fillRequiredFields();
 
@@ -63,7 +63,9 @@ describe("WriteTestimonialDialog image size", () => {
       },
     });
 
-    expect(screen.getByText("profileImageTooLarge:4")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("profileImageTooLarge:4")).toBeInTheDocument();
+    });
     expect(input).toHaveValue("");
 
     fireEvent.click(screen.getByRole("button", { name: "submit" }));
