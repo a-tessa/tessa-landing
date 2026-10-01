@@ -224,14 +224,21 @@ export function GalleryMediaBrowser({
               </button>
 
               {active.kind === "photo" && active.item.imageUrl ? (
-                <div className="relative aspect-4/3 w-full">
+                <div className="relative w-full">
                   <Image
                     key={active.item.id}
                     src={active.item.imageUrl}
                     alt={active.item.alt}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 48rem"
-                    className="object-contain"
+                    width={1600}
+                    height={1067}
+                    sizes="(max-width: 768px) calc(100vw - 16px), 48rem"
+                    className="h-auto max-h-[85vh] w-full"
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      maxHeight: "85vh",
+                      aspectRatio: "auto",
+                    }}
                     priority
                   />
                   {activePhotoIndex > 0 ? (
