@@ -205,7 +205,7 @@ export function GalleryMediaBrowser({
         <DialogContent
           showCloseButton={false}
           className={cn(
-            "grid max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden border-0 bg-primary p-0 sm:max-w-3xl",
+            "grid max-w-[calc(100%-1.5rem)] gap-0 overflow-hidden border-0 bg-primary px-2 py-0 sm:max-w-3xl",
           )}
         >
           <VisuallyHidden.Root>
