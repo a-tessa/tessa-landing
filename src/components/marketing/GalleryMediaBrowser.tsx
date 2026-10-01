@@ -1,10 +1,10 @@
 "use client";
 
-import { Play, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Play, X } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { VisuallyHidden } from "radix-ui";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { GalleryMediaItemPublicDto } from "@/lib/api/gallery";
 import { cn } from "@/lib/utils";
 import {
@@ -89,6 +89,41 @@ export function GalleryMediaBrowser({
 }: GalleryMediaBrowserProps) {
   const t = useTranslations("pages.gallery");
   const [active, setActive] = useState<ActiveMedia | null>(null);
+  const visiblePhotos = useMemo(
+    () => photos.filter((item) => Boolean(item.imageUrl)),
+    [photos],
+  );
+  const activePhotoIndex =
+    active?.kind === "photo"
+      ? visiblePhotos.findIndex((item) => item.id === active.item.id)
+      : -1;
+
+  function showPhotoAt(index: number) {
+    const item = visiblePhotos[index];
+    if (!item) return;
+    setActive({ kind: "photo", item });
+  }
+
+  useEffect(() => {
+    if (active?.kind !== "photo" || visiblePhotos.length < 2) return;
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      event.preventDefault();
+      const currentIndex = visiblePhotos.findIndex(
+        (item) => item.id === active?.item.id,
+      );
+      if (currentIndex < 0) return;
+      const nextIndex =
+        event.key === "ArrowRight" ? currentIndex + 1 : currentIndex - 1;
+      const item = visiblePhotos[nextIndex];
+      if (!item) return;
+      setActive({ kind: "photo", item });
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [active, visiblePhotos]);
 
   const showPhotos = photos.length > 0;
   const showVideos = videos.length > 0;
@@ -191,6 +226,7 @@ export function GalleryMediaBrowser({
               {active.kind === "photo" && active.item.imageUrl ? (
                 <div className="relative aspect-4/3 w-full">
                   <Image
+                    key={active.item.id}
                     src={active.item.imageUrl}
                     alt={active.item.alt}
                     fill
@@ -198,6 +234,27 @@ export function GalleryMediaBrowser({
                     className="object-contain"
                     priority
                   />
+                  {activePhotoIndex > 0 ? (
+                    <button
+                      type="button"
+                      onClick={() => showPhotoAt(activePhotoIndex - 1)}
+                      className="absolute top-1/2 left-3 z-10 inline-flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white transition-colors hover:bg-black/55"
+                      aria-label={t("prevPhoto")}
+                    >
+                      <ChevronLeft className="size-5" />
+                    </button>
+                  ) : null}
+                  {activePhotoIndex >= 0 &&
+                  activePhotoIndex < visiblePhotos.length - 1 ? (
+                    <button
+                      type="button"
+                      onClick={() => showPhotoAt(activePhotoIndex + 1)}
+                      className="absolute top-1/2 right-3 z-10 inline-flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white transition-colors hover:bg-black/55"
+                      aria-label={t("nextPhoto")}
+                    >
+                      <ChevronRight className="size-5" />
+                    </button>
+                  ) : null}
                 </div>
               ) : null}
 

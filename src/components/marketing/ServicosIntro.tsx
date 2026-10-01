@@ -18,7 +18,7 @@ export async function ServicosIntro({
   return (
     <section aria-labelledby="scenarios-title" className="w-full">
       <div
-        className={`${freeSectionShellSpacing} flex flex-col md:flex-row gap-10`}
+        className={`${freeSectionShellSpacing} flex flex-col gap-10 md:flex-row md:items-center`}
       >
         <div className="w-full md:w-5/12 flex-1">
           <h2
@@ -31,7 +31,7 @@ export async function ServicosIntro({
             {t("customSolutions")}
           </p>
         </div>
-        <p className="w-full md:w-5/12 flex-1 text-left md:text-left mt-1">
+        <p className="w-full flex-1 text-left md:w-5/12">
           {t("description")}
         </p>
       </div>

@@ -658,6 +658,8 @@
       "emptyInCategory": "No media in this category yet.",
       "playVideo": "Play video",
       "close": "Close",
+      "prevPhoto": "Previous photo",
+      "nextPhoto": "Next photo",
       "lightboxLabel": "Gallery media"
     },
     "contato": {

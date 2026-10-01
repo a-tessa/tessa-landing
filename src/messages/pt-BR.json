@@ -658,6 +658,8 @@
       "emptyInCategory": "Nenhuma mídia nesta categoria por enquanto.",
       "playVideo": "Reproduzir vídeo",
       "close": "Fechar",
+      "prevPhoto": "Foto anterior",
+      "nextPhoto": "Próxima foto",
       "lightboxLabel": "Mídia da galeria"
     },
     "contato": {
