@@ -71,23 +71,15 @@ export async function DownloadsDirectory({
     );
   }
 
+  const documentsInOrder = groups.flatMap((group) => group.documents);
+
   return (
-    <div className="flex w-full flex-col gap-14">
-      {groups.map((group) => (
-        <section
-          key={group.slug}
-          aria-label={group.name}
-          className="flex flex-col gap-6"
-        >
-          <ul className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-4 lg:gap-5">
-            {group.documents.map((document) => (
-              <li key={document.id}>
-                <DownloadDocumentCard locale={locale} document={document} />
-              </li>
-            ))}
-          </ul>
-        </section>
+    <ul className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-5 xl:grid-cols-5">
+      {documentsInOrder.map((document) => (
+        <li key={document.id}>
+          <DownloadDocumentCard locale={locale} document={document} />
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }

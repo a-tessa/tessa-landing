@@ -43,7 +43,7 @@ export async function DownloadDocumentCard({
             src={document.coverImageUrl}
             alt={t("coverImageAlt", { title: document.title })}
             fill
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
             className="object-cover transition-transform duration-500 group-hover/cover:scale-[1.03]"
           />
         ) : (
@@ -90,7 +90,7 @@ export async function DownloadDocumentCard({
       <div className="relative flex flex-1 flex-col gap-1 bg-card px-2 py-2.5">
         <h3
           className={cn(
-            "my-auto pl-3 font-barlow text-sm font-semibold uppercase tracking-wide text-foreground sm:text-base",
+            "my-auto pl-3 font-barlow text-[0.65rem] font-semibold uppercase leading-snug tracking-wide text-foreground sm:text-xs md:text-sm xl:text-sm",
             hasDescription && "pr-9",
           )}
         >
