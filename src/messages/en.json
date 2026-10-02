@@ -686,6 +686,10 @@
         "title": "OUR VALUES",
         "description": "Quality, safety, commitment to deadlines, customer proximity, and continuous improvement at every stage of the process."
       }
+    },
+    "trabalheConosco": {
+      "title": "Work with us",
+      "description": "Fill out the form below to join our talent pool."
     }
   },
   "footer": {
@@ -707,7 +711,8 @@
       "blog": "Blog",
       "downloads": "Downloads",
       "gallery": "Gallery",
-      "contact": "Contact/Location"
+      "contact": "Contact/Location",
+      "careers": "Work with us"
     },
     "legal": {
       "terms": "Terms of use",
@@ -735,5 +740,57 @@
     "pt-BR": "Português",
     "en": "English",
     "es": "Español"
+  },
+  "talentApplication": {
+    "fullName": "Name",
+    "email": "Email",
+    "phone": "Mobile",
+    "phonePlaceholder": "(17) 99999-0000",
+    "phoneHint": "Area code plus 8 or 9 digits: (00) 0000-0000 or (00) 00000-0000.",
+    "phoneTitle": "Use (00) 0000-0000 or (00) 00000-0000",
+    "educationLevel": "Education level",
+    "educationLevelPlaceholder": "Select a level",
+    "educationLevels": {
+      "elementaryIncomplete": "Incomplete elementary school",
+      "elementaryComplete": "Complete elementary school",
+      "highSchoolIncomplete": "Incomplete high school",
+      "highSchoolComplete": "Complete high school",
+      "higherIncomplete": "Incomplete higher education",
+      "higherComplete": "Complete higher education",
+      "postgraduate": "Postgraduate",
+      "masters": "Master's degree",
+      "doctorate": "Doctorate"
+    },
+    "education": "Field of study",
+    "practiceArea": "Area of work",
+    "areas": {
+      "production": "Production",
+      "commercial": "Commercial",
+      "finance": "Finance",
+      "customerService": "Customer service",
+      "technology": "Technology",
+      "other": "Other"
+    },
+    "professionalSummary": "Short professional summary",
+    "submit": "Submit application",
+    "pending": "Sending...",
+    "successTitle": "Application received",
+    "successMessage": "We received your talent-pool application. Our team will review your profile and, if there is an opening, will contact you by the email or mobile number you provided.",
+    "errors": {
+      "fullName": "Enter your full name.",
+      "fullNameMax": "Maximum 200 characters.",
+      "email": "Enter a valid email.",
+      "phone": "Enter a phone number with area code and 8 or 9 digits.",
+      "educationLevel": "Select an education level.",
+      "education": "Enter your field of study.",
+      "educationMax": "Maximum 200 characters.",
+      "practiceArea": "Select an area of work.",
+      "professionalSummary": "Write a short professional summary.",
+      "professionalSummaryMax": "Maximum 2000 characters.",
+      "unavailable": "The submission service is unavailable right now. Please try again later.",
+      "rateLimit": "Too many submissions recently. Wait a moment and try again.",
+      "generic": "We could not send your application. Please try again later.",
+      "network": "Could not reach the server. Check your connection and try again."
+    }
   }
 }

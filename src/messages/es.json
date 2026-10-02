@@ -686,6 +686,10 @@
         "title": "NUESTROS VALORES",
         "description": "Calidad, seguridad, compromiso con los plazos, cercanía con el cliente y mejora continua en cada etapa del proceso."
       }
+    },
+    "trabalheConosco": {
+      "title": "Trabaja con nosotros",
+      "description": "Complete el formulario de abajo para registrarse en nuestro banco de talentos."
     }
   },
   "footer": {
@@ -707,7 +711,8 @@
       "blog": "Blog",
       "downloads": "Descargas",
       "gallery": "Galería",
-      "contact": "Contacto/Ubicación"
+      "contact": "Contacto/Ubicación",
+      "careers": "Trabaja con nosotros"
     },
     "legal": {
       "terms": "Términos de uso",
@@ -735,5 +740,57 @@
     "pt-BR": "Português",
     "en": "English",
     "es": "Español"
+  },
+  "talentApplication": {
+    "fullName": "Nombre",
+    "email": "Correo",
+    "phone": "Celular",
+    "phonePlaceholder": "(17) 99999-0000",
+    "phoneHint": "Código de área y 8 o 9 dígitos: (00) 0000-0000 o (00) 00000-0000.",
+    "phoneTitle": "Use (00) 0000-0000 o (00) 00000-0000",
+    "educationLevel": "Nivel de escolaridad",
+    "educationLevelPlaceholder": "Seleccione el nivel",
+    "educationLevels": {
+      "elementaryIncomplete": "Primaria incompleta",
+      "elementaryComplete": "Primaria completa",
+      "highSchoolIncomplete": "Secundaria incompleta",
+      "highSchoolComplete": "Secundaria completa",
+      "higherIncomplete": "Superior incompleto",
+      "higherComplete": "Superior completo",
+      "postgraduate": "Posgrado",
+      "masters": "Maestría",
+      "doctorate": "Doctorado"
+    },
+    "education": "Formación",
+    "practiceArea": "Área de actuación",
+    "areas": {
+      "production": "Producción",
+      "commercial": "Comercial",
+      "finance": "Financiero",
+      "customerService": "Atención al cliente",
+      "technology": "Tecnología",
+      "other": "Otro"
+    },
+    "professionalSummary": "Breve resumen profesional",
+    "submit": "Enviar registro",
+    "pending": "Enviando...",
+    "successTitle": "Registro recibido",
+    "successMessage": "Recibimos su registro en el banco de talentos. Nuestro equipo analizará su perfil y, si hay una oportunidad, se pondrá en contacto por el correo o el celular informado.",
+    "errors": {
+      "fullName": "Indique su nombre completo.",
+      "fullNameMax": "Máximo 200 caracteres.",
+      "email": "Indique un correo válido.",
+      "phone": "Indique un teléfono con código de área y 8 o 9 dígitos.",
+      "educationLevel": "Seleccione el nivel de escolaridad.",
+      "education": "Indique su formación.",
+      "educationMax": "Máximo 200 caracteres.",
+      "practiceArea": "Seleccione un área de actuación.",
+      "professionalSummary": "Escriba un breve resumen profesional.",
+      "professionalSummaryMax": "Máximo 2000 caracteres.",
+      "unavailable": "El servicio de envío no está disponible en este momento. Inténtelo más tarde.",
+      "rateLimit": "Demasiados envíos recientes. Espere un momento e inténtelo de nuevo.",
+      "generic": "No fue posible enviar su registro. Inténtelo más tarde.",
+      "network": "Fallo de conexión con el servidor. Verifique su internet e inténtelo de nuevo."
+    }
   }
 }

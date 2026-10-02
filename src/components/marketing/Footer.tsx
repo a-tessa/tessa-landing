@@ -23,6 +23,7 @@ const MENU_KEYS = [
   { href: "/downloads", key: "downloads" },
   { href: "/galeria", key: "gallery" },
   { href: "/contato", key: "contact" },
+  { href: "/trabalhe-conosco", key: "careers" },
 ] as const;
 
 type LegalLink = {

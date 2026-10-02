@@ -288,5 +288,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   );
 
-  return [...staticEntries, ...serviceEntries, ...blogEntries];
+  const careersEntries = advertisedLocales.map((locale) => ({
+    url: absoluteUrl(locale, "/trabalhe-conosco"),
+    ...(siteLastModified ? { lastModified: siteLastModified } : {}),
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+    alternates: {
+      languages: buildLanguages("/trabalhe-conosco", advertisedLocales),
+    },
+  }));
+
+  return [...staticEntries, ...careersEntries, ...serviceEntries, ...blogEntries];
 }

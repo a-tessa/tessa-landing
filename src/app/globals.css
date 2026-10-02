@@ -141,6 +141,9 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+  html {
+    scrollbar-gutter: stable;
+  }
   main {
     @apply overflow-x-hidden;
   }
@@ -289,4 +292,13 @@ body {
     max-width: 100% !important;
     aspect-ratio: 16 / 9;
   }
+}
+
+/* react-remove-scroll turns the centered body margins into padding while a
+   select is open. max-width then crushes the page and shifts it sideways. */
+html body[data-scroll-locked] {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }

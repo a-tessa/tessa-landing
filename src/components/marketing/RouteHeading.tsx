@@ -38,6 +38,10 @@ const ROUTE_NAMESPACES = [
     prefix: "/contato",
     namespace: "pages.contato",
   },
+  {
+    prefix: "/trabalhe-conosco",
+    namespace: "pages.trabalheConosco",
+  },
 ] as const;
 
 type RouteConfig = (typeof ROUTE_NAMESPACES)[number];
